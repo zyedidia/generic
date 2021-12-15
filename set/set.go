@@ -7,7 +7,7 @@ type Set[K g.Hashable[K]] struct {
 	m *hashmap.Map[K, struct{}]
 }
 
-func NewSet[K g.Hashable[K]](capacity uint64) *Set[K] {
+func New[K g.Hashable[K]](capacity uint64) *Set[K] {
 	return &Set[K]{
 		m: hashmap.NewMap[K, struct{}](capacity),
 	}

@@ -6,11 +6,13 @@ type Uint8 uint8
 type Uint16 uint16
 type Uint32 uint32
 type Uint64 uint64
+type Uint uint
 
 type Int8 int8
 type Int16 int16
 type Int32 int32
 type Int64 int64
+type Int int
 
 type Float32 float32
 type Float64 float64
@@ -60,6 +62,16 @@ func (u Uint64) Hash() uint64 {
 	return hash(uint64(u))
 }
 
+func (u Uint) Less(other Uint) bool {
+	return u < other
+}
+func (u Uint) Equals(other Uint) bool {
+	return u == other
+}
+func (u Uint) Hash() uint64 {
+	return hash(uint64(u))
+}
+
 func (i Int8) Less(other Int8) bool {
 	return i < other
 }
@@ -97,6 +109,16 @@ func (i Int64) Equals(other Int64) bool {
 	return i == other
 }
 func (i Int64) Hash() uint64 {
+	return hash(uint64(i))
+}
+
+func (i Int) Less(other Int) bool {
+	return i < other
+}
+func (i Int) Equals(other Int) bool {
+	return i == other
+}
+func (i Int) Hash() uint64 {
 	return hash(uint64(i))
 }
 

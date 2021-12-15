@@ -1,4 +1,4 @@
-# Generic Datastructures
+# Generic Data Structures
 
 With the release of Go 1.18, it is possible to implement generic data
 structures in Go. This repository contains some data structures I have found

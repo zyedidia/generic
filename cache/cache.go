@@ -1,4 +1,4 @@
-package memo
+package cache
 
 import "github.com/zyedidia/generic/list"
 
@@ -18,8 +18,8 @@ type kv[K comparable, V any] struct {
 	val V
 }
 
-// NewTable returns a new memo.Cache with the given capacity.
-func NewTable[K comparable, V any](capacity int) *Cache[K, V] {
+// NewCache returns a new Cache with the given capacity.
+func NewCache[K comparable, V any](capacity int) *Cache[K, V] {
 	return &Cache[K, V]{
 		size:     0,
 		capacity: capacity,
@@ -73,7 +73,7 @@ func (t *Cache[K, V]) Put(k K, e V) {
 }
 
 // Delete causes the entry associated with the given key to be immediately
-// evicted from the table.
+// evicted from the cache.
 func (t *Cache[K, V]) Delete(k K) {
 	if n, ok := t.table[k]; ok {
 		t.lru.Remove(n)

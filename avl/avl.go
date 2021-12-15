@@ -105,7 +105,7 @@ func (n *node[K, V]) getHeight() int {
 }
 
 func (n *node[K, V]) recalculateHeight() {
-	n.height = 1 + max(n.left.getHeight(), n.right.getHeight())
+	n.height = 1 + g.Max(n.left.getHeight(), n.right.getHeight())
 }
 
 func (n *node[K, V]) rebalanceTree() *node[K, V] {
@@ -155,11 +155,4 @@ func (n *node[K, V]) findSmallest() *node[K, V] {
 	} else {
 		return n
 	}
-}
-
-func max(a int, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

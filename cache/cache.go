@@ -56,10 +56,7 @@ func (t *Cache[K, V]) Put(k K, e V) {
 	}
 
 	if t.size == t.capacity {
-		key := t.lru.Tail.Value.key
-		t.lru.Remove(t.lru.Tail)
-		t.size--
-		delete(t.table, key)
+		t.evict()
 	}
 	n := &list.Node[kv[K, V]]{
 		Value: kv[K, V]{
@@ -72,6 +69,13 @@ func (t *Cache[K, V]) Put(k K, e V) {
 	t.table[k] = n
 }
 
+func (t *Cache[K, V]) evict() {
+	key := t.lru.Tail.Value.key
+	t.lru.Remove(t.lru.Tail)
+	t.size--
+	delete(t.table, key)
+}
+
 // Delete causes the entry associated with the given key to be immediately
 // evicted from the cache.
 func (t *Cache[K, V]) Delete(k K) {
@@ -80,4 +84,30 @@ func (t *Cache[K, V]) Delete(k K) {
 		t.size--
 		delete(t.table, k)
 	}
+}
+
+// Resize changes the maximum capacity for this cache to 'size'.
+func (t *Cache[K, V]) Resize(size int) {
+	if t.capacity == size {
+		return
+	} else if t.capacity < size {
+		t.capacity = size
+		return
+	}
+
+	for i := 0; i < t.capacity - size; i++ {
+		t.evict()
+	}
+
+	t.capacity = size
+}
+
+// Size returns the number of active elements in the cache.
+func (t *Cache[K, V]) Size() int {
+	return t.size
+}
+
+// Capacity returns the maximum capacity of the cache.
+func (t *Cache[K, V]) Capacity() int {
+	return t.capacity
 }

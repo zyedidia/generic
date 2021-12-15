@@ -1,5 +1,7 @@
 package rope
 
+import g "github.com/zyedidia/generic"
+
 var (
 	// SplitLength is the threshold above which slices will be split into
 	// separate nodes.
@@ -91,11 +93,11 @@ func (n *Node[V]) Remove(start, end int) {
 		n.length = len(n.value)
 	case tNode:
 		leftLength := n.left.length
-		leftStart := min(start, leftLength)
-		leftEnd := min(end, leftLength)
+		leftStart := g.Min(start, leftLength)
+		leftEnd := g.Min(end, leftLength)
 		rightLength := n.right.length
-		rightStart := max(0, min(start-leftLength, rightLength))
-		rightEnd := max(0, min(end-leftLength, rightLength))
+		rightStart := g.Max(0, g.Min(start-leftLength, rightLength))
+		rightEnd := g.Max(0, g.Min(end-leftLength, rightLength))
 		if leftStart < leftLength {
 			n.left.Remove(leftStart, leftEnd)
 		}
@@ -138,11 +140,11 @@ func (n *Node[V]) Slice(start, end int) []V {
 		return n.value[start:end]
 	case tNode:
 		leftLength := n.left.length
-		leftStart := min(start, leftLength)
-		leftEnd := min(end, leftLength)
+		leftStart := g.Min(start, leftLength)
+		leftEnd := g.Min(end, leftLength)
 		rightLength := n.right.length
-		rightStart := max(0, min(start-leftLength, rightLength))
-		rightEnd := max(0, min(end-leftLength, rightLength))
+		rightStart := g.Max(0, g.Min(start-leftLength, rightLength))
+		rightEnd := g.Max(0, g.Min(end-leftLength, rightLength))
 
 		if leftStart != leftEnd {
 			if rightStart != rightEnd {
@@ -244,20 +246,6 @@ func (n *Node[V]) Each(fn func(n *Node[V]) bool) bool {
 		}
 		return n.right.Each(fn)
 	}
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // from slice tricks

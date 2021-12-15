@@ -54,7 +54,7 @@ func (m *Map[K, V]) GetZ(key K) V {
 	return v
 }
 
-func (m *Map[K, V]) expandto(newcap uint64) {
+func (m *Map[K, V]) resize(newcap uint64) {
 	newm := Map[K, V]{
 		capacity: newcap,
 		length: m.length,
@@ -74,7 +74,7 @@ func (m *Map[K, V]) expandto(newcap uint64) {
 // value will be overwritten with the new value.
 func (m *Map[K, V]) Set(key K, val V) {
 	if m.length >= m.capacity / 2 {
-		m.expandto(m.capacity * 2)
+		m.resize(m.capacity * 2)
 	} else if m.readonly {
 		entries := make([]entry[K, V], len(m.entries))
 		copy(entries, m.entries)
@@ -99,6 +99,45 @@ func (m *Map[K, V]) Set(key K, val V) {
 	m.entries[idx].value = val;
 	m.entries[idx].filled = true
 	m.length++
+}
+
+func (m *Map[K, V]) remove(idx uint64) {
+	var k K
+	var v V
+	m.entries[idx].filled = false
+	m.entries[idx].key = k
+	m.entries[idx].value = v
+	m.length--
+}
+
+// Delete removes the specified key-value pair from the map.
+func (m *Map[K, V]) Delete(key K) {
+	hash := key.Hash()
+	idx := hash & (m.capacity - 1)
+
+	for m.entries[idx].filled && !m.entries[idx].key.Equals(key) {
+		idx = (idx + 1) % m.capacity
+	}
+
+	if !m.entries[idx].filled {
+		return
+	}
+
+	m.remove(idx)
+
+	idx = (idx + 1) % m.capacity
+	for m.entries[idx].filled {
+		krehash := m.entries[idx].key
+		vrehash := m.entries[idx].value
+		m.remove(idx)
+		m.Set(krehash, vrehash)
+		idx = (idx + 1) % m.capacity
+	}
+
+	// halves the array if it is 12.5% full or less
+	if (m.length > 0 && m.length <= m.capacity/8) {
+		m.resize(m.capacity/2)
+	}
 }
 
 // Copy returns a copy of this map. The copy will not allocate any memory until

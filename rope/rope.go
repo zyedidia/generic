@@ -2,16 +2,16 @@ package rope
 
 import g "github.com/zyedidia/generic"
 
-var (
-	// SplitLength is the threshold above which slices will be split into
+const (
+	// splitLength is the threshold above which slices will be split into
 	// separate nodes.
-	SplitLength = 4096 * 4
-	// JoinLength is the threshold below which nodes will be merged into
+	splitLength = 4096 * 4
+	// joinLength is the threshold below which nodes will be merged into
 	// slices.
-	JoinLength = SplitLength / 2
-	// RebalanceRatio is the threshold used to trigger a rebuild during a
+	joinLength = splitLength / 2
+	// rebalanceRatio is the threshold used to trigger a rebuild during a
 	// rebalance operation.
-	RebalanceRatio = 1.2
+	rebalanceRatio = 1.2
 )
 
 type nodeType byte
@@ -52,7 +52,7 @@ func (n *Node[V]) Len() int {
 func (n *Node[V]) adjust() {
 	switch n.kind {
 	case tLeaf:
-		if n.length > SplitLength {
+		if n.length > splitLength {
 			divide := n.length / 2
 			n.left = New(n.value[:divide])
 			n.right = New(n.value[divide:])
@@ -61,7 +61,7 @@ func (n *Node[V]) adjust() {
 			n.length = n.left.length + n.right.length
 		}
 	case tNode:
-		if n.length < JoinLength {
+		if n.length < joinLength {
 			n.value = n.Value()
 			n.left = nil
 			n.right = nil
@@ -226,7 +226,7 @@ func (n *Node[V]) Rebalance() {
 	case tNode:
 		lratio := float64(n.left.length) / float64(n.right.length)
 		rratio := float64(n.right.length) / float64(n.left.length)
-		if lratio > RebalanceRatio || rratio > RebalanceRatio {
+		if lratio > rebalanceRatio || rratio > rebalanceRatio {
 			n.Rebuild()
 		} else {
 			n.left.Rebalance()

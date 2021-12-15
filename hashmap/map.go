@@ -1,27 +1,23 @@
 package hashmap
 
-// Hashable implements the Hash() function, and must support the == operator.
-type Hashable interface {
-	comparable
-	Hash() uint64
-}
+import g "github.com/zyedidia/generic"
 
-type entry[K Hashable, V any] struct {
+type entry[K g.Hashable[K], V any] struct {
 	key K
 	filled bool
 	value V
 }
 
 // A Map is a hashmap that supports copying via copy-on-write.
-type Map[K Hashable, V any] struct {
+type Map[K g.Hashable[K], V any] struct {
 	entries []entry[K, V]
 	capacity uint64
 	length uint64
 	readonly bool
 }
 
-// NewCowMap constructs a new map with the given capacity.
-func NewCowMap[K Hashable, V any](capacity uint64) *Map[K, V] {
+// NewMap constructs a new map with the given capacity.
+func NewMap[K g.Hashable[K], V any](capacity uint64) *Map[K, V] {
 	if capacity == 0 {
 		capacity = 1
 	}
@@ -38,7 +34,7 @@ func (m *Map[K, V]) Get(key K) (V, bool) {
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if (m.entries[idx].key == key) {
+		if (m.entries[idx].key.Equals(key)) {
 			return m.entries[idx].value, true
 		}
 		idx++
@@ -89,7 +85,7 @@ func (m *Map[K, V]) Set(key K, val V) {
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if m.entries[idx].key == key {
+		if m.entries[idx].key.Equals(key) {
 			m.entries[idx].value = val
 			return
 		}

@@ -1,8 +1,8 @@
 package avl
 
-import "github.com/zyedidia/generic"
+import g "github.com/zyedidia/generic"
 
-type Tree[K generic.Orderable[K], V any] struct {
+type Tree[K g.Lesser[K], V any] struct {
 	root *node[K, V]
 }
 
@@ -27,7 +27,7 @@ func (t *Tree[K, V]) Height() int {
 	return t.root.getHeight()
 }
 
-type node[K generic.Orderable[K], V any] struct {
+type node[K g.Lesser[K], V any] struct {
 	key   K
 	value V
 
@@ -47,9 +47,9 @@ func (n *node[K, V]) add(key K, value V) *node[K, V] {
 		}
 	}
 
-	if key.Compare(n.key) < 0 {
+	if g.Compare(key, n.key) < 0 {
 		n.left = n.left.add(key, value)
-	} else if key.Compare(n.key) > 0 {
+	} else if g.Compare(key, n.key) > 0 {
 		n.right = n.right.add(key, value)
 	} else {
 		n.value = value
@@ -61,9 +61,9 @@ func (n *node[K, V]) remove(key K) *node[K, V] {
 	if n == nil {
 		return nil
 	}
-	if key.Compare(n.key) < 0 {
+	if g.Compare(key, n.key) < 0 {
 		n.left = n.left.remove(key)
-	} else if key.Compare(n.key) > 0 {
+	} else if g.Compare(key, n.key) > 0 {
 		n.right = n.right.remove(key)
 	} else {
 		if n.left != nil && n.right != nil {
@@ -88,9 +88,9 @@ func (n *node[K, V]) search(key K) *node[K, V] {
 	if n == nil {
 		return nil
 	}
-	if key.Compare(n.key) < 0 {
+	if g.Compare(key, n.key) < 0 {
 		return n.left.search(key)
-	} else if key.Compare(n.key) > 0 {
+	} else if g.Compare(key, n.key) > 0 {
 		return n.right.search(key)
 	} else {
 		return n

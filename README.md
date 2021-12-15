@@ -17,3 +17,15 @@ structure.
 * `stack`: a LIFO stack.
 
 This project is currently in-progress.
+
+Planned additions:
+
+* Interval tree
+* Hashset
+* Trie
+* Queue
+* Approximate membership query filters
+* B-tree
+* Better tests
+* Examples
+* Benchmarks

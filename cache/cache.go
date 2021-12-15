@@ -95,7 +95,7 @@ func (t *Cache[K, V]) Resize(size int) {
 		return
 	}
 
-	for i := 0; i < t.capacity - size; i++ {
+	for i := 0; i < t.capacity-size; i++ {
 		t.evict()
 	}
 

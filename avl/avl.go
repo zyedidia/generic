@@ -39,11 +39,11 @@ type node[K g.Lesser[K], V any] struct {
 func (n *node[K, V]) add(key K, value V) *node[K, V] {
 	if n == nil {
 		return &node[K, V]{
-			key: key,
-			value: value,
+			key:    key,
+			value:  value,
 			height: 1,
-			left: nil,
-			right: nil,
+			left:   nil,
+			right:  nil,
 		}
 	}
 

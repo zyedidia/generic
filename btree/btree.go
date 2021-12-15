@@ -5,19 +5,19 @@ import g "github.com/zyedidia/generic"
 const maxChildren = 64 // must be even and greater than 2
 
 type Tree[K g.Lesser[K], V any] struct {
-	root *node[K, V]
+	root   *node[K, V]
 	height int
-	n int
+	n      int
 }
 
 type node[K g.Lesser[K], V any] struct {
-	m int
+	m        int
 	children []entry[K, V]
 }
 
 type entry[K g.Lesser[K], V any] struct {
-	key K
-	val V
+	key  K
+	val  V
 	next *node[K, V]
 }
 
@@ -73,11 +73,11 @@ func (t *Tree[K, V]) Put(key K, val V) {
 		m: 2,
 	}
 	n.children[0] = entry[K, V]{
-		key: t.root.children[0].key,
+		key:  t.root.children[0].key,
 		next: t.root,
 	}
 	n.children[1] = entry[K, V]{
-		key: u.children[0].key,
+		key:  u.children[0].key,
 		next: u,
 	}
 	t.root = n

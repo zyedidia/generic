@@ -5,7 +5,7 @@ type List[V any] struct {
 }
 
 type Node[V any] struct {
-	Value        V
+	Value      V
 	Prev, Next *Node[V]
 }
 

@@ -3,16 +3,16 @@ package hashmap
 import g "github.com/zyedidia/generic"
 
 type entry[K g.Hashable[K], V any] struct {
-	key K
+	key    K
 	filled bool
-	value V
+	value  V
 }
 
 // A Map is a hashmap that supports copying via copy-on-write.
 type Map[K g.Hashable[K], V any] struct {
-	entries []entry[K, V]
+	entries  []entry[K, V]
 	capacity uint64
-	length uint64
+	length   uint64
 	readonly bool
 }
 
@@ -22,7 +22,7 @@ func NewMap[K g.Hashable[K], V any](capacity uint64) *Map[K, V] {
 		capacity = 1
 	}
 	return &Map[K, V]{
-		entries: make([]entry[K, V], capacity),
+		entries:  make([]entry[K, V], capacity),
 		capacity: capacity,
 	}
 }
@@ -34,11 +34,11 @@ func (m *Map[K, V]) Get(key K) (V, bool) {
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if (m.entries[idx].key.Equals(key)) {
+		if m.entries[idx].key.Equals(key) {
 			return m.entries[idx].value, true
 		}
 		idx++
-		if (idx >= m.capacity) {
+		if idx >= m.capacity {
 			idx = 0
 		}
 	}
@@ -57,8 +57,8 @@ func (m *Map[K, V]) GetZ(key K) V {
 func (m *Map[K, V]) resize(newcap uint64) {
 	newm := Map[K, V]{
 		capacity: newcap,
-		length: m.length,
-		entries: make([]entry[K, V], newcap),
+		length:   m.length,
+		entries:  make([]entry[K, V], newcap),
 	}
 
 	for _, ent := range m.entries {
@@ -73,7 +73,7 @@ func (m *Map[K, V]) resize(newcap uint64) {
 // Set maps the given key to the given value. If the key already exists its
 // value will be overwritten with the new value.
 func (m *Map[K, V]) Set(key K, val V) {
-	if m.length >= m.capacity / 2 {
+	if m.length >= m.capacity/2 {
 		m.resize(m.capacity * 2)
 	} else if m.readonly {
 		entries := make([]entry[K, V], len(m.entries))
@@ -95,8 +95,8 @@ func (m *Map[K, V]) Set(key K, val V) {
 		}
 	}
 
-	m.entries[idx].key = key;
-	m.entries[idx].value = val;
+	m.entries[idx].key = key
+	m.entries[idx].value = val
 	m.entries[idx].filled = true
 	m.length++
 }
@@ -135,8 +135,8 @@ func (m *Map[K, V]) Delete(key K) {
 	}
 
 	// halves the array if it is 12.5% full or less
-	if (m.length > 0 && m.length <= m.capacity/8) {
-		m.resize(m.capacity/2)
+	if m.length > 0 && m.length <= m.capacity/8 {
+		m.resize(m.capacity / 2)
 	}
 }
 
@@ -146,9 +146,9 @@ func (m *Map[K, V]) Delete(key K) {
 func (m *Map[K, V]) Copy() *Map[K, V] {
 	m.readonly = true
 	return &Map[K, V]{
-		entries: m.entries,
+		entries:  m.entries,
 		capacity: m.capacity,
-		length: m.length,
+		length:   m.length,
 		readonly: true,
 	}
 }
@@ -167,7 +167,7 @@ func (m *Map[K, V]) Keys() []K {
 }
 
 // Range applies 'fn' to every value in the map.
-func (m *Map[K, V]) Range(fn func (key K, val V)) {
+func (m *Map[K, V]) Range(fn func(key K, val V)) {
 	for _, ent := range m.entries {
 		if ent.filled {
 			fn(ent.key, ent.value)

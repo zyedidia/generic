@@ -44,7 +44,7 @@ type node[V any] struct {
 	key   Range
 	value V
 
-	max int
+	max    int
 	height int
 	left   *node[V]
 	right  *node[V]
@@ -53,12 +53,12 @@ type node[V any] struct {
 func (n *node[V]) add(key Range, value V) *node[V] {
 	if n == nil {
 		return &node[V]{
-			key: key,
-			value: value,
-			max: key.High,
+			key:    key,
+			value:  value,
+			max:    key.High,
 			height: 1,
-			left: nil,
-			right: nil,
+			left:   nil,
+			right:  nil,
 		}
 	}
 

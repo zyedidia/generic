@@ -1,5 +1,7 @@
 package generic
 
+import "github.com/segmentio/fasthash/fnv1a"
+
 type Uint8 uint8
 type Uint16 uint16
 type Uint32 uint32
@@ -16,6 +18,7 @@ type Float64 float64
 type Bool bool
 
 type String string
+type ByteSlice []byte
 
 func (u Uint8) Less(other Uint8) bool {
 	return u < other
@@ -97,13 +100,6 @@ func (i Int64) Hash() uint64 {
 	return hash(uint64(i))
 }
 
-func (s String) Less(other String) bool {
-	return s < other
-}
-func (s String) Equals(other String) bool {
-	return s == other
-}
-
 func (b Bool) Equals(other Bool) bool {
 	return b == other
 }
@@ -112,6 +108,29 @@ func (b Bool) Hash() uint64 {
 		return 1
 	}
 	return 0
+}
+
+func (s String) Less(other String) bool {
+	return s < other
+}
+func (s String) Equals(other String) bool {
+	return s == other
+}
+func (s String) Hash() uint64 {
+	return fnv1a.HashString64(string(s))
+}
+
+func (b ByteSlice) Equals(other ByteSlice) bool {
+	// TODO: update when stdlib slices package is available
+	for i := range b {
+		if b[i] != other[i] {
+			return false
+		}
+	}
+	return true
+}
+func (b ByteSlice) Hash() uint64 {
+	return fnv1a.HashBytes64([]byte(b))
 }
 
 func hash(u uint64) uint64 {

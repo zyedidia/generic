@@ -3,7 +3,7 @@ package list
 import "github.com/zyedidia/generic/iter"
 
 type List[V any] struct {
-	Head, Tail *Node[V]
+	Front, Back *Node[V]
 }
 
 type Node[V any] struct {
@@ -11,27 +11,54 @@ type Node[V any] struct {
 	Prev, Next *Node[V]
 }
 
-func (l *List[V]) Append(n *Node[V]) {
-	n.Next = l.Head
-	n.Prev = nil
-	if l.Head != nil {
-		l.Head.Prev = n
+func New[V any]() *List[V] {
+	return &List[V]{}
+}
+
+func (l *List[V]) PushBack(v V) {
+	l.PushBackNode(&Node[V]{
+		Value: v,
+	})
+}
+
+func (l *List[V]) PushFront(v V) {
+	l.PushFrontNode(&Node[V]{
+		Value: v,
+	})
+}
+
+func (l *List[V]) PushBackNode(n *Node[V]) {
+	n.Next = nil
+	n.Prev = l.Back
+	if l.Back != nil {
+		l.Back.Next = n
 	} else {
-		l.Tail = n
+		l.Front = n
 	}
-	l.Head = n
+	l.Back = n
+}
+
+func (l *List[V]) PushFrontNode(n *Node[V]) {
+	n.Next = l.Front
+	n.Prev = nil
+	if l.Front != nil {
+		l.Front.Prev = n
+	} else {
+		l.Back = n
+	}
+	l.Front = n
 }
 
 func (l *List[V]) Remove(n *Node[V]) {
 	if n.Next != nil {
 		n.Next.Prev = n.Prev
 	} else {
-		l.Tail = n.Prev
+		l.Back = n.Prev
 	}
 	if n.Prev != nil {
 		n.Prev.Next = n.Next
 	} else {
-		l.Head = n.Next
+		l.Front = n.Next
 	}
 }
 
@@ -41,8 +68,9 @@ func (n *Node[V]) Iter() iter.Iter[V] {
 		if node == nil {
 			return v, false
 		}
+		v = node.Value
 		node = node.Next
-		return node.Value, true
+		return v, true
 	}
 }
 
@@ -52,7 +80,8 @@ func (n *Node[V]) ReverseIter() iter.Iter[V] {
 		if node == nil {
 			return v, false
 		}
+		v = node.Value
 		node = node.Prev
-		return node.Value, true
+		return v, true
 	}
 }

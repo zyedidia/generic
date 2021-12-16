@@ -33,7 +33,7 @@ func NewCache[K comparable, V any](capacity int) *Cache[K, V] {
 func (t *Cache[K, V]) Get(k K) (V, bool) {
 	if n, ok := t.table[k]; ok {
 		t.lru.Remove(n)
-		t.lru.Append(n)
+		t.lru.PushFrontNode(n)
 		return n.Value.val, true
 	}
 	var v V
@@ -51,7 +51,7 @@ func (t *Cache[K, V]) Put(k K, e V) {
 	if n, ok := t.table[k]; ok {
 		n.Value.val = e
 		t.lru.Remove(n)
-		t.lru.Append(n)
+		t.lru.PushFrontNode(n)
 		return
 	}
 
@@ -64,14 +64,14 @@ func (t *Cache[K, V]) Put(k K, e V) {
 			val: e,
 		},
 	}
-	t.lru.Append(n)
+	t.lru.PushFrontNode(n)
 	t.size++
 	t.table[k] = n
 }
 
 func (t *Cache[K, V]) evict() {
-	key := t.lru.Tail.Value.key
-	t.lru.Remove(t.lru.Tail)
+	key := t.lru.Back.Value.key
+	t.lru.Remove(t.lru.Back)
 	t.size--
 	delete(t.table, key)
 }

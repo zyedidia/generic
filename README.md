@@ -1,9 +1,9 @@
 # Generic Data Structures
 
-With the release of Go 1.18, it is possible to implement generic data
+With the release of Go 1.18, it will be possible to implement generic data
 structures in Go. This repository contains some data structures I have found
-useful. See the individual directories for more information about each data
-structure.
+useful implemented with generics. See the individual directories for more
+information about each data structure.
 
 * `avl`: an AVL tree.
 * `btree`: a B-tree.
@@ -30,3 +30,21 @@ Planned additions:
 * Better tests
 * Examples
 * Benchmarks
+
+# Discussion
+
+We are in the very early stages of generics in Go and it is not clear what the
+best practices are. This project is an attempt to become familiar with Go's
+generics and determine what works well and what doesn't. If you have feedback
+on the implementation, please open an issue for further discussion. Some topics
+for discussion include the iterator API, and custom comparable types.
+
+# Contributing
+
+There are more data structures that may be useful to have, such as bloom
+filters, queues, tries, graph representations, and more kinds of search trees.
+If you would like to contribute a data structure please let me know.
+
+It would also be useful to have comprehensive benchmarks for the data
+structures, comparing to standard library implementations when possible, or
+just on their own.

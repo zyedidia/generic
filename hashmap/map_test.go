@@ -1,9 +1,10 @@
 package hashmap
 
 import (
-	g "github.com/zyedidia/generic"
 	"math/rand"
 	"testing"
+
+	g "github.com/zyedidia/generic"
 )
 
 func checkeq[K g.Hashable[K], V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {

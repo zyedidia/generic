@@ -1,9 +1,12 @@
 package avl_test
 
-import "testing"
-import "math/rand"
-import g "github.com/zyedidia/generic"
-import "github.com/zyedidia/generic/avl"
+import (
+	"math/rand"
+	"testing"
+
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/avl"
+)
 
 func checkeq[K g.Lesser[K], V comparable](cm *avl.Tree[K, V], get func(k K) (V, bool), t *testing.T) {
 	cm.Iter().For(func(kv avl.KV[K, V]) {

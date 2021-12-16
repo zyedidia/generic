@@ -1,8 +1,10 @@
 package hashset
 
-import g "github.com/zyedidia/generic"
-import "github.com/zyedidia/generic/hashmap"
-import "github.com/zyedidia/generic/iter"
+import (
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/hashmap"
+	"github.com/zyedidia/generic/iter"
+)
 
 type Set[K g.Hashable[K]] struct {
 	m *hashmap.Map[K, struct{}]

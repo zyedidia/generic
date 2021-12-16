@@ -1,7 +1,9 @@
 package hashmap
 
-import g "github.com/zyedidia/generic"
-import "github.com/zyedidia/generic/iter"
+import (
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/iter"
+)
 
 type entry[K g.Hashable[K], V any] struct {
 	key    K

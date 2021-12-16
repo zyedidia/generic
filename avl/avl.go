@@ -1,7 +1,9 @@
 package avl
 
-import g "github.com/zyedidia/generic"
-import "github.com/zyedidia/generic/iter"
+import (
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/iter"
+)
 
 type KV[K g.Lesser[K], V any] struct {
 	Key K

@@ -24,7 +24,7 @@ func TestOverlaps(t *testing.T) {
 	}
 }
 
-func Example(t *testing.T) {
+func Example() {
 	tree := New[string]()
 	tree.Put(0, 10, "foo")
 	tree.Put(5, 9, "bar")

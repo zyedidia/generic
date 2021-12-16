@@ -16,7 +16,7 @@ func checkeq[K g.Hashable[K], V comparable](cm *Map[K, V], get func(k K) (V, boo
 	})
 }
 
-func TestLookupMap(t *testing.T) {
+func TestCrossCheck(t *testing.T) {
 	stdm := make(map[g.Uint64]uint32)
 	cowm := NewMap[g.Uint64, uint32](1)
 

@@ -1,9 +1,19 @@
 package avl
 
 import g "github.com/zyedidia/generic"
+import "github.com/zyedidia/generic/iter"
+
+type KV[K g.Lesser[K], V any] struct {
+	Key K
+	Val V
+}
 
 type Tree[K g.Lesser[K], V any] struct {
 	root *node[K, V]
+}
+
+func New[K g.Lesser[K], V any]() *Tree[K, V] {
+	return &Tree[K, V]{}
 }
 
 func (t *Tree[K, V]) Add(key K, value V) {
@@ -11,7 +21,7 @@ func (t *Tree[K, V]) Add(key K, value V) {
 }
 
 func (t *Tree[K, V]) Remove(key K) {
-	t.root.remove(key)
+	t.root = t.root.remove(key)
 }
 
 func (t *Tree[K, V]) Search(key K) (V, bool) {
@@ -21,6 +31,10 @@ func (t *Tree[K, V]) Search(key K) (V, bool) {
 		return v, false
 	}
 	return n.value, true
+}
+
+func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
+	return t.root.iter()
 }
 
 func (t *Tree[K, V]) Height() int {
@@ -94,6 +108,31 @@ func (n *node[K, V]) search(key K) *node[K, V] {
 		return n.right.search(key)
 	} else {
 		return n
+	}
+}
+
+func (n *node[K, V]) iter() iter.Iter[KV[K, V]] {
+	if n == nil {
+		return func() (v KV[K, V], ok bool) {
+			return v, false
+		}
+	}
+
+	var didself bool
+	left := n.left.iter()
+	right := n.right.iter()
+	return func() (KV[K, V], bool) {
+		v, ok := left()
+		if ok {
+			return v, true
+		} else if !didself {
+			didself = true
+			return KV[K, V]{
+				Key: n.key,
+				Val: n.value,
+			}, true
+		}
+		return right()
 	}
 }
 

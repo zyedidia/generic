@@ -1,8 +1,16 @@
 package btree
 
-import g "github.com/zyedidia/generic"
+import (
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/iter"
+)
 
 const maxChildren = 64 // must be even and greater than 2
+
+type KV[K g.Lesser[K], V any] struct {
+	Key K
+	Val V
+}
 
 type Tree[K g.Lesser[K], V any] struct {
 	root   *node[K, V]
@@ -12,7 +20,7 @@ type Tree[K g.Lesser[K], V any] struct {
 
 type node[K g.Lesser[K], V any] struct {
 	m        int
-	children []entry[K, V]
+	children [maxChildren]entry[K, V]
 }
 
 type entry[K g.Lesser[K], V any] struct {
@@ -134,4 +142,16 @@ func (t *Tree[K, V]) split(h *node[K, V]) *node[K, V] {
 		n.children[j] = h.children[maxChildren/2+j]
 	}
 	return n
+}
+
+func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
+	return t.iter(t.root)
+}
+
+func (t *Tree[K, V]) iter(n *node[K, V]) iter.Iter[KV[K, V]] {
+	if n == nil {
+		return func() (v KV[K, V], ok bool) {
+			return v, false
+		}
+	}
 }

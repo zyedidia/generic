@@ -23,7 +23,8 @@ The package also includes support for iterators, in the `iter` subpackage.
 Most data structures provide an iterator API, which can be used with some
 convenience functions in `iter`.
 
-This project is currently in-progress.
+This project is currently in-progress and the API is not stable. A stable
+version will be released when Go 1.18 is released.
 
 Planned additions:
 
@@ -47,4 +48,5 @@ If you would like to contribute a data structure please let me know.
 
 It would also be useful to have comprehensive benchmarks for the data
 structures, comparing to standard library implementations when possible, or
-just on their own.
+just on their own. Benchmarks will also allow us to profile and optimize
+the implementations.

@@ -1,6 +1,14 @@
 package interval
 
-import g "github.com/zyedidia/generic"
+import (
+	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/iter"
+)
+
+type KV[V any] struct {
+	Key Range
+	Val V
+}
 
 type Range struct {
 	Low, High int
@@ -34,6 +42,10 @@ func (t *Tree[V]) Search(pos int) (V, bool) {
 		return v, false
 	}
 	return n.value, true
+}
+
+func (t *Tree[V]) Iter() iter.Iter[KV[V]] {
+	return t.root.iter()
 }
 
 func (t *Tree[V]) Height() int {
@@ -144,6 +156,31 @@ func (n *node[V]) overlaps(key Range, result []V) []V {
 
 	result = n.right.overlaps(key, result)
 	return result
+}
+
+func (n *node[V]) iter() iter.Iter[KV[V]] {
+	if n == nil {
+		return func() (v KV[V], ok bool) {
+			return v, false
+		}
+	}
+
+	var didself bool
+	left := n.left.iter()
+	right := n.right.iter()
+	return func() (KV[V], bool) {
+		v, ok := left()
+		if ok {
+			return v, true
+		} else if !didself {
+			didself = true
+			return KV[V]{
+				Key: n.key,
+				Val: n.value,
+			}, true
+		}
+		return right()
+	}
 }
 
 func (n *node[V]) getHeight() int {

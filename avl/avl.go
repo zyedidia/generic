@@ -20,8 +20,8 @@ func New[K g.Lesser[K], V any]() *Tree[K, V] {
 	return &Tree[K, V]{}
 }
 
-// Add associates 'key' with 'value'.
-func (t *Tree[K, V]) Add(key K, value V) {
+// Put associates 'key' with 'value'.
+func (t *Tree[K, V]) Put(key K, value V) {
 	t.root = t.root.add(key, value)
 }
 
@@ -30,14 +30,20 @@ func (t *Tree[K, V]) Remove(key K) {
 	t.root = t.root.remove(key)
 }
 
-// Search returns the value associated with 'key'.
-func (t *Tree[K, V]) Search(key K) (V, bool) {
+// Get returns the value associated with 'key'.
+func (t *Tree[K, V]) Get(key K) (V, bool) {
 	n := t.root.search(key)
 	if n == nil {
 		var v V
 		return v, false
 	}
 	return n.value, true
+}
+
+// GetZ is the same as Get but returns the zero value when nothing is found.
+func (t *Tree[K, V]) GetZ(key K) V {
+	v, _ := t.Get(key)
+	return v
 }
 
 // Iter returns an iterator over all key-value pairs, iterating in sorted order
@@ -49,6 +55,11 @@ func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
 // Height returns the height of the tree.
 func (t *Tree[K, V]) Height() int {
 	return t.root.getHeight()
+}
+
+// Size returns the number of elements in the tree.
+func (t *Tree[K, V]) Size() int {
+	return t.root.size()
 }
 
 type node[K g.Lesser[K], V any] struct {
@@ -204,4 +215,15 @@ func (n *node[K, V]) findSmallest() *node[K, V] {
 	} else {
 		return n
 	}
+}
+
+func (n *node[K, V]) size() int {
+	s := 1
+	if n.left != nil {
+		s += n.left.size()
+	}
+	if n.right != nil {
+		s += n.left.size()
+	}
+	return s
 }

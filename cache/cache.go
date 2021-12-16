@@ -79,9 +79,9 @@ func (t *Cache[K, V]) evict() {
 	delete(t.table, key)
 }
 
-// Delete causes the entry associated with the given key to be immediately
+// Remove causes the entry associated with the given key to be immediately
 // evicted from the cache.
-func (t *Cache[K, V]) Delete(k K) {
+func (t *Cache[K, V]) Remove(k K) {
 	if n, ok := t.table[k]; ok {
 		t.lru.Remove(n)
 		t.size--

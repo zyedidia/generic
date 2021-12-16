@@ -20,7 +20,7 @@ func New[K g.Hashable[K]](capacity uint64) *Set[K] {
 
 // Put adds 'val' to the set.
 func (s *Set[K]) Put(val K) {
-	s.m.Set(val, struct{}{})
+	s.m.Put(val, struct{}{})
 }
 
 // Has returns true only if 'val' is in the set.
@@ -31,7 +31,12 @@ func (s *Set[K]) Has(val K) bool {
 
 // Remove removes 'val' from the set.
 func (s *Set[K]) Remove(val K) {
-	s.m.Delete(val)
+	s.m.Remove(val)
+}
+
+// Size returns the number of elements in the set.
+func (s *Set[K]) Size() int {
+	return s.m.length
 }
 
 // Iter returns an iterator over all values in the set.

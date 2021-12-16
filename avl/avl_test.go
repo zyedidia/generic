@@ -32,7 +32,7 @@ func TestCrossCheck(t *testing.T) {
 		switch op {
 		case 0:
 			stdm[key] = val
-			tree.Add(g.Int(key), val)
+			tree.Put(g.Int(key), val)
 		case 1:
 			var del int
 			for k := range stdm {

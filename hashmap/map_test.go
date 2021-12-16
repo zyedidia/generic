@@ -31,7 +31,7 @@ func TestCrossCheck(t *testing.T) {
 		switch op {
 		case 0:
 			stdm[key] = val
-			cowm.Set(key, val)
+			cowm.Put(key, val)
 		case 1:
 			var del g.Uint64
 			for k := range stdm {
@@ -39,7 +39,7 @@ func TestCrossCheck(t *testing.T) {
 				break
 			}
 			delete(stdm, del)
-			cowm.Delete(del)
+			cowm.Remove(del)
 		}
 
 		checkeq(cowm, func(k g.Uint64) (uint32, bool) {
@@ -53,14 +53,14 @@ func TestCopy(t *testing.T) {
 	orig := NewMap[g.Uint64, uint32](1)
 
 	for i := uint32(0); i < 10; i++ {
-		orig.Set(g.Uint64(i), i)
+		orig.Put(g.Uint64(i), i)
 	}
 
 	cpy := orig.Copy()
 
 	checkeq(cpy, orig.Get, t)
 
-	cpy.Set(0, 42)
+	cpy.Put(0, 42)
 
 	if cpy.GetZ(0) != 42 {
 		t.Fatal("didn't get 42")

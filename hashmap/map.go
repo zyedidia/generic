@@ -66,16 +66,16 @@ func (m *Map[K, V]) resize(newcap uint64) {
 
 	for _, ent := range m.entries {
 		if ent.filled {
-			newm.Set(ent.key, ent.value)
+			newm.Put(ent.key, ent.value)
 		}
 	}
 	m.capacity = newm.capacity
 	m.entries = newm.entries
 }
 
-// Set maps the given key to the given value. If the key already exists its
+// Put maps the given key to the given value. If the key already exists its
 // value will be overwritten with the new value.
-func (m *Map[K, V]) Set(key K, val V) {
+func (m *Map[K, V]) Put(key K, val V) {
 	if m.length >= m.capacity/2 {
 		m.resize(m.capacity * 2)
 	} else if m.readonly {
@@ -113,8 +113,8 @@ func (m *Map[K, V]) remove(idx uint64) {
 	m.length--
 }
 
-// Delete removes the specified key-value pair from the map.
-func (m *Map[K, V]) Delete(key K) {
+// Remove removes the specified key-value pair from the map.
+func (m *Map[K, V]) Remove(key K) {
 	hash := key.Hash()
 	idx := hash & (m.capacity - 1)
 
@@ -133,7 +133,7 @@ func (m *Map[K, V]) Delete(key K) {
 		krehash := m.entries[idx].key
 		vrehash := m.entries[idx].value
 		m.remove(idx)
-		m.Set(krehash, vrehash)
+		m.Put(krehash, vrehash)
 		idx = (idx + 1) % m.capacity
 	}
 
@@ -141,6 +141,11 @@ func (m *Map[K, V]) Delete(key K) {
 	if m.length > 0 && m.length <= m.capacity/8 {
 		m.resize(m.capacity / 2)
 	}
+}
+
+// Size returns the number of items in the map.
+func (m *Map[K, V]) Size() int {
+	return int(m.length)
 }
 
 // Copy returns a copy of this map. The copy will not allocate any memory until

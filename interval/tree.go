@@ -24,7 +24,7 @@ func (t *Tree[V]) Overlaps(key Range) []V {
 }
 
 func (t *Tree[V]) Remove(key Range) {
-	t.root.remove(key)
+	t.root = t.root.remove(key)
 }
 
 func (t *Tree[V]) Search(pos int) (V, bool) {

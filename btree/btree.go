@@ -12,6 +12,8 @@ type KV[K g.Lesser[K], V any] struct {
 	Val V
 }
 
+// Adapted from the Princeton Algorithms 4th ed. B-tree implementation.
+
 // Tree implements a B-tree.
 type Tree[K g.Lesser[K], V any] struct {
 	root   *node[K, V]

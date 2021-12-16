@@ -6,17 +6,17 @@ import (
 )
 
 type KV[V any] struct {
-	Key Range
-	Val V
+	Low, High int
+	Val       V
 }
 
-// Range represents an interval over [low, high).
-type Range struct {
+// intrvl represents an interval over [low, high).
+type intrvl struct {
 	Low, High int
 }
 
-func overlaps(i1 Range, low, high int) bool {
-	return i1.Low <= high && i1.High >= low
+func overlaps(i1 intrvl, low, high int) bool {
+	return i1.Low < high && i1.High > low
 }
 
 // Tree implements an interval tree. All intervals must have unique starting
@@ -25,15 +25,20 @@ type Tree[V any] struct {
 	root *node[V]
 }
 
-// Add associates the interval 'key' with 'value'.
-func (t *Tree[V]) Add(key Range, value V) {
-	t.root = t.root.add(key, value)
+// New returns an empty interval tree.
+func New[V any]() *Tree[V] {
+	return &Tree[V]{}
+}
+
+// Put associates the interval 'key' with 'value'.
+func (t *Tree[V]) Put(low, high int, value V) {
+	t.root = t.root.add(intrvl{low, high}, value)
 }
 
 // Overlaps returns all values that overlap with the given range.
-func (t *Tree[V]) Overlaps(key Range) []V {
+func (t *Tree[V]) Overlaps(low, high int) []V {
 	var result []V
-	return t.root.overlaps(key, result)
+	return t.root.overlaps(intrvl{low, high}, result)
 }
 
 // Remove deletes the interval starting at 'pos'.
@@ -41,15 +46,21 @@ func (t *Tree[V]) Remove(pos int) {
 	t.root = t.root.remove(pos)
 }
 
-// Search returns the value associated with the interval starting at 'pos', or
+// Get returns the value associated with the interval starting at 'pos', or
 // 'false' if no such value exists.
-func (t *Tree[V]) Search(pos int) (V, bool) {
+func (t *Tree[V]) Get(pos int) (V, bool) {
 	n := t.root.search(pos)
 	if n == nil {
 		var v V
 		return v, false
 	}
 	return n.value, true
+}
+
+// GetZ is the same as Get but returns the zero value if nothing is found.
+func (t *Tree[V]) GetZ(pos int) V {
+	v, _ := t.Get(pos)
+	return v
 }
 
 // Iter returns the tree iterator.
@@ -62,8 +73,13 @@ func (t *Tree[V]) Height() int {
 	return t.root.getHeight()
 }
 
+// Size returns the number of elements in the tree.
+func (t *Tree[V]) Size() int {
+	return t.root.size()
+}
+
 type node[V any] struct {
-	key   Range
+	key   intrvl
 	value V
 
 	max    int
@@ -72,7 +88,7 @@ type node[V any] struct {
 	right  *node[V]
 }
 
-func (n *node[V]) add(key Range, value V) *node[V] {
+func (n *node[V]) add(key intrvl, value V) *node[V] {
 	if n == nil {
 		return &node[V]{
 			key:    key,
@@ -145,7 +161,7 @@ func (n *node[V]) search(pos int) *node[V] {
 	}
 }
 
-func (n *node[V]) overlaps(key Range, result []V) []V {
+func (n *node[V]) overlaps(key intrvl, result []V) []V {
 	if n == nil {
 		return result
 	}
@@ -185,8 +201,9 @@ func (n *node[V]) iter() iter.Iter[KV[V]] {
 		} else if !didself {
 			didself = true
 			return KV[V]{
-				Key: n.key,
-				Val: n.value,
+				Low:  n.key.Low,
+				High: n.key.High,
+				Val:  n.value,
 			}, true
 		}
 		return right()
@@ -256,4 +273,15 @@ func (n *node[V]) findSmallest() *node[V] {
 	} else {
 		return n
 	}
+}
+
+func (n *node[V]) size() int {
+	s := 1
+	if n.left != nil {
+		s += n.left.size()
+	}
+	if n.right != nil {
+		s += n.right.size()
+	}
+	return s
 }

@@ -1,3 +1,9 @@
+// Package generic provides types and constraints useful for implementing
+// generic data structures. In particular, wrappers of primitive types are
+// provided so that they implement Lesser, Comparable, and Hashable interfaces.
+// This allows generic data structures that can use primitive types or custom
+// user types. This package uses a custom murmur hash function for integer
+// types and FNV1a for strings.
 package generic
 
 import "github.com/segmentio/fasthash/fnv1a"

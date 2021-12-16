@@ -6,7 +6,11 @@
 // types and FNV1a for strings.
 package generic
 
-import "github.com/segmentio/fasthash/fnv1a"
+import (
+	"math"
+
+	"github.com/segmentio/fasthash/fnv1a"
+)
 
 type Uint8 uint8
 type Uint16 uint16
@@ -126,6 +130,26 @@ func (i Int) Equals(other Int) bool {
 }
 func (i Int) Hash() uint64 {
 	return hash(uint64(i))
+}
+
+func (f Float32) Less(other Float32) bool {
+	return f < other
+}
+func (f Float32) Equals(other Float32) bool {
+	return f == other
+}
+func (f Float32) Hash() uint64 {
+	return hash(uint64(math.Float32bits(float32(f))))
+}
+
+func (f Float64) Less(other Float64) bool {
+	return f < other
+}
+func (f Float64) Equals(other Float64) bool {
+	return f == other
+}
+func (f Float64) Hash() uint64 {
+	return hash(math.Float64bits(float64(f)))
 }
 
 func (b Bool) Equals(other Bool) bool {

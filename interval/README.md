@@ -6,7 +6,15 @@
 import "github.com/zyedidia/generic/interval"
 ```
 
-Package interval provides an implementation of an interval tree built using an augmented AVL tree\. An interval tree stores values associated with intervals\, and can efficiently determine which intervals overlap with others\. All intervals must have a unique starting position\. It supports the following operations\, where 'n' is the number of intervals in the tree: \* Put: add an interval to the tree\. Complexity: O\(lg n\)\. \* Get: find an interval with a given starting position\. Complexity O\(lg n\)\. \* Overlaps: find all intervals that overlap with a given interval\. Complexity: O\(lg n \+ m\)\, where 'm' is the size of the result \(number of overlapping intervals found\)\. \* Remove: remove the interval at a given position\. Complexity: O\(lg n\)\.
+Package interval provides an implementation of an interval tree built using an augmented AVL tree\. An interval tree stores values associated with intervals\, and can efficiently determine which intervals overlap with others\. All intervals must have a unique starting position\. It supports the following operations\, where 'n' is the number of intervals in the tree:
+
+\* Put: add an interval to the tree\. Complexity: O\(lg n\)\.
+
+\* Get: find an interval with a given starting position\. Complexity O\(lg n\)\.
+
+\* Overlaps: find all intervals that overlap with a given interval\. Complexity: O\(lg n \+ m\)\, where 'm' is the size of the result \(number of overlapping intervals found\)\.
+
+\* Remove: remove the interval at a given position\. Complexity: O\(lg n\)\.
 
 <details><summary>Example</summary>
 <p>

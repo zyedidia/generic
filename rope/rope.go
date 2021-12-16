@@ -3,10 +3,15 @@
 // and deletion from the middle of the array. It is implemented as an augmented
 // binary search tree. The rope supports the following operations, where 'n' is
 // the number of elements in the rope:
-// * Remove. Complexity O(lg n).
-// * Insert. Complexity O(lg n).
-// * Slice. Complexity O(lg n + m), where m is the size of the slice.
-// * At. Complexity O(lg n).
+//
+// * Remove: O(lg n).
+//
+// * Insert: O(lg n).
+//
+// * Slice: O(lg n + m), where m is the size of the slice.
+//
+// * At: O(lg n).
+//
 // A rope will be slower than an array for lookup, but faster for modification,
 // and lookup is still logarithmic, which can be acceptable for many
 // applications, whereas modification of an array is linear time in the worst

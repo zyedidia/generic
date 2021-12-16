@@ -24,7 +24,7 @@ func (it Iter[T]) ForBreak(fn func(t T) bool) {
 // Slice returns an iterator for a slice.
 func Slice[T any](slice []T) Iter[T] {
 	var i int
-	return func() (t T, done bool) {
+	return func() (t T, ok bool) {
 		if i >= len(slice) {
 			return t, false
 		}
@@ -35,13 +35,26 @@ func Slice[T any](slice []T) Iter[T] {
 	}
 }
 
+// SliceReverse returns an iterator over a slice that iterates in reverse.
+func SliceReverse[T any](slice []T) Iter[T] {
+	i := len(slice) - 1
+	return func() (t T, ok bool) {
+		if i < 0 {
+			return t, false
+		}
+		r := slice[i]
+		i--
+		return r, true
+	}
+}
+
 // KV is a key-value pair used in a standard map.
 type KV[K comparable, V any] struct {
 	Key K
 	Val V
 }
 
-// Map returns an iterator a map.
+// Map returns an iterator for a map.
 func Map[K comparable, V any](m map[K]V) Iter[KV[K, V]] {
 	keys := make([]KV[K, V], 0, len(m))
 	for k, v := range m {

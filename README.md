@@ -23,14 +23,12 @@ The package also includes support for iterators, in the `iter` subpackage.
 Most data structures provide an iterator API, which can be used with some
 convenience functions in `iter`.
 
+See each subpackage for documentation and examples. The top-level `generic`
+package provides some useful types and constraints. See [DOC.md](DOC.md)
+for documentation.
+
 This project is currently in-progress and the API is not stable. A stable
 version will be released when Go 1.18 is released.
-
-Planned additions:
-
-* Better tests
-* Examples
-* Benchmarks
 
 # Discussion
 

@@ -115,6 +115,8 @@ func (t *Cache[K, V]) Capacity() int {
 	return t.capacity
 }
 
+// Iter returns an iterator over all key-value pairs in the cache. It iterates
+// in order of most recently used to least recently used.
 func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]] {
 	return t.lru.Front.Iter()
 }

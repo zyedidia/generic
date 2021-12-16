@@ -5,13 +5,14 @@ import (
 	"github.com/zyedidia/generic/iter"
 )
 
-const maxChildren = 4 // must be even and >= 2
+const maxChildren = 64 // must be even and >= 2
 
 type KV[K g.Lesser[K], V any] struct {
 	Key K
 	Val V
 }
 
+// Tree implements a B-tree.
 type Tree[K g.Lesser[K], V any] struct {
 	root   *node[K, V]
 	height int
@@ -29,20 +30,24 @@ type entry[K g.Lesser[K], V any] struct {
 	next *node[K, V]
 }
 
+// New returns an empty B-tree.
 func New[K g.Lesser[K], V any]() *Tree[K, V] {
 	return &Tree[K, V]{
 		root: &node[K, V]{},
 	}
 }
 
+// Size returns the number of elements in the tree.
 func (t *Tree[K, V]) Size() int {
 	return t.n
 }
 
+// Get returns the value associated with 'key'.
 func (t *Tree[K, V]) Get(key K) (V, bool) {
 	return t.search(t.root, key, t.height)
 }
 
+// GetZ is the same as Get but returns the zero value when nothing is found.
 func (t *Tree[K, V]) GetZ(key K) V {
 	v, _ := t.search(t.root, key, t.height)
 	return v
@@ -70,6 +75,7 @@ func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 	return v, false
 }
 
+// Put associates 'key' with 'val'.
 func (t *Tree[K, V]) Put(key K, val V) {
 	u := t.insert(t.root, key, val, t.height)
 	t.n++
@@ -144,6 +150,8 @@ func (t *Tree[K, V]) split(h *node[K, V]) *node[K, V] {
 	return n
 }
 
+// Iter returns an iterator over all key-value pairs that iterates in sorted
+// order from smallest to largest.
 func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
 	var result []KV[K, V]
 	slice := t.iter(t.root, t.height, result)

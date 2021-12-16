@@ -161,6 +161,7 @@ type KV[K g.Hashable[K], V any] struct {
 	Val V
 }
 
+// Iter returns an iterator over all key-value pairs in the map.
 func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]] {
 	kvs := make([]KV[K, V], 0, m.length)
 	for _, ent := range m.entries {

@@ -10,22 +10,27 @@ type KV[K g.Lesser[K], V any] struct {
 	Val V
 }
 
+// Tree implements an AVL tree.
 type Tree[K g.Lesser[K], V any] struct {
 	root *node[K, V]
 }
 
+// New returns an empty AVL tree.
 func New[K g.Lesser[K], V any]() *Tree[K, V] {
 	return &Tree[K, V]{}
 }
 
+// Add associates 'key' with 'value'.
 func (t *Tree[K, V]) Add(key K, value V) {
 	t.root = t.root.add(key, value)
 }
 
+// Remove removes the value associated with 'key'.
 func (t *Tree[K, V]) Remove(key K) {
 	t.root = t.root.remove(key)
 }
 
+// Search returns the value associated with 'key'.
 func (t *Tree[K, V]) Search(key K) (V, bool) {
 	n := t.root.search(key)
 	if n == nil {
@@ -35,10 +40,13 @@ func (t *Tree[K, V]) Search(key K) (V, bool) {
 	return n.value, true
 }
 
+// Iter returns an iterator over all key-value pairs, iterating in sorted order
+// from smallest to largest.
 func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
 	return t.root.iter()
 }
 
+// Height returns the height of the tree.
 func (t *Tree[K, V]) Height() int {
 	return t.root.getHeight()
 }

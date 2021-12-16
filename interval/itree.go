@@ -10,6 +10,7 @@ type KV[V any] struct {
 	Val V
 }
 
+// Range represents an interval over [low, high).
 type Range struct {
 	Low, High int
 }
@@ -18,23 +19,30 @@ func overlaps(i1 Range, low, high int) bool {
 	return i1.Low <= high && i1.High >= low
 }
 
+// Tree implements an interval tree. All intervals must have unique starting
+// positions.
 type Tree[V any] struct {
 	root *node[V]
 }
 
+// Add associates the interval 'key' with 'value'.
 func (t *Tree[V]) Add(key Range, value V) {
 	t.root = t.root.add(key, value)
 }
 
+// Overlaps returns all values that overlap with the given range.
 func (t *Tree[V]) Overlaps(key Range) []V {
 	var result []V
 	return t.root.overlaps(key, result)
 }
 
-func (t *Tree[V]) Remove(key Range) {
-	t.root = t.root.remove(key)
+// Remove deletes the interval starting at 'pos'.
+func (t *Tree[V]) Remove(pos int) {
+	t.root = t.root.remove(pos)
 }
 
+// Search returns the value associated with the interval starting at 'pos', or
+// 'false' if no such value exists.
 func (t *Tree[V]) Search(pos int) (V, bool) {
 	n := t.root.search(pos)
 	if n == nil {
@@ -44,10 +52,12 @@ func (t *Tree[V]) Search(pos int) (V, bool) {
 	return n.value, true
 }
 
+// Iter returns the tree iterator.
 func (t *Tree[V]) Iter() iter.Iter[KV[V]] {
 	return t.root.iter()
 }
 
+// Height returns the height of the tree.
 func (t *Tree[V]) Height() int {
 	return t.root.getHeight()
 }
@@ -95,20 +105,20 @@ func (n *node[V]) updateMax() {
 	}
 }
 
-func (n *node[V]) remove(key Range) *node[V] {
+func (n *node[V]) remove(pos int) *node[V] {
 	if n == nil {
 		return nil
 	}
-	if key.Low < n.key.Low {
-		n.left = n.left.remove(key)
-	} else if key.Low > n.key.Low {
-		n.right = n.right.remove(key)
+	if pos < n.key.Low {
+		n.left = n.left.remove(pos)
+	} else if pos > n.key.Low {
+		n.right = n.right.remove(pos)
 	} else {
 		if n.left != nil && n.right != nil {
 			rightMinNode := n.right.findSmallest()
 			n.key = rightMinNode.key
 			n.value = rightMinNode.value
-			n.right = n.right.remove(rightMinNode.key)
+			n.right = n.right.remove(rightMinNode.key.Low)
 		} else if n.left != nil {
 			n = n.left
 		} else if n.right != nil {

@@ -18,6 +18,8 @@ import "github.com/zyedidia/generic/stack"
 
 ## type Stack
 
+Stack implements a LIFO stack with peeking\.
+
 ```go
 type Stack[T any] struct {
     // contains filtered or unexported fields
@@ -30,11 +32,15 @@ type Stack[T any] struct {
 func New[T any]() *Stack[T]
 ```
 
+New returns an empty stack\.
+
 ### func \(\*BADRECV\) Peek
 
 ```go
 func (s *Stack[T]) Peek() (t T)
 ```
+
+Peek returns the stack's top element but does not remove it\. If the stack is empty the zero value is returned\.
 
 ### func \(\*BADRECV\) Pop
 
@@ -42,17 +48,23 @@ func (s *Stack[T]) Peek() (t T)
 func (s *Stack[T]) Pop() (t T)
 ```
 
+Pop removes the stack's top element and returns it\. If the stack is empty it returns the zero value\.
+
 ### func \(\*BADRECV\) Push
 
 ```go
 func (s *Stack[T]) Push(value T)
 ```
 
+Push adds 'value' places 'value' at the top of the stack\.
+
 ### func \(\*BADRECV\) Size
 
 ```go
 func (s *Stack[T]) Size() int
 ```
+
+Size returns the number of elements in the stack\.
 
 
 

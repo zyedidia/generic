@@ -2,31 +2,37 @@ package list
 
 import "github.com/zyedidia/generic/iter"
 
+// List implements a doubly-linked list.
 type List[V any] struct {
 	Front, Back *Node[V]
 }
 
+// Node is a node in the linked list.
 type Node[V any] struct {
 	Value      V
 	Prev, Next *Node[V]
 }
 
+// New returns an empty linked list.
 func New[V any]() *List[V] {
 	return &List[V]{}
 }
 
+// PushBack adds 'v' to the end of the list.
 func (l *List[V]) PushBack(v V) {
 	l.PushBackNode(&Node[V]{
 		Value: v,
 	})
 }
 
+// PushFront adds 'v' to the beginning of the list.
 func (l *List[V]) PushFront(v V) {
 	l.PushFrontNode(&Node[V]{
 		Value: v,
 	})
 }
 
+// PushBackNode adds the node 'n' to the back of the list.
 func (l *List[V]) PushBackNode(n *Node[V]) {
 	n.Next = nil
 	n.Prev = l.Back
@@ -38,6 +44,7 @@ func (l *List[V]) PushBackNode(n *Node[V]) {
 	l.Back = n
 }
 
+// PushFrontNode adds the node 'n' to the front of the list.
 func (l *List[V]) PushFrontNode(n *Node[V]) {
 	n.Next = l.Front
 	n.Prev = nil
@@ -49,6 +56,7 @@ func (l *List[V]) PushFrontNode(n *Node[V]) {
 	l.Front = n
 }
 
+// Remove removes the node 'n' from the list.
 func (l *List[V]) Remove(n *Node[V]) {
 	if n.Next != nil {
 		n.Next.Prev = n.Prev
@@ -62,6 +70,8 @@ func (l *List[V]) Remove(n *Node[V]) {
 	}
 }
 
+// Iter returns a forward iterator, going from front to back starting at node
+// 'n'.
 func (n *Node[V]) Iter() iter.Iter[V] {
 	node := n
 	return func() (v V, ok bool) {
@@ -74,6 +84,8 @@ func (n *Node[V]) Iter() iter.Iter[V] {
 	}
 }
 
+// Iter returns a reverse iterator, going from back to front starting at node
+// 'n'.
 func (n *Node[V]) ReverseIter() iter.Iter[V] {
 	node := n
 	return func() (v V, ok bool) {

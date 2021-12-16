@@ -26,9 +26,9 @@ func TestMapIter(t *testing.T) {
 	}
 
 	it := iter.Map(m)
-	for i, ok := it(); ok; i, ok = it() {
+	it.For(func(i iter.KV[string, int]) {
 		if i.Val != m[i.Key] {
 			t.Fatal("incorrect")
 		}
-	}
+	})
 }

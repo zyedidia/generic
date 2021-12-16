@@ -25,9 +25,9 @@ Package interval provides an implementation of an interval tree built using an a
 	tree.Put(0, 10, "foo")
 	tree.Put(5, 9, "bar")
 	tree.Put(10, 11, "baz")
-	tree.Put(-10, -5, "quux")
+	tree.Put(-10, 4, "quux")
 
-	vals := tree.Overlaps(9, 15)
+	vals := tree.Overlaps(4, 10)
 	for _, v := range vals {
 		fmt.Println(v)
 	}

@@ -56,7 +56,7 @@ Pop removes the stack's top element and returns it\. If the stack is empty it re
 func (s *Stack[T]) Push(value T)
 ```
 
-Push adds 'value' places 'value' at the top of the stack\.
+Push places 'value' at the top of the stack\.
 
 ### func \(\*BADRECV\) Size
 

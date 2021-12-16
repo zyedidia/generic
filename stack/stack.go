@@ -12,7 +12,7 @@ func New[T any]() *Stack[T] {
 	}
 }
 
-// Push adds 'value' places 'value' at the top of the stack.
+// Push places 'value' at the top of the stack.
 func (s *Stack[T]) Push(value T) {
 	s.entries = append(s.entries, value)
 }

@@ -1,6 +1,9 @@
 package cache
 
-import "github.com/zyedidia/generic/list"
+import (
+	"github.com/zyedidia/generic/iter"
+	"github.com/zyedidia/generic/list"
+)
 
 // A Cache is an LRU cache for keys and values. Each entry is
 // put into the table with an associated key used for looking up the entry.
@@ -9,22 +12,22 @@ import "github.com/zyedidia/generic/list"
 type Cache[K comparable, V any] struct {
 	size     int
 	capacity int
-	lru      list.List[kv[K, V]]
-	table    map[K]*list.Node[kv[K, V]]
+	lru      list.List[KV[K, V]]
+	table    map[K]*list.Node[KV[K, V]]
 }
 
-type kv[K comparable, V any] struct {
-	key K
-	val V
+type KV[K comparable, V any] struct {
+	Key K
+	Val V
 }
 
-// NewCache returns a new Cache with the given capacity.
-func NewCache[K comparable, V any](capacity int) *Cache[K, V] {
+// New returns a new Cache with the given capacity.
+func New[K comparable, V any](capacity int) *Cache[K, V] {
 	return &Cache[K, V]{
 		size:     0,
 		capacity: capacity,
-		lru:      list.List[kv[K, V]]{},
-		table:    make(map[K]*list.Node[kv[K, V]]),
+		lru:      list.List[KV[K, V]]{},
+		table:    make(map[K]*list.Node[KV[K, V]]),
 	}
 }
 
@@ -34,7 +37,7 @@ func (t *Cache[K, V]) Get(k K) (V, bool) {
 	if n, ok := t.table[k]; ok {
 		t.lru.Remove(n)
 		t.lru.PushFrontNode(n)
-		return n.Value.val, true
+		return n.Value.Val, true
 	}
 	var v V
 	return v, false
@@ -49,7 +52,7 @@ func (t *Cache[K, V]) GetZ(k K) V {
 // Put adds a new key-entry pair to the table.
 func (t *Cache[K, V]) Put(k K, e V) {
 	if n, ok := t.table[k]; ok {
-		n.Value.val = e
+		n.Value.Val = e
 		t.lru.Remove(n)
 		t.lru.PushFrontNode(n)
 		return
@@ -58,10 +61,10 @@ func (t *Cache[K, V]) Put(k K, e V) {
 	if t.size == t.capacity {
 		t.evict()
 	}
-	n := &list.Node[kv[K, V]]{
-		Value: kv[K, V]{
-			key: k,
-			val: e,
+	n := &list.Node[KV[K, V]]{
+		Value: KV[K, V]{
+			Key: k,
+			Val: e,
 		},
 	}
 	t.lru.PushFrontNode(n)
@@ -70,7 +73,7 @@ func (t *Cache[K, V]) Put(k K, e V) {
 }
 
 func (t *Cache[K, V]) evict() {
-	key := t.lru.Back.Value.key
+	key := t.lru.Back.Value.Key
 	t.lru.Remove(t.lru.Back)
 	t.size--
 	delete(t.table, key)
@@ -110,4 +113,8 @@ func (t *Cache[K, V]) Size() int {
 // Capacity returns the maximum capacity of the cache.
 func (t *Cache[K, V]) Capacity() int {
 	return t.capacity
+}
+
+func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]] {
+	return t.lru.Front.Iter()
 }

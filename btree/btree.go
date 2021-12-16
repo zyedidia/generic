@@ -5,7 +5,7 @@ import (
 	"github.com/zyedidia/generic/iter"
 )
 
-const maxChildren = 64 // must be even and greater than 2
+const maxChildren = 4 // must be even and >= 2
 
 type KV[K g.Lesser[K], V any] struct {
 	Key K
@@ -29,7 +29,7 @@ type entry[K g.Lesser[K], V any] struct {
 	next *node[K, V]
 }
 
-func NewTree[K g.Lesser[K], V any]() *Tree[K, V] {
+func New[K g.Lesser[K], V any]() *Tree[K, V] {
 	return &Tree[K, V]{
 		root: &node[K, V]{},
 	}
@@ -145,13 +145,23 @@ func (t *Tree[K, V]) split(h *node[K, V]) *node[K, V] {
 }
 
 func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
-	return t.iter(t.root)
+	var result []KV[K, V]
+	slice := t.iter(t.root, t.height, result)
+	return iter.Slice(slice)
 }
 
-func (t *Tree[K, V]) iter(n *node[K, V]) iter.Iter[KV[K, V]] {
-	if n == nil {
-		return func() (v KV[K, V], ok bool) {
-			return v, false
+func (t *Tree[K, V]) iter(n *node[K, V], height int, result []KV[K, V]) []KV[K, V] {
+	if height == 0 {
+		for j := 0; j < n.m; j++ {
+			result = append(result, KV[K, V]{
+				Key: n.children[j].key,
+				Val: n.children[j].val,
+			})
+		}
+	} else {
+		for j := 0; j < n.m; j++ {
+			result = t.iter(n.children[j].next, height-1, result)
 		}
 	}
+	return result
 }

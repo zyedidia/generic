@@ -1,6 +1,7 @@
 package btree_test
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 
@@ -40,4 +41,21 @@ func TestCrossCheck(t *testing.T) {
 			return v, ok
 		}, t)
 	}
+}
+
+func Example() {
+	tree := btree.New[g.Int, g.String]()
+
+	tree.Put(42, "foo")
+	tree.Put(-10, "bar")
+	tree.Put(0, "baz")
+
+	tree.Iter().For(func(kv btree.KV[g.Int, g.String]) {
+		fmt.Println(kv.Key, kv.Val)
+	})
+
+	// Output:
+	// -10 bar
+	// 0 baz
+	// 42 foo
 }

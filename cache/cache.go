@@ -1,3 +1,7 @@
+// Package cache provides an implementation of a key-value store with a maximum
+// size. Once the maximum size is reached, the cache uses a least-recently-used
+// policy to evict old entries. The cache is implemented as a combined hashmap
+// and linked list. This ensures all operations are constant-time.
 package cache
 
 import (

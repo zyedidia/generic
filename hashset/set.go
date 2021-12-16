@@ -37,7 +37,7 @@ func (s *Set[K]) Remove(val K) {
 
 // Size returns the number of elements in the set.
 func (s *Set[K]) Size() int {
-	return s.m.length
+	return s.m.Size()
 }
 
 // Iter returns an iterator over all values in the set.

@@ -2,6 +2,7 @@ package rope_test
 
 import (
 	"bytes"
+	"fmt"
 	"math/rand"
 	"os"
 	"testing"
@@ -169,4 +170,18 @@ func insert(s []byte, k int, vs []byte) []byte {
 	copy(s2[k:], vs)
 	copy(s2[k+len(vs):], s[k:])
 	return s2
+}
+
+func Example() {
+	r := rope.New[byte]([]byte("hello world"))
+
+	fmt.Println(string(r.At(0)))
+
+	r.Remove(6, r.Len())
+	r.Insert(6, []byte("rope"))
+
+	fmt.Println(string(r.Value()))
+	// Output:
+	// h
+	// hello rope
 }

@@ -1,6 +1,7 @@
 package interval
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -23,14 +24,18 @@ func TestOverlaps(t *testing.T) {
 	}
 }
 
-func TestSimple(t *testing.T) {
+func Example(t *testing.T) {
 	tree := New[string]()
 	tree.Put(0, 10, "foo")
 	tree.Put(5, 9, "bar")
 	tree.Put(10, 11, "baz")
 	tree.Put(-10, -5, "quux")
 
-	if len(tree.Overlaps(9, 15)) != 2 {
-		t.Fatal("wrong number of overlaps")
+	vals := tree.Overlaps(9, 15)
+	for _, v := range vals {
+		fmt.Println(v)
 	}
+	// Output:
+	// foo
+	// bar
 }

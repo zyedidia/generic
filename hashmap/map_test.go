@@ -1,6 +1,7 @@
 package hashmap
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 
@@ -65,4 +66,22 @@ func TestCopy(t *testing.T) {
 	if cpy.GetZ(0) != 42 {
 		t.Fatal("didn't get 42")
 	}
+}
+
+func Example() {
+	m := NewMap[g.String, g.Int](1)
+	m.Put("foo", 42)
+	m.Put("bar", 13)
+
+	fmt.Println(m.GetZ("foo"))
+	fmt.Println(m.GetZ("baz"))
+
+	m.Remove("foo")
+
+	fmt.Println(m.GetZ("foo"))
+
+	// Output:
+	// 42
+	// 0
+	// 0
 }

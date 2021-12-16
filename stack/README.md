@@ -6,6 +6,35 @@
 import "github.com/zyedidia/generic/stack"
 ```
 
+Package stack provides an implementation of a LIFO stack built using a resizing array\.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic/stack"
+)
+
+func main() {
+	st := stack.New[string]()
+	st.Push("foo")
+	st.Push("bar")
+
+	fmt.Println(st.Pop())  // bar
+	fmt.Println(st.Peek()) // foo
+
+	st.Push("baz")
+	fmt.Println(st.Size()) // 2
+}
+```
+
+</p>
+</details>
+
 ## Index
 
 - [type Stack](<#type-stack>)

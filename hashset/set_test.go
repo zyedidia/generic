@@ -1,6 +1,7 @@
 package hashset_test
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 
@@ -43,4 +44,17 @@ func TestCrossCheck(t *testing.T) {
 			return ok
 		}, t)
 	}
+}
+
+func Example() {
+	set := hashset.New[g.String](3)
+	set.Put("foo")
+	set.Put("bar")
+	set.Put("baz")
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("quux"))
+	// Output:
+	// true
+	// false
 }

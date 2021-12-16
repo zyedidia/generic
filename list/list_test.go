@@ -1,24 +1,24 @@
 package list_test
 
 import (
-	"testing"
+	"fmt"
 
 	"github.com/zyedidia/generic/list"
 )
 
-func TestList(t *testing.T) {
+func Example() {
 	l := list.New[int]()
 	l.PushBack(0)
 	l.PushBack(1)
 	l.PushBack(2)
 	l.PushBack(3)
 
-	var s int
 	l.Front.Iter().For(func(i int) {
-		s += i
+		fmt.Println(i)
 	})
-
-	if s != 6 {
-		t.Fatal("incorrect sum")
-	}
+	// Output:
+	// 0
+	// 1
+	// 2
+	// 3
 }

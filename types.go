@@ -2,6 +2,8 @@ package generic
 
 import "github.com/segmentio/fasthash/fnv1a"
 
+type Iter[T any] func() (T, bool)
+
 type Uint8 uint8
 type Uint16 uint16
 type Uint32 uint32

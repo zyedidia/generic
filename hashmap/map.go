@@ -1,6 +1,7 @@
 package hashmap
 
 import g "github.com/zyedidia/generic"
+import "github.com/zyedidia/generic/iter"
 
 type entry[K g.Hashable[K], V any] struct {
 	key    K
@@ -153,24 +154,20 @@ func (m *Map[K, V]) Copy() *Map[K, V] {
 	}
 }
 
-// Keys returns the map's keys.
-func (m *Map[K, V]) Keys() []K {
-	keys := make([]K, m.length)
-
-	for _, ent := range m.entries {
-		if ent.filled {
-			keys = append(keys, ent.key)
-		}
-	}
-
-	return keys
+type KV[K g.Hashable[K], V any] struct {
+	Key K
+	Val V
 }
 
-// Range applies 'fn' to every value in the map.
-func (m *Map[K, V]) Range(fn func(key K, val V)) {
+func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]] {
+	kvs := make([]KV[K, V], 0, m.length)
 	for _, ent := range m.entries {
 		if ent.filled {
-			fn(ent.key, ent.value)
+			kvs = append(kvs, KV[K, V]{
+				Key: ent.key,
+				Val: ent.value,
+			})
 		}
 	}
+	return iter.Slice(kvs)
 }

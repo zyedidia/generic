@@ -11,13 +11,17 @@ structure.
   elements using LRU when full.
 * `hashmap`: a hashmap with linear probing. The main feature is that
   the hashmap can be efficiently copied, using copy-on-write under the hood.
+* `hashset`: a hashset that uses the hashmap as the underlying storage.
 * `interval`: an interval tree, implemented as an augmented AVL tree.
 * `list`: a doubly-linked list.
 * `rope`: a generic rope, which is similar to an array but supports efficient
   insertion and deletion from anywhere in the array. Ropes are typically used
   for arrays of bytes, but this rope is generic.
-* `set`: a hashset that uses the hashmap as the underlying storage.
 * `stack`: a LIFO stack.
+
+The package also includes support for iterators, in the `iter` subpackage.
+Most data structures provide an iterator API, which can be used with some
+convenience functions in `iter`.
 
 This project is currently in-progress.
 

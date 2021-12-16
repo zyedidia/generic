@@ -7,11 +7,11 @@ import (
 )
 
 func checkeq[K g.Hashable[K], V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
-	cm.Range(func(k K, v V) {
-		if ov, ok := get(k); !ok {
-			t.Fatalf("key %v should exist", k)
-		} else if v != ov {
-			t.Fatalf("value mismatch: %v != %v", v, ov)
+	cm.Iter().For(func(kv KV[K, V]) {
+		if ov, ok := get(kv.Key); !ok {
+			t.Fatalf("key %v should exist", kv.Key)
+		} else if kv.Val != ov {
+			t.Fatalf("value mismatch: %v != %v", kv.Val, ov)
 		}
 	})
 }
@@ -25,9 +25,21 @@ func TestLookupMap(t *testing.T) {
 	for i := 0; i < nops; i++ {
 		key := g.Uint64(rand.Uint64())
 		val := rand.Uint32()
+		op := rand.Intn(2)
 
-		stdm[key] = val
-		cowm.Set(key, val)
+		switch op {
+		case 0:
+			stdm[key] = val
+			cowm.Set(key, val)
+		case 1:
+			var del g.Uint64
+			for k := range stdm {
+				del = k
+				break
+			}
+			delete(stdm, del)
+			cowm.Delete(del)
+		}
 
 		checkeq(cowm, func(k g.Uint64) (uint32, bool) {
 			v, ok := stdm[k]

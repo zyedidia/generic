@@ -51,5 +51,5 @@ func Map[K comparable, V any](m map[K]V) Iter[KV[K, V]] {
 		})
 	}
 
-	return Slice[KV[K, V]](keys)
+	return Slice(keys)
 }

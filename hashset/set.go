@@ -1,7 +1,8 @@
-package set
+package hashset
 
 import g "github.com/zyedidia/generic"
 import "github.com/zyedidia/generic/hashmap"
+import "github.com/zyedidia/generic/iter"
 
 type Set[K g.Hashable[K]] struct {
 	m *hashmap.Map[K, struct{}]
@@ -24,4 +25,12 @@ func (s *Set[K]) Has(val K) bool {
 
 func (s *Set[K]) Remove(val K) {
 	s.m.Delete(val)
+}
+
+func (s *Set[K]) Iter() iter.Iter[K] {
+	it := s.m.Iter()
+	return func() (K, bool) {
+		kv, ok := it()
+		return kv.Key, ok
+	}
 }

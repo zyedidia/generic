@@ -1,3 +1,4 @@
+// Package hashset provides an implementation of a hashset.
 package hashset
 
 import (

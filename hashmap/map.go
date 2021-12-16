@@ -1,3 +1,9 @@
+// Package hashmap provides an implementation of a hashmap. The map uses linear
+// probing and automatically resizes. The map can also be efficiently copied,
+// and will perform copies lazily, using copy-on-write. However, the
+// copy-on-write will copy the entire map after the first write. One can imagine
+// a more efficient implementation that would split the map into chunks and use
+// copy-on-write selectively for each chunk.
 package hashmap
 
 import (

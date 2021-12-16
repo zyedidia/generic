@@ -1,3 +1,5 @@
+// Package stack provides an implementation of a LIFO stack built using a
+// resizing array.
 package stack
 
 // Stack implements a LIFO stack with peeking.

@@ -1,3 +1,7 @@
+// Package btree provides an implementation of a B-tree. A B-tree is a
+// logarithmic search tree that maintains key-value pairs in sorted order. It
+// is not binary because it stores more than 2 data entries per node. The
+// branching factor for this tree is 64.
 package btree
 
 import (

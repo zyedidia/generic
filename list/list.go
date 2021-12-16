@@ -1,3 +1,6 @@
+// Package list provides an implementation of a doubly-linked list with a front
+// and back. The individual nodes of the list are publicly exposed so that the
+// user can have fine-grained control over the list.
 package list
 
 import "github.com/zyedidia/generic/iter"

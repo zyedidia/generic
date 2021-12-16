@@ -1,3 +1,7 @@
+// Package avl provides an implementation of an AVL tree. An AVL tree is a
+// self-balancing binary search tree. It stores key-value pairs that are sorted
+// based on the key, and maintains that the tree is always balanced, ensuring
+// logarithmic-time for all operations.
 package avl
 
 import (

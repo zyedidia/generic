@@ -24,12 +24,20 @@ func main() {
 	st.Push("foo")
 	st.Push("bar")
 
-	fmt.Println(st.Pop())  // bar
-	fmt.Println(st.Peek()) // foo
+	fmt.Println(st.Pop())
+	fmt.Println(st.Peek())
 
 	st.Push("baz")
-	fmt.Println(st.Size()) // 2
+	fmt.Println(st.Size())
 }
+```
+
+#### Output
+
+```
+bar
+foo
+2
 ```
 
 </p>

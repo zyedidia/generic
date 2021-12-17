@@ -25,7 +25,7 @@ func (t *Trie[V]) Size() int {
 	return t.n
 }
 
-func (t *Trie[V]) Contains(key []byte) bool {
+func (t *Trie[V]) Contains(key string) bool {
 	if len(key) == 0 {
 		return false
 	}
@@ -33,7 +33,7 @@ func (t *Trie[V]) Contains(key []byte) bool {
 	return ok
 }
 
-func (t *Trie[V]) Get(key []byte) (v V, ok bool) {
+func (t *Trie[V]) Get(key string) (v V, ok bool) {
 	if len(key) == 0 {
 		return v, false
 	}
@@ -44,7 +44,7 @@ func (t *Trie[V]) Get(key []byte) (v V, ok bool) {
 	return x.val, true
 }
 
-func (t *Trie[V]) get(x *node[V], key []byte, d int) *node[V] {
+func (t *Trie[V]) get(x *node[V], key string, d int) *node[V] {
 	if x == nil || len(key) == 0 {
 		return nil
 	}
@@ -60,7 +60,7 @@ func (t *Trie[V]) get(x *node[V], key []byte, d int) *node[V] {
 	}
 }
 
-func (t *Trie[V]) Put(key []byte, val V) {
+func (t *Trie[V]) Put(key string, val V) {
 	if len(key) == 0 {
 		return
 	}
@@ -70,7 +70,7 @@ func (t *Trie[V]) Put(key []byte, val V) {
 	t.root = t.put(t.root, key, val, 0, true)
 }
 
-func (t *Trie[V]) Remove(key []byte) {
+func (t *Trie[V]) Remove(key string) {
 	if len(key) == 0 || !t.Contains(key) {
 		return
 	}
@@ -80,7 +80,7 @@ func (t *Trie[V]) Remove(key []byte) {
 	t.root = t.put(t.root, key, v, 0, false)
 }
 
-func (t *Trie[V]) put(x *node[V], key []byte, val V, d int, valid bool) *node[V] {
+func (t *Trie[V]) put(x *node[V], key string, val V, d int, valid bool) *node[V] {
 	c := key[d]
 	if x == nil {
 		x = &node[V]{
@@ -100,9 +100,9 @@ func (t *Trie[V]) put(x *node[V], key []byte, val V, d int, valid bool) *node[V]
 	return x
 }
 
-func (t *Trie[V]) LongestPrefix(query []byte) []byte {
+func (t *Trie[V]) LongestPrefix(query string) string {
 	if len(query) == 0 {
-		return nil
+		return ""
 	}
 	length := 0
 	x := t.root
@@ -124,11 +124,11 @@ func (t *Trie[V]) LongestPrefix(query []byte) []byte {
 	return query[:length]
 }
 
-func (t *Trie[V]) Keys() (queue [][]byte) {
-	return t.collect(t.root, []byte{}, queue)
+func (t *Trie[V]) Keys() (queue []string) {
+	return t.collect(t.root, "", queue)
 }
 
-func (t *Trie[V]) KeysWithPrefix(prefix []byte) (queue [][]byte) {
+func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string) {
 	if len(prefix) == 0 {
 		return t.Keys()
 	}
@@ -137,20 +137,20 @@ func (t *Trie[V]) KeysWithPrefix(prefix []byte) (queue [][]byte) {
 		return nil
 	}
 	if x.valid {
-		queue = [][]byte{prefix}
+		queue = []string{prefix}
 	}
 	return t.collect(x.mid, prefix, queue)
 }
 
-func (t *Trie[V]) collect(x *node[V], prefix []byte, queue [][]byte) [][]byte {
+func (t *Trie[V]) collect(x *node[V], prefix string, queue []string) []string {
 	if x == nil {
 		return queue
 	}
 	queue = t.collect(x.left, prefix, queue)
 	if x.valid {
-		queue = append(queue, append(prefix, x.c))
+		queue = append(queue, prefix+string(x.c))
 	}
-	queue = t.collect(x.mid, append(prefix, x.c), queue)
+	queue = t.collect(x.mid, prefix+string(x.c), queue)
 	if len(prefix) > 0 {
 		prefix = prefix[:len(prefix)-1]
 	}

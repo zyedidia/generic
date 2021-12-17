@@ -21,3 +21,9 @@ type Hashable[T any] interface {
 	Comparable[T]
 	Hash() uint64
 }
+
+type Sliceable[T any] interface {
+	At(idx int) T
+	Slice(low, high int) Sliceable[T]
+	Append(s Sliceable[T]) Sliceable[T]
+}

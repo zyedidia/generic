@@ -171,6 +171,15 @@ func (s String) Equals(other String) bool {
 func (s String) Hash() uint64 {
 	return fnv1a.HashString64(string(s))
 }
+func (s String) At(idx int) byte {
+	return s[idx]
+}
+func (s String) Slice(low, high int) String {
+	return s[low:high]
+}
+func (s String) Append(other String) String {
+	return s + other
+}
 
 func (b ByteSlice) Equals(other ByteSlice) bool {
 	// TODO: update when stdlib slices package is available

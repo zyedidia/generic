@@ -8,10 +8,15 @@ import (
 
 func Example() {
 	tr := trie.New[int]()
-	tr.Put([]byte("foo"), 1)
-	tr.Put([]byte("fo"), 2)
-	tr.Put([]byte("bar"), 3)
+	tr.Put("foo", 1)
+	tr.Put("fo", 2)
+	tr.Put("bar", 3)
 
-	fmt.Println(tr.Contains([]byte("f")))
-	fmt.Println(tr.KeysWithPrefix([]byte("")))
+	fmt.Println(tr.Contains("f"))
+	fmt.Println(tr.KeysWithPrefix(""))
+	fmt.Println(tr.KeysWithPrefix("f"))
+	// Output:
+	// false
+	// [bar fo foo]
+	// [fo foo]
 }

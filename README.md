@@ -18,6 +18,7 @@ information about each data structure.
   insertion and deletion from anywhere in the array. Ropes are typically used
   for arrays of bytes, but this rope is generic.
 * `stack`: a LIFO stack.
+* `trie`: a ternary search trie.
 
 The package also includes support for iterators, in the `iter` subpackage.
 Most data structures provide an iterator API, which can be used with some
@@ -41,7 +42,7 @@ for discussion include the iterator API, and custom comparable types.
 # Contributing
 
 There are more data structures that may be useful to have, such as bloom
-filters, queues, tries, graph representations, and more kinds of search trees.
+filters, queues, graph representations, and more kinds of search trees.
 If you would like to contribute a data structure please let me know.
 
 It would also be useful to have comprehensive benchmarks for the data

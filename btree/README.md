@@ -54,6 +54,7 @@ func main() {
   - [func (t *Tree[K, V]) GetZ(key K) V](<#func-badrecv-getz>)
   - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (t *Tree[K, V]) Put(key K, val V)](<#func-badrecv-put>)
+  - [func (t *Tree[K, V]) Remove(key K)](<#func-badrecv-remove>)
   - [func (t *Tree[K, V]) Size() int](<#func-badrecv-size>)
 
 
@@ -115,6 +116,14 @@ func (t *Tree[K, V]) Put(key K, val V)
 ```
 
 Put associates 'key' with 'val'\.
+
+### func \(\*BADRECV\) Remove
+
+```go
+func (t *Tree[K, V]) Remove(key K)
+```
+
+Remove removes the value associated with 'key'\.
 
 ### func \(\*BADRECV\) Size
 

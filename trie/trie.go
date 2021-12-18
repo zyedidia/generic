@@ -1,8 +1,9 @@
 // Package trie provides an implementation of a ternary search trie.
 package trie
 
-// This implementation is adapted from the TST implementation in Princeton
-// Algorithms 4th ed.
+// Adapted from the TST implementation in Algorithms, 4th ed., by Robert
+// Sedgewick and Kevin Wayne.
+// https://algs4.cs.princeton.edu/52trie/TST.java.html.
 
 // A Trie is a data structure that supports common prefix operations.
 type Trie[V any] struct {
@@ -17,14 +18,17 @@ type node[V any] struct {
 	valid            bool
 }
 
+// New returns an empty trie.
 func New[V any]() *Trie[V] {
 	return &Trie[V]{}
 }
 
+// Size returns the size of the trie.
 func (t *Trie[V]) Size() int {
 	return t.n
 }
 
+// Contains returns whether this trie contains 'key'.
 func (t *Trie[V]) Contains(key string) bool {
 	if len(key) == 0 {
 		return false
@@ -33,6 +37,7 @@ func (t *Trie[V]) Contains(key string) bool {
 	return ok
 }
 
+// Get returns the value associated with 'key'.
 func (t *Trie[V]) Get(key string) (v V, ok bool) {
 	if len(key) == 0 {
 		return v, false
@@ -60,6 +65,7 @@ func (t *Trie[V]) get(x *node[V], key string, d int) *node[V] {
 	}
 }
 
+// Put associates 'val' with 'key'.
 func (t *Trie[V]) Put(key string, val V) {
 	if len(key) == 0 {
 		return
@@ -70,6 +76,7 @@ func (t *Trie[V]) Put(key string, val V) {
 	t.root = t.put(t.root, key, val, 0, true)
 }
 
+// Remove removes the value associated with 'key'.
 func (t *Trie[V]) Remove(key string) {
 	if len(key) == 0 || !t.Contains(key) {
 		return
@@ -100,6 +107,7 @@ func (t *Trie[V]) put(x *node[V], key string, val V, d int, valid bool) *node[V]
 	return x
 }
 
+// LongestPrefix returns the key that is the longest prefix of 'query'.
 func (t *Trie[V]) LongestPrefix(query string) string {
 	if len(query) == 0 {
 		return ""
@@ -124,10 +132,12 @@ func (t *Trie[V]) LongestPrefix(query string) string {
 	return query[:length]
 }
 
+// Keys returns all keys in the trie.
 func (t *Trie[V]) Keys() (queue []string) {
 	return t.collect(t.root, "", queue)
 }
 
+// KeysWithPrefix returns all keys with prefix 'prefix'.
 func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string) {
 	if len(prefix) == 0 {
 		return t.Keys()

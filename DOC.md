@@ -23,7 +23,13 @@ Package generic provides types and constraints useful for implementing generic d
   - [func (b ByteSlice) Hash() uint64](<#func-byteslice-hash>)
 - [type Comparable](<#type-comparable>)
 - [type Float32](<#type-float32>)
+  - [func (f Float32) Equals(other Float32) bool](<#func-float32-equals>)
+  - [func (f Float32) Hash() uint64](<#func-float32-hash>)
+  - [func (f Float32) Less(other Float32) bool](<#func-float32-less>)
 - [type Float64](<#type-float64>)
+  - [func (f Float64) Equals(other Float64) bool](<#func-float64-equals>)
+  - [func (f Float64) Hash() uint64](<#func-float64-hash>)
+  - [func (f Float64) Less(other Float64) bool](<#func-float64-less>)
 - [type Hashable](<#type-hashable>)
 - [type Int](<#type-int>)
   - [func (i Int) Equals(other Int) bool](<#func-int-equals>)
@@ -46,10 +52,14 @@ Package generic provides types and constraints useful for implementing generic d
   - [func (i Int8) Hash() uint64](<#func-int8-hash>)
   - [func (i Int8) Less(other Int8) bool](<#func-int8-less>)
 - [type Lesser](<#type-lesser>)
+- [type Sliceable](<#type-sliceable>)
 - [type String](<#type-string>)
+  - [func (s String) Append(other String) String](<#func-string-append>)
+  - [func (s String) At(idx int) byte](<#func-string-at>)
   - [func (s String) Equals(other String) bool](<#func-string-equals>)
   - [func (s String) Hash() uint64](<#func-string-hash>)
   - [func (s String) Less(other String) bool](<#func-string-less>)
+  - [func (s String) Slice(low, high int) String](<#func-string-slice>)
 - [type Uint](<#type-uint>)
   - [func (u Uint) Equals(other Uint) bool](<#func-uint-equals>)
   - [func (u Uint) Hash() uint64](<#func-uint-hash>)
@@ -152,10 +162,46 @@ type Comparable[T any] interface {
 type Float32 float32
 ```
 
+### func \(Float32\) Equals
+
+```go
+func (f Float32) Equals(other Float32) bool
+```
+
+### func \(Float32\) Hash
+
+```go
+func (f Float32) Hash() uint64
+```
+
+### func \(Float32\) Less
+
+```go
+func (f Float32) Less(other Float32) bool
+```
+
 ## type Float64
 
 ```go
 type Float64 float64
+```
+
+### func \(Float64\) Equals
+
+```go
+func (f Float64) Equals(other Float64) bool
+```
+
+### func \(Float64\) Hash
+
+```go
+func (f Float64) Hash() uint64
+```
+
+### func \(Float64\) Less
+
+```go
+func (f Float64) Less(other Float64) bool
 ```
 
 ## type Hashable
@@ -295,10 +341,32 @@ type Lesser[T any] interface {
 }
 ```
 
+## type Sliceable
+
+```go
+type Sliceable[T any] interface {
+    At(idx int) T
+    Slice(low, high int) Sliceable[T]
+    Append(s Sliceable[T]) Sliceable[T]
+}
+```
+
 ## type String
 
 ```go
 type String string
+```
+
+### func \(String\) Append
+
+```go
+func (s String) Append(other String) String
+```
+
+### func \(String\) At
+
+```go
+func (s String) At(idx int) byte
 ```
 
 ### func \(String\) Equals
@@ -317,6 +385,12 @@ func (s String) Hash() uint64
 
 ```go
 func (s String) Less(other String) bool
+```
+
+### func \(String\) Slice
+
+```go
+func (s String) Slice(low, high int) String
 ```
 
 ## type Uint

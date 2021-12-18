@@ -9,14 +9,16 @@ import (
 	"github.com/zyedidia/generic/iter"
 )
 
-const maxChildren = 64 // must be even and >= 2
+const maxChildren = 64 // must be even and > 2
 
 type KV[K g.Lesser[K], V any] struct {
 	Key K
 	Val V
 }
 
-// Adapted from the Princeton Algorithms 4th ed. B-tree implementation.
+// Adapted from the B-tree implementation in Algorithms, 4th ed., by Robert
+// Sedgewick and Kevin Wayne.
+// https://algs4.cs.princeton.edu/62btree/BTree.java.html.
 
 // Tree implements a B-tree.
 type Tree[K g.Lesser[K], V any] struct {
@@ -105,6 +107,7 @@ func (t *Tree[K, V]) Put(key K, val V) {
 	t.height++
 }
 
+// Remove removes the value associated with 'key'.
 func (t *Tree[K, V]) Remove(key K) {
 	_, ok := t.Get(key)
 	if !ok {

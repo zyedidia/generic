@@ -29,7 +29,9 @@ package provides some useful types and constraints. See [DOC.md](DOC.md)
 for documentation.
 
 This project is currently in-progress and the API is not stable. A stable
-version will be released when Go 1.18 is released.
+version will be released when Go 1.18 is released. Currently, this serves
+as an experiment to get familiar with Go's generics, and figure out what
+approaches for using them are best.
 
 # Discussion
 
@@ -37,7 +39,7 @@ We are in the very early stages of generics in Go and it is not clear what the
 best practices are. This project is an attempt to become familiar with Go's
 generics and determine what works well and what doesn't. If you have feedback
 on the implementation, please open an issue for further discussion. Some topics
-for discussion include the iterator API, and custom comparable types.
+for discussion include the iterator API, and the use of custom comparable types.
 
 # Contributing
 

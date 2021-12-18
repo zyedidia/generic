@@ -26,7 +26,7 @@ func TestCrossCheck(t *testing.T) {
 	const nops = 1000
 
 	for i := 0; i < nops; i++ {
-		key := rand.Int()
+		key := rand.Intn(100)
 		val := rand.Int()
 		op := rand.Intn(2)
 

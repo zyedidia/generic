@@ -47,12 +47,6 @@ func (t *Cache[K, V]) Get(k K) (V, bool) {
 	return v, false
 }
 
-// GetZ is the same as Get but returns the zero-value if k is not found.
-func (t *Cache[K, V]) GetZ(k K) V {
-	v, _ := t.Get(k)
-	return v
-}
-
 // Put adds a new key-entry pair to the table.
 func (t *Cache[K, V]) Put(k K, e V) {
 	if n, ok := t.table[k]; ok {

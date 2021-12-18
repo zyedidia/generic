@@ -56,13 +56,6 @@ func (m *Map[K, V]) Get(key K) (V, bool) {
 	return v, false
 }
 
-// GetZ returns the value stored for this key, or its zero value if there is no
-// such value.
-func (m *Map[K, V]) GetZ(key K) V {
-	v, _ := m.Get(key)
-	return v
-}
-
 func (m *Map[K, V]) resize(newcap uint64) {
 	newm := Map[K, V]{
 		capacity: newcap,

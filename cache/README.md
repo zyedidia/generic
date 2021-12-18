@@ -50,7 +50,6 @@ func main() {
   - [func New[K comparable, V any](capacity int) *Cache[K, V]](<#func-new>)
   - [func (t *Cache[K, V]) Capacity() int](<#func-badrecv-capacity>)
   - [func (t *Cache[K, V]) Get(k K) (V, bool)](<#func-badrecv-get>)
-  - [func (t *Cache[K, V]) GetZ(k K) V](<#func-badrecv-getz>)
   - [func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (t *Cache[K, V]) Put(k K, e V)](<#func-badrecv-put>)
   - [func (t *Cache[K, V]) Remove(k K)](<#func-badrecv-remove>)
@@ -92,14 +91,6 @@ func (t *Cache[K, V]) Get(k K) (V, bool)
 ```
 
 Get returns the entry associated with a given key\, and a boolean indicating whether the key exists in the table\.
-
-### func \(\*BADRECV\) GetZ
-
-```go
-func (t *Cache[K, V]) GetZ(k K) V
-```
-
-GetZ is the same as Get but returns the zero\-value if k is not found\.
 
 ### func \(\*BADRECV\) Iter
 

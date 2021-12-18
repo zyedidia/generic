@@ -51,7 +51,6 @@ bar
 - [type Tree](<#type-tree>)
   - [func New[V any]() *Tree[V]](<#func-new>)
   - [func (t *Tree[V]) Get(pos int) (V, bool)](<#func-badrecv-get>)
-  - [func (t *Tree[V]) GetZ(pos int) V](<#func-badrecv-getz>)
   - [func (t *Tree[V]) Height() int](<#func-badrecv-height>)
   - [func (t *Tree[V]) Iter() iter.Iter[KV[V]]](<#func-badrecv-iter>)
   - [func (t *Tree[V]) Overlaps(low, high int) []V](<#func-badrecv-overlaps>)
@@ -94,14 +93,6 @@ func (t *Tree[V]) Get(pos int) (V, bool)
 ```
 
 Get returns the value associated with the interval starting at 'pos'\, or 'false' if no such value exists\.
-
-### func \(\*BADRECV\) GetZ
-
-```go
-func (t *Tree[V]) GetZ(pos int) V
-```
-
-GetZ is the same as Get but returns the zero value if nothing is found\.
 
 ### func \(\*BADRECV\) Height
 

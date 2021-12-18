@@ -63,7 +63,7 @@ func TestCopy(t *testing.T) {
 
 	cpy.Put(0, 42)
 
-	if cpy.GetZ(0) != 42 {
+	if v, _ := cpy.Get(0); v != 42 {
 		t.Fatal("didn't get 42")
 	}
 }
@@ -73,15 +73,15 @@ func Example() {
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 
-	fmt.Println(m.GetZ("foo"))
-	fmt.Println(m.GetZ("baz"))
+	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("baz"))
 
 	m.Remove("foo")
 
-	fmt.Println(m.GetZ("foo"))
+	fmt.Println(m.Get("foo"))
 
 	// Output:
-	// 42
-	// 0
-	// 0
+	// 42 true
+	// 0 false
+	// 0 false
 }

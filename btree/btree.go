@@ -56,12 +56,6 @@ func (t *Tree[K, V]) Get(key K) (V, bool) {
 	return t.search(t.root, key, t.height)
 }
 
-// GetZ is the same as Get but returns the zero value when nothing is found.
-func (t *Tree[K, V]) GetZ(key K) V {
-	v, _ := t.search(t.root, key, t.height)
-	return v
-}
-
 func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 	children := x.children
 

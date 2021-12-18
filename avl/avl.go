@@ -44,12 +44,6 @@ func (t *Tree[K, V]) Get(key K) (V, bool) {
 	return n.value, true
 }
 
-// GetZ is the same as Get but returns the zero value when nothing is found.
-func (t *Tree[K, V]) GetZ(key K) V {
-	v, _ := t.Get(key)
-	return v
-}
-
 // Iter returns an iterator over all key-value pairs, iterating in sorted order
 // from smallest to largest.
 func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {

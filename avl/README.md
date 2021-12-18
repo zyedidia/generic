@@ -53,7 +53,6 @@ func main() {
 - [type Tree](<#type-tree>)
   - [func New[K g.Lesser[K], V any]() *Tree[K, V]](<#func-new>)
   - [func (t *Tree[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
-  - [func (t *Tree[K, V]) GetZ(key K) V](<#func-badrecv-getz>)
   - [func (t *Tree[K, V]) Height() int](<#func-badrecv-height>)
   - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (t *Tree[K, V]) Put(key K, value V)](<#func-badrecv-put>)
@@ -95,14 +94,6 @@ func (t *Tree[K, V]) Get(key K) (V, bool)
 ```
 
 Get returns the value associated with 'key'\.
-
-### func \(\*BADRECV\) GetZ
-
-```go
-func (t *Tree[K, V]) GetZ(key K) V
-```
-
-GetZ is the same as Get but returns the zero value when nothing is found\.
 
 ### func \(\*BADRECV\) Height
 

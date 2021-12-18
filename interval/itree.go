@@ -73,12 +73,6 @@ func (t *Tree[V]) Get(pos int) (V, bool) {
 	return n.value, true
 }
 
-// GetZ is the same as Get but returns the zero value if nothing is found.
-func (t *Tree[V]) GetZ(pos int) V {
-	v, _ := t.Get(pos)
-	return v
-}
-
 // Iter returns the tree iterator.
 func (t *Tree[V]) Iter() iter.Iter[KV[V]] {
 	return t.root.iter()

@@ -17,12 +17,12 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 
-	fmt.Println(m.GetZ("foo"))
-	fmt.Println(m.GetZ("baz"))
+	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("baz"))
 
 	m.Remove("foo")
 
-	fmt.Println(m.GetZ("foo"))
+	fmt.Println(m.Get("foo"))
 
 }
 ```
@@ -30,9 +30,9 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 #### Output
 
 ```
-42
-0
-0
+42 true
+0 false
+0 false
 ```
 
 </p>
@@ -45,7 +45,6 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
   - [func NewMap[K g.Hashable[K], V any](capacity uint64) *Map[K, V]](<#func-newmap>)
   - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-badrecv-copy>)
   - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
-  - [func (m *Map[K, V]) GetZ(key K) V](<#func-badrecv-getz>)
   - [func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (m *Map[K, V]) Put(key K, val V)](<#func-badrecv-put>)
   - [func (m *Map[K, V]) Remove(key K)](<#func-badrecv-remove>)
@@ -94,14 +93,6 @@ func (m *Map[K, V]) Get(key K) (V, bool)
 ```
 
 Get returns the value stored for this key\, or false if there is no such value\.
-
-### func \(\*BADRECV\) GetZ
-
-```go
-func (m *Map[K, V]) GetZ(key K) V
-```
-
-GetZ returns the value stored for this key\, or its zero value if there is no such value\.
 
 ### func \(\*BADRECV\) Iter
 

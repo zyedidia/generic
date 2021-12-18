@@ -38,8 +38,33 @@ approaches for using them are best.
 We are in the very early stages of generics in Go and it is not clear what the
 best practices are. This project is an attempt to become familiar with Go's
 generics and determine what works well and what doesn't. If you have feedback
-on the implementation, please open an issue for further discussion. Some topics
-for discussion include the iterator API, and the use of custom comparable types.
+on the implementation, please open an issue for further discussion.
+
+Some notes:
+
+* Iterators: the `iter` package provides an API for data structures to return
+  iterators. The main use of this is to loop over all elements in a data
+  structure and apply some function. Is this better than just returning all
+  key-value pairs as a slice, or using a `.Each(callback)` function? In some
+  cases, the iterator can be lazy, which is better than returning a slice
+  because the slice has to be pre-computed. But for other data structures
+  (especially trees), it is difficult to make a lazy iterator, and the iterator
+  doesn't provide much benefit (has to either pre-allocate a slice of results,
+  or allocate many function closures). The `.Each` approach doesn't ever
+  allocate anything but is less flexible than the other approaches. At the
+  moment I am not sure iterators are worth having.
+
+* Custom key types: since there are no methods defined on primitive types, and
+  no operators defined on user types, it is impossible to make a generic data
+  structures/function with operator constraints that accepts both primitive and
+  user types. Should we use the primitive type constraints as much as possible,
+  or is having wrapper types for all primitive types like in this package the
+  correct approach? For example, the AVL tree constrains keys to be
+  `generic.Lesser[T]`, but they could be `constraints.ordered`. This would mean
+  keys must be primitive types. As it currently stands, to use a primitive type
+  as a key with `generic.Lesser[T]`, one must use the appropriate wrapper from
+  the `generic` package: `generic.Int(x)`. Note: in some cases, we must always
+  use a wrapper, such as for data structures that require hashable keys.
 
 # Contributing
 

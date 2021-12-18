@@ -26,14 +26,22 @@ func TestCrossCheck(t *testing.T) {
 	const nops = 1000
 
 	for i := 0; i < nops; i++ {
-		key := rand.Int()
+		key := rand.Intn(100)
 		val := rand.Int()
-		op := rand.Intn(1)
+		op := rand.Intn(2)
 
 		switch op {
 		case 0:
 			stdm[key] = val
 			tree.Put(g.Int(key), val)
+		case 1:
+			var del int
+			for k := range stdm {
+				del = k
+				break
+			}
+			delete(stdm, del)
+			tree.Remove(g.Int(del))
 		}
 
 		checkeq(tree, func(k g.Int) (int, bool) {

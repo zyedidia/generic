@@ -31,9 +31,10 @@ type node[K g.Lesser[K], V any] struct {
 }
 
 type entry[K g.Lesser[K], V any] struct {
-	key  K
-	val  V
-	next *node[K, V]
+	key   K
+	val   V
+	valid bool
+	next  *node[K, V]
 }
 
 // New returns an empty B-tree.
@@ -66,7 +67,7 @@ func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 		// leaf node
 		for j := 0; j < x.m; j++ {
 			if g.Compare(key, children[j].key) == 0 {
-				return children[j].val, true
+				return children[j].val, children[j].valid
 			}
 		}
 	} else {
@@ -83,7 +84,7 @@ func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 
 // Put associates 'key' with 'val'.
 func (t *Tree[K, V]) Put(key K, val V) {
-	u := t.insert(t.root, key, val, t.height)
+	u := t.insert(t.root, key, val, t.height, true)
 	t.n++
 	if u == nil {
 		return
@@ -104,17 +105,33 @@ func (t *Tree[K, V]) Put(key K, val V) {
 	t.height++
 }
 
-func (t *Tree[K, V]) insert(h *node[K, V], key K, val V, height int) *node[K, V] {
+func (t *Tree[K, V]) Remove(key K) {
+	_, ok := t.Get(key)
+	if !ok {
+		return
+	}
+	var v V
+	// insert a tombstone to remove an existing value
+	t.insert(t.root, key, v, t.height, false)
+	t.n--
+}
+
+func (t *Tree[K, V]) insert(h *node[K, V], key K, val V, height int, valid bool) *node[K, V] {
 	ent := entry[K, V]{
-		key: key,
-		val: val,
+		key:   key,
+		val:   val,
+		valid: valid,
 	}
 
 	var j int
 	if height == 0 {
 		// leaf node
 		for j = 0; j < h.m; j++ {
-			if g.Compare(key, h.children[j].key) < 0 {
+			if g.Compare(key, h.children[j].key) == 0 {
+				h.children[j].val = val
+				h.children[j].valid = valid
+				return nil
+			} else if g.Compare(key, h.children[j].key) < 0 {
 				break
 			}
 		}
@@ -122,12 +139,13 @@ func (t *Tree[K, V]) insert(h *node[K, V], key K, val V, height int) *node[K, V]
 		// internal node
 		for j = 0; j < h.m; j++ {
 			if (j+1 == h.m) || g.Compare(key, h.children[j+1].key) < 0 {
-				u := t.insert(h.children[j].next, key, val, height-1)
+				u := t.insert(h.children[j].next, key, val, height-1, valid)
 				if u == nil {
 					return nil
 				}
 				j++
 				ent.key = u.children[0].key
+				ent.valid = false
 				ent.next = u
 				break
 			}
@@ -167,6 +185,9 @@ func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
 func (t *Tree[K, V]) iter(n *node[K, V], height int, result []KV[K, V]) []KV[K, V] {
 	if height == 0 {
 		for j := 0; j < n.m; j++ {
+			if !n.children[j].valid {
+				continue
+			}
 			result = append(result, KV[K, V]{
 				Key: n.children[j].key,
 				Val: n.children[j].val,

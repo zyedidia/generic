@@ -13,10 +13,7 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 
 ```go
 {
-	m := NewMap[string, int](1, Ops[string]{
-		Equals: g.Equals[string],
-		Hash:   g.HashString,
-	})
+	m := NewMap[string, int](1, g.Equals[string], g.HashString)
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 
@@ -45,14 +42,13 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 
 - [type KV](<#type-kv>)
 - [type Map](<#type-map>)
-  - [func NewMap[K, V any](capacity uint64, ops Ops[K]) *Map[K, V]](<#func-newmap>)
+  - [func NewMap[K, V any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Map[K, V]](<#func-newmap>)
   - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-badrecv-copy>)
   - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
   - [func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (m *Map[K, V]) Put(key K, val V)](<#func-badrecv-put>)
   - [func (m *Map[K, V]) Remove(key K)](<#func-badrecv-remove>)
   - [func (m *Map[K, V]) Size() int](<#func-badrecv-size>)
-- [type Ops](<#type-ops>)
 
 
 ## type KV
@@ -77,7 +73,7 @@ type Map[K, V any] struct {
 ### func NewMap
 
 ```go
-func NewMap[K, V any](capacity uint64, ops Ops[K]) *Map[K, V]
+func NewMap[K, V any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Map[K, V]
 ```
 
 NewMap constructs a new map with the given capacity\.
@@ -129,15 +125,6 @@ func (m *Map[K, V]) Size() int
 ```
 
 Size returns the number of items in the map\.
-
-## type Ops
-
-```go
-type Ops[T any] struct {
-    Equals func(a, b T) bool
-    Hash   func(t T) uint64
-}
-```
 
 
 

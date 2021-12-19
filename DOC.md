@@ -6,11 +6,9 @@
 import "github.com/zyedidia/generic"
 ```
 
-Package generic provides types and constraints useful for implementing generic data structures\. In particular\, wrappers of primitive types are provided so that they implement Lesser\, Comparable\, and Hashable interfaces\. This allows generic data structures that can use primitive types or custom user types\. This package uses a custom murmur hash function for integer types and FNV1a for strings\.
-
 ## Index
 
-- [func Compare[T any](a, b T, less func(a, b T) bool) int](<#func-compare>)
+- [func Compare[T any](a, b T, less Lesser[T]) int](<#func-compare>)
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
 - [func HashBytes(b []byte) uint64](<#func-hashbytes>)
 - [func HashInt(i int) uint64](<#func-hashint>)
@@ -26,9 +24,9 @@ Package generic provides types and constraints useful for implementing generic d
 - [func HashUint8(u uint8) uint64](<#func-hashuint8>)
 - [func Less[T constraints.Ordered](a, b T) bool](<#func-less>)
 - [func Max[T constraints.Ordered](a, b T) T](<#func-max>)
-- [func MaxFunc[T any](a, b T, less func(a, b T) bool) T](<#func-maxfunc>)
+- [func MaxFunc[T any](a, b T, less Lesser[T]) T](<#func-maxfunc>)
 - [func Min[T constraints.Ordered](a, b T) T](<#func-min>)
-- [func MinFunc[T any](a, b T, less func(a, b T) bool) T](<#func-minfunc>)
+- [func MinFunc[T any](a, b T, less Lesser[T]) T](<#func-minfunc>)
 - [type Equaler](<#type-equaler>)
 - [type Hasher](<#type-hasher>)
 - [type Lesser](<#type-lesser>)
@@ -37,14 +35,24 @@ Package generic provides types and constraints useful for implementing generic d
 ## func Compare
 
 ```go
-func Compare[T any](a, b T, less func(a, b T) bool) int
+func Compare[T any](a, b T, less Lesser[T]) int
 ```
+
+Compare uses a less function to determine the ordering of 'a' and 'b'\. It returns:
+
+\* \-1 if a \< b
+
+\* 1 if a \> b
+
+\* 0 if a == b
 
 ## func Equals
 
 ```go
 func Equals[T comparable](a, b T) bool
 ```
+
+Equals wraps the '==' operator for comparable types\.
 
 ## func HashBytes
 
@@ -124,17 +132,23 @@ func HashUint8(u uint8) uint64
 func Less[T constraints.Ordered](a, b T) bool
 ```
 
+Less wraps the '\<' operator for ordered types\.
+
 ## func Max
 
 ```go
 func Max[T constraints.Ordered](a, b T) T
 ```
 
+Max returns the max of a and b\.
+
 ## func MaxFunc
 
 ```go
-func MaxFunc[T any](a, b T, less func(a, b T) bool) T
+func MaxFunc[T any](a, b T, less Lesser[T]) T
 ```
+
+MaxFunc returns the max of a and b using the less func\.
 
 ## func Min
 
@@ -142,13 +156,19 @@ func MaxFunc[T any](a, b T, less func(a, b T) bool) T
 func Min[T constraints.Ordered](a, b T) T
 ```
 
+Min returns the min of a and b\.
+
 ## func MinFunc
 
 ```go
-func MinFunc[T any](a, b T, less func(a, b T) bool) T
+func MinFunc[T any](a, b T, less Lesser[T]) T
 ```
 
+MinFunc returns the min of a and b using the less func\.
+
 ## type Equaler
+
+Equaler is a function that returns whether 'a' and 'b' are equal\.
 
 ```go
 type Equaler[T any] func(a, b T) bool
@@ -156,11 +176,15 @@ type Equaler[T any] func(a, b T) bool
 
 ## type Hasher
 
+Hasher is a function that returns the hash of 't'\.
+
 ```go
 type Hasher[T any] func(t T) uint64
 ```
 
 ## type Lesser
+
+Lesser is a function that returns whether 'a' is less than 'b'\.
 
 ```go
 type Lesser[T any] func(a, b T) bool

@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/zyedidia/generic/list"
@@ -144,12 +145,61 @@ func TestFIFOQueueIter(t *testing.T) {
 	q := nonEmptyQueue()
 
 	i := 1
-	q.Iter().For(func (item int) {
+	q.Iter().For(func(item int) {
 		if item != i {
 			t.Errorf("got %v, want %v", item, i)
 		}
 		i++
 	})
+}
+
+func ExampleFIFOQueue_Enqueue() {
+	q := New[int]()
+	q.Enqueue(1)
+}
+
+func ExampleFIFOQueue_Peek() {
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Peek())
+	// Output: 1
+}
+
+func ExampleFIFOQueue_Dequeue() {
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Dequeue())
+	// Output: 1
+}
+
+func ExampleFIFOQueue_Iter() {
+	q := New[int]()
+	q.Enqueue(1)
+	q.Enqueue(2)
+
+	q.Iter().For(func(i int) {
+		fmt.Println(i)
+	})
+	// Output:
+	// 1
+	// 2
+}
+
+func ExampleFIFOQueue_Empty_empty() {
+	q := New[int]()
+
+	fmt.Println(q.Empty())
+	// Output: true
+}
+
+func ExampleFIFOQueue_Empty_nonempty() {
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Empty())
+	// Output: false
 }
 
 func emptyQueue() *FIFOQueue[int] {

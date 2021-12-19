@@ -6,14 +6,14 @@ import (
 	"github.com/segmentio/fasthash/fnv1a"
 )
 
-// Equaler is a function that returns whether 'a' and 'b' are equal.
-type Equaler[T any] func(a, b T) bool
+// EqualsFn is a function that returns whether 'a' and 'b' are equal.
+type EqualsFn[T any] func(a, b T) bool
 
-// Lesser is a function that returns whether 'a' is less than 'b'.
-type Lesser[T any] func(a, b T) bool
+// LessFn is a function that returns whether 'a' is less than 'b'.
+type LessFn[T any] func(a, b T) bool
 
-// Hasher is a function that returns the hash of 't'.
-type Hasher[T any] func(t T) uint64
+// HashFn is a function that returns the hash of 't'.
+type HashFn[T any] func(t T) uint64
 
 // Equals wraps the '==' operator for comparable types.
 func Equals[T comparable](a, b T) bool {
@@ -32,7 +32,7 @@ func Less[T constraints.Ordered](a, b T) bool {
 // * 1 if a > b
 //
 // * 0 if a == b
-func Compare[T any](a, b T, less Lesser[T]) int {
+func Compare[T any](a, b T, less LessFn[T]) int {
 	if less(a, b) {
 		return -1
 	} else if less(b, a) {
@@ -58,7 +58,7 @@ func Min[T constraints.Ordered](a, b T) T {
 }
 
 // MaxFunc returns the max of a and b using the less func.
-func MaxFunc[T any](a, b T, less Lesser[T]) T {
+func MaxFunc[T any](a, b T, less LessFn[T]) T {
 	if less(b, a) {
 		return a
 	}
@@ -66,7 +66,7 @@ func MaxFunc[T any](a, b T, less Lesser[T]) T {
 }
 
 // MinFunc returns the min of a and b using the less func.
-func MinFunc[T any](a, b T, less Lesser[T]) T {
+func MinFunc[T any](a, b T, less LessFn[T]) T {
 	if less(a, b) {
 		return a
 	}

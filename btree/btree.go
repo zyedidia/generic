@@ -26,7 +26,7 @@ type Tree[K any, V any] struct {
 	height int
 	n      int
 
-	less g.Lesser[K]
+	less g.LessFn[K]
 }
 
 type node[K any, V any] struct {
@@ -42,7 +42,7 @@ type entry[K any, V any] struct {
 }
 
 // New returns an empty B-tree.
-func New[K any, V any](less g.Lesser[K]) *Tree[K, V] {
+func New[K any, V any](less g.LessFn[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		root: &node[K, V]{},
 		less: less,

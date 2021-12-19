@@ -17,11 +17,11 @@ type KV[K any, V any] struct {
 // Tree implements an AVL tree.
 type Tree[K any, V any] struct {
 	root *node[K, V]
-	less g.Lesser[K]
+	less g.LessFn[K]
 }
 
 // New returns an empty AVL tree.
-func New[K any, V any](less g.Lesser[K]) *Tree[K, V] {
+func New[K any, V any](less g.LessFn[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		less: less,
 	}
@@ -72,7 +72,7 @@ type node[K any, V any] struct {
 	right  *node[K, V]
 }
 
-func (n *node[K, V]) add(key K, value V, less g.Lesser[K]) *node[K, V] {
+func (n *node[K, V]) add(key K, value V, less g.LessFn[K]) *node[K, V] {
 	if n == nil {
 		return &node[K, V]{
 			key:    key,
@@ -93,7 +93,7 @@ func (n *node[K, V]) add(key K, value V, less g.Lesser[K]) *node[K, V] {
 	return n.rebalanceTree()
 }
 
-func (n *node[K, V]) remove(key K, less g.Lesser[K]) *node[K, V] {
+func (n *node[K, V]) remove(key K, less g.LessFn[K]) *node[K, V] {
 	if n == nil {
 		return nil
 	}
@@ -120,7 +120,7 @@ func (n *node[K, V]) remove(key K, less g.Lesser[K]) *node[K, V] {
 	return n.rebalanceTree()
 }
 
-func (n *node[K, V]) search(key K, less g.Lesser[K]) *node[K, V] {
+func (n *node[K, V]) search(key K, less g.LessFn[K]) *node[K, V] {
 	if n == nil {
 		return nil
 	}

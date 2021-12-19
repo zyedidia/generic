@@ -8,7 +8,7 @@ import "github.com/zyedidia/generic"
 
 ## Index
 
-- [func Compare[T any](a, b T, less Lesser[T]) int](<#func-compare>)
+- [func Compare[T any](a, b T, less LessFn[T]) int](<#func-compare>)
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
 - [func HashBytes(b []byte) uint64](<#func-hashbytes>)
 - [func HashInt(i int) uint64](<#func-hashint>)
@@ -24,18 +24,18 @@ import "github.com/zyedidia/generic"
 - [func HashUint8(u uint8) uint64](<#func-hashuint8>)
 - [func Less[T constraints.Ordered](a, b T) bool](<#func-less>)
 - [func Max[T constraints.Ordered](a, b T) T](<#func-max>)
-- [func MaxFunc[T any](a, b T, less Lesser[T]) T](<#func-maxfunc>)
+- [func MaxFunc[T any](a, b T, less LessFn[T]) T](<#func-maxfunc>)
 - [func Min[T constraints.Ordered](a, b T) T](<#func-min>)
-- [func MinFunc[T any](a, b T, less Lesser[T]) T](<#func-minfunc>)
-- [type Equaler](<#type-equaler>)
-- [type Hasher](<#type-hasher>)
-- [type Lesser](<#type-lesser>)
+- [func MinFunc[T any](a, b T, less LessFn[T]) T](<#func-minfunc>)
+- [type EqualsFn](<#type-equalsfn>)
+- [type HashFn](<#type-hashfn>)
+- [type LessFn](<#type-lessfn>)
 
 
 ## func Compare
 
 ```go
-func Compare[T any](a, b T, less Lesser[T]) int
+func Compare[T any](a, b T, less LessFn[T]) int
 ```
 
 Compare uses a less function to determine the ordering of 'a' and 'b'\. It returns:
@@ -145,7 +145,7 @@ Max returns the max of a and b\.
 ## func MaxFunc
 
 ```go
-func MaxFunc[T any](a, b T, less Lesser[T]) T
+func MaxFunc[T any](a, b T, less LessFn[T]) T
 ```
 
 MaxFunc returns the max of a and b using the less func\.
@@ -161,33 +161,33 @@ Min returns the min of a and b\.
 ## func MinFunc
 
 ```go
-func MinFunc[T any](a, b T, less Lesser[T]) T
+func MinFunc[T any](a, b T, less LessFn[T]) T
 ```
 
 MinFunc returns the min of a and b using the less func\.
 
-## type Equaler
+## type EqualsFn
 
-Equaler is a function that returns whether 'a' and 'b' are equal\.
+EqualsFn is a function that returns whether 'a' and 'b' are equal\.
 
 ```go
-type Equaler[T any] func(a, b T) bool
+type EqualsFn[T any] func(a, b T) bool
 ```
 
-## type Hasher
+## type HashFn
 
-Hasher is a function that returns the hash of 't'\.
+HashFn is a function that returns the hash of 't'\.
 
 ```go
-type Hasher[T any] func(t T) uint64
+type HashFn[T any] func(t T) uint64
 ```
 
-## type Lesser
+## type LessFn
 
-Lesser is a function that returns whether 'a' is less than 'b'\.
+LessFn is a function that returns whether 'a' is less than 'b'\.
 
 ```go
-type Lesser[T any] func(a, b T) bool
+type LessFn[T any] func(a, b T) bool
 ```
 
 

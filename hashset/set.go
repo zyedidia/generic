@@ -13,7 +13,7 @@ type Set[K any] struct {
 }
 
 // New returns an empty hashset.
-func New[K any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Set[K] {
+func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K] {
 	return &Set[K]{
 		m: hashmap.NewMap[K, struct{}](capacity, equals, hash),
 	}

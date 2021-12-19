@@ -51,7 +51,7 @@ func main() {
 
 - [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
-  - [func New[K any, V any](less g.Lesser[K]) *Tree[K, V]](<#func-new>)
+  - [func New[K any, V any](less g.LessFn[K]) *Tree[K, V]](<#func-new>)
   - [func (t *Tree[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
   - [func (t *Tree[K, V]) Height() int](<#func-badrecv-height>)
   - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
@@ -82,7 +82,7 @@ type Tree[K any, V any] struct {
 ### func New
 
 ```go
-func New[K any, V any](less g.Lesser[K]) *Tree[K, V]
+func New[K any, V any](less g.LessFn[K]) *Tree[K, V]
 ```
 
 New returns an empty AVL tree\.

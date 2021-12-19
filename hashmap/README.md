@@ -42,7 +42,7 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 
 - [type KV](<#type-kv>)
 - [type Map](<#type-map>)
-  - [func NewMap[K, V any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Map[K, V]](<#func-newmap>)
+  - [func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]](<#func-newmap>)
   - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-badrecv-copy>)
   - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
   - [func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
@@ -73,7 +73,7 @@ type Map[K, V any] struct {
 ### func NewMap
 
 ```go
-func NewMap[K, V any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Map[K, V]
+func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]
 ```
 
 NewMap constructs a new map with the given capacity\.

@@ -44,7 +44,7 @@ false
 ## Index
 
 - [type Set](<#type-set>)
-  - [func New[K any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Set[K]](<#func-new>)
+  - [func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]](<#func-new>)
   - [func (s *Set[K]) Has(val K) bool](<#func-badrecv-has>)
   - [func (s *Set[K]) Iter() iter.Iter[K]](<#func-badrecv-iter>)
   - [func (s *Set[K]) Put(val K)](<#func-badrecv-put>)
@@ -65,7 +65,7 @@ type Set[K any] struct {
 ### func New
 
 ```go
-func New[K any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Set[K]
+func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
 ```
 
 New returns an empty hashset\.

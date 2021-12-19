@@ -56,17 +56,13 @@ Some notes:
   allocate anything but is less flexible than the other approaches. At the
   moment I am not sure iterators are worth having.
 
-* Custom key types: since there are no methods defined on primitive types, and
-  no operators defined on user types, it is impossible to make a generic data
-  structures/function with operator constraints that accepts both primitive and
-  user types. Should we use the primitive type constraints as much as possible,
-  or is having wrapper types for all primitive types like in this package the
-  correct approach? For example, the AVL tree constrains keys to be
-  `generic.Lesser[T]`, but they could be `constraints.ordered`. This would mean
-  keys must be primitive types. As it currently stands, to use a primitive type
-  as a key with `generic.Lesser[T]`, one must use the appropriate wrapper from
-  the `generic` package: `generic.Int(x)`. Note: in some cases, we must always
-  use a wrapper, such as for data structures that require hashable keys.
+* Supporting custom key types: I originally used wrappers and constraints to
+  handle custom key types, but after trying out operator functions (passing
+  `less`, `hash`, `equals` functions during construction), I think this
+  provides a better unification between supporting custom types and primitive
+  types. One downside is that there is a bit of additional boilerplate when
+  creating a new data structure that uses primitive types, but this is quite
+  minimal.
 
 # Contributing
 

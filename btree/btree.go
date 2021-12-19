@@ -11,7 +11,7 @@ import (
 
 const maxChildren = 64 // must be even and > 2
 
-type KV[K any, V any] struct {
+type KV[K, V any] struct {
 	Key K
 	Val V
 }
@@ -21,7 +21,7 @@ type KV[K any, V any] struct {
 // https://algs4.cs.princeton.edu/62btree/BTree.java.html.
 
 // Tree implements a B-tree.
-type Tree[K any, V any] struct {
+type Tree[K, V any] struct {
 	root   *node[K, V]
 	height int
 	n      int
@@ -29,12 +29,12 @@ type Tree[K any, V any] struct {
 	less g.LessFn[K]
 }
 
-type node[K any, V any] struct {
+type node[K, V any] struct {
 	m        int
 	children [maxChildren]entry[K, V]
 }
 
-type entry[K any, V any] struct {
+type entry[K, V any] struct {
 	key   K
 	val   V
 	valid bool
@@ -42,7 +42,7 @@ type entry[K any, V any] struct {
 }
 
 // New returns an empty B-tree.
-func New[K any, V any](less g.LessFn[K]) *Tree[K, V] {
+func New[K, V any](less g.LessFn[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		root: &node[K, V]{},
 		less: less,

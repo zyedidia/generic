@@ -49,7 +49,7 @@ func main() {
 
 - [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
-  - [func New[K any, V any](less g.LessFn[K]) *Tree[K, V]](<#func-new>)
+  - [func New[K, V any](less g.LessFn[K]) *Tree[K, V]](<#func-new>)
   - [func (t *Tree[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
   - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
   - [func (t *Tree[K, V]) Put(key K, val V)](<#func-badrecv-put>)
@@ -60,7 +60,7 @@ func main() {
 ## type KV
 
 ```go
-type KV[K any, V any] struct {
+type KV[K, V any] struct {
     Key K
     Val V
 }
@@ -71,7 +71,7 @@ type KV[K any, V any] struct {
 Tree implements a B\-tree\.
 
 ```go
-type Tree[K any, V any] struct {
+type Tree[K, V any] struct {
     // contains filtered or unexported fields
 }
 ```
@@ -79,7 +79,7 @@ type Tree[K any, V any] struct {
 ### func New
 
 ```go
-func New[K any, V any](less g.LessFn[K]) *Tree[K, V]
+func New[K, V any](less g.LessFn[K]) *Tree[K, V]
 ```
 
 New returns an empty B\-tree\.

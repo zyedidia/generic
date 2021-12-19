@@ -9,19 +9,19 @@ import (
 	"github.com/zyedidia/generic/iter"
 )
 
-type KV[K any, V any] struct {
+type KV[K, V any] struct {
 	Key K
 	Val V
 }
 
 // Tree implements an AVL tree.
-type Tree[K any, V any] struct {
+type Tree[K, V any] struct {
 	root *node[K, V]
 	less g.LessFn[K]
 }
 
 // New returns an empty AVL tree.
-func New[K any, V any](less g.LessFn[K]) *Tree[K, V] {
+func New[K, V any](less g.LessFn[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		less: less,
 	}
@@ -63,7 +63,7 @@ func (t *Tree[K, V]) Size() int {
 	return t.root.size()
 }
 
-type node[K any, V any] struct {
+type node[K, V any] struct {
 	key   K
 	value V
 

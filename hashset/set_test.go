@@ -6,10 +6,11 @@ import (
 	"testing"
 
 	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/hashmap"
 	"github.com/zyedidia/generic/hashset"
 )
 
-func checkeq[K g.Hashable[K]](set *hashset.Set[K], get func(k K) bool, t *testing.T) {
+func checkeq[K any](set *hashset.Set[K], get func(k K) bool, t *testing.T) {
 	set.Iter().For(func(key K) {
 		if !get(key) {
 			t.Fatalf("value %v should be in the set", key)
@@ -19,7 +20,10 @@ func checkeq[K g.Hashable[K]](set *hashset.Set[K], get func(k K) bool, t *testin
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[int]bool)
-	set := hashset.New[g.Int](1)
+	set := hashset.New[int](1, hashmap.Ops[int]{
+		Equals: g.Equals[int],
+		Hash:   g.HashInt,
+	})
 
 	const nops = 1000
 	for i := 0; i < nops; i++ {
@@ -28,7 +32,7 @@ func TestCrossCheck(t *testing.T) {
 		case 0:
 			key := rand.Int()
 			stdm[key] = true
-			set.Put(g.Int(key))
+			set.Put(key)
 		case 1:
 			var del int
 			for k := range stdm {
@@ -36,10 +40,10 @@ func TestCrossCheck(t *testing.T) {
 				break
 			}
 			delete(stdm, del)
-			set.Remove(g.Int(del))
+			set.Remove(del)
 		}
 
-		checkeq(set, func(k g.Int) bool {
+		checkeq(set, func(k int) bool {
 			_, ok := stdm[int(k)]
 			return ok
 		}, t)
@@ -47,7 +51,10 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func Example() {
-	set := hashset.New[g.String](3)
+	set := hashset.New[string](3, hashmap.Ops[string]{
+		Equals: g.Equals[string],
+		Hash:   g.HashString,
+	})
 	set.Put("foo")
 	set.Put("bar")
 	set.Put("baz")

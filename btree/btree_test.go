@@ -9,7 +9,7 @@ import (
 	"github.com/zyedidia/generic/btree"
 )
 
-func checkeq[K g.Lesser[K], V comparable](cm *btree.Tree[K, V], get func(k K) (V, bool), t *testing.T) {
+func checkeq[K any, V comparable](cm *btree.Tree[K, V], get func(k K) (V, bool), t *testing.T) {
 	cm.Iter().For(func(kv btree.KV[K, V]) {
 		if ov, ok := get(kv.Key); !ok {
 			t.Fatalf("key %v should exist", kv.Key)
@@ -21,7 +21,7 @@ func checkeq[K g.Lesser[K], V comparable](cm *btree.Tree[K, V], get func(k K) (V
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[int]int)
-	tree := btree.New[g.Int, int]()
+	tree := btree.New[int, int](g.Less[int])
 
 	const nops = 1000
 
@@ -33,7 +33,7 @@ func TestCrossCheck(t *testing.T) {
 		switch op {
 		case 0:
 			stdm[key] = val
-			tree.Put(g.Int(key), val)
+			tree.Put(key, val)
 		case 1:
 			var del int
 			for k := range stdm {
@@ -41,10 +41,10 @@ func TestCrossCheck(t *testing.T) {
 				break
 			}
 			delete(stdm, del)
-			tree.Remove(g.Int(del))
+			tree.Remove(del)
 		}
 
-		checkeq(tree, func(k g.Int) (int, bool) {
+		checkeq(tree, func(k int) (int, bool) {
 			v, ok := stdm[int(k)]
 			return v, ok
 		}, t)
@@ -52,13 +52,13 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func Example() {
-	tree := btree.New[g.Int, g.String]()
+	tree := btree.New[int, string](g.Less[int])
 
 	tree.Put(42, "foo")
 	tree.Put(-10, "bar")
 	tree.Put(0, "baz")
 
-	tree.Iter().For(func(kv btree.KV[g.Int, g.String]) {
+	tree.Iter().For(func(kv btree.KV[int, string]) {
 		fmt.Println(kv.Key, kv.Val)
 	})
 

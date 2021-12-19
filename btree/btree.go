@@ -11,7 +11,7 @@ import (
 
 const maxChildren = 64 // must be even and > 2
 
-type KV[K g.Lesser[K], V any] struct {
+type KV[K any, V any] struct {
 	Key K
 	Val V
 }
@@ -21,18 +21,20 @@ type KV[K g.Lesser[K], V any] struct {
 // https://algs4.cs.princeton.edu/62btree/BTree.java.html.
 
 // Tree implements a B-tree.
-type Tree[K g.Lesser[K], V any] struct {
+type Tree[K any, V any] struct {
 	root   *node[K, V]
 	height int
 	n      int
+
+	less g.Lesser[K]
 }
 
-type node[K g.Lesser[K], V any] struct {
+type node[K any, V any] struct {
 	m        int
 	children [maxChildren]entry[K, V]
 }
 
-type entry[K g.Lesser[K], V any] struct {
+type entry[K any, V any] struct {
 	key   K
 	val   V
 	valid bool
@@ -40,9 +42,10 @@ type entry[K g.Lesser[K], V any] struct {
 }
 
 // New returns an empty B-tree.
-func New[K g.Lesser[K], V any]() *Tree[K, V] {
+func New[K any, V any](less g.Lesser[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		root: &node[K, V]{},
+		less: less,
 	}
 }
 
@@ -62,14 +65,14 @@ func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 	if height == 0 {
 		// leaf node
 		for j := 0; j < x.m; j++ {
-			if g.Compare(key, children[j].key) == 0 {
+			if g.Compare(key, children[j].key, t.less) == 0 {
 				return children[j].val, children[j].valid
 			}
 		}
 	} else {
 		// internal node
 		for j := 0; j < x.m; j++ {
-			if x.m == j+1 || g.Compare(key, children[j+1].key) < 0 {
+			if x.m == j+1 || g.Compare(key, children[j+1].key, t.less) < 0 {
 				return t.search(children[j].next, key, height-1)
 			}
 		}
@@ -124,18 +127,18 @@ func (t *Tree[K, V]) insert(h *node[K, V], key K, val V, height int, valid bool)
 	if height == 0 {
 		// leaf node
 		for j = 0; j < h.m; j++ {
-			if g.Compare(key, h.children[j].key) == 0 {
+			if g.Compare(key, h.children[j].key, t.less) == 0 {
 				h.children[j].val = val
 				h.children[j].valid = valid
 				return nil
-			} else if g.Compare(key, h.children[j].key) < 0 {
+			} else if g.Compare(key, h.children[j].key, t.less) < 0 {
 				break
 			}
 		}
 	} else {
 		// internal node
 		for j = 0; j < h.m; j++ {
-			if (j+1 == h.m) || g.Compare(key, h.children[j+1].key) < 0 {
+			if (j+1 == h.m) || g.Compare(key, h.children[j+1].key, t.less) < 0 {
 				u := t.insert(h.children[j].next, key, val, height-1, valid)
 				if u == nil {
 					return nil

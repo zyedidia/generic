@@ -44,6 +44,12 @@ func HashInt16(i int32) uint64 {
 func HashInt8(i int32) uint64 {
 	return hash(uint64(i))
 }
+func HashInt(i int) uint64 {
+	return hash(uint64(i))
+}
+func HashUint(i uint) uint64 {
+	return hash(uint64(i))
+}
 func HashString(s string) uint64 {
 	return fnv1a.HashString64(s)
 }

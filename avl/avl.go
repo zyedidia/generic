@@ -9,34 +9,37 @@ import (
 	"github.com/zyedidia/generic/iter"
 )
 
-type KV[K g.Lesser[K], V any] struct {
+type KV[K any, V any] struct {
 	Key K
 	Val V
 }
 
 // Tree implements an AVL tree.
-type Tree[K g.Lesser[K], V any] struct {
+type Tree[K any, V any] struct {
 	root *node[K, V]
+	less g.Lesser[K]
 }
 
 // New returns an empty AVL tree.
-func New[K g.Lesser[K], V any]() *Tree[K, V] {
-	return &Tree[K, V]{}
+func New[K any, V any](less g.Lesser[K]) *Tree[K, V] {
+	return &Tree[K, V]{
+		less: less,
+	}
 }
 
 // Put associates 'key' with 'value'.
 func (t *Tree[K, V]) Put(key K, value V) {
-	t.root = t.root.add(key, value)
+	t.root = t.root.add(key, value, t.less)
 }
 
 // Remove removes the value associated with 'key'.
 func (t *Tree[K, V]) Remove(key K) {
-	t.root = t.root.remove(key)
+	t.root = t.root.remove(key, t.less)
 }
 
 // Get returns the value associated with 'key'.
 func (t *Tree[K, V]) Get(key K) (V, bool) {
-	n := t.root.search(key)
+	n := t.root.search(key, t.less)
 	if n == nil {
 		var v V
 		return v, false
@@ -60,7 +63,7 @@ func (t *Tree[K, V]) Size() int {
 	return t.root.size()
 }
 
-type node[K g.Lesser[K], V any] struct {
+type node[K any, V any] struct {
 	key   K
 	value V
 
@@ -69,7 +72,7 @@ type node[K g.Lesser[K], V any] struct {
 	right  *node[K, V]
 }
 
-func (n *node[K, V]) add(key K, value V) *node[K, V] {
+func (n *node[K, V]) add(key K, value V, less g.Lesser[K]) *node[K, V] {
 	if n == nil {
 		return &node[K, V]{
 			key:    key,
@@ -80,30 +83,30 @@ func (n *node[K, V]) add(key K, value V) *node[K, V] {
 		}
 	}
 
-	if g.Compare(key, n.key) < 0 {
-		n.left = n.left.add(key, value)
-	} else if g.Compare(key, n.key) > 0 {
-		n.right = n.right.add(key, value)
+	if g.Compare(key, n.key, less) < 0 {
+		n.left = n.left.add(key, value, less)
+	} else if g.Compare(key, n.key, less) > 0 {
+		n.right = n.right.add(key, value, less)
 	} else {
 		n.value = value
 	}
 	return n.rebalanceTree()
 }
 
-func (n *node[K, V]) remove(key K) *node[K, V] {
+func (n *node[K, V]) remove(key K, less g.Lesser[K]) *node[K, V] {
 	if n == nil {
 		return nil
 	}
-	if g.Compare(key, n.key) < 0 {
-		n.left = n.left.remove(key)
-	} else if g.Compare(key, n.key) > 0 {
-		n.right = n.right.remove(key)
+	if g.Compare(key, n.key, less) < 0 {
+		n.left = n.left.remove(key, less)
+	} else if g.Compare(key, n.key, less) > 0 {
+		n.right = n.right.remove(key, less)
 	} else {
 		if n.left != nil && n.right != nil {
 			rightMinNode := n.right.findSmallest()
 			n.key = rightMinNode.key
 			n.value = rightMinNode.value
-			n.right = n.right.remove(rightMinNode.key)
+			n.right = n.right.remove(rightMinNode.key, less)
 		} else if n.left != nil {
 			n = n.left
 		} else if n.right != nil {
@@ -117,14 +120,14 @@ func (n *node[K, V]) remove(key K) *node[K, V] {
 	return n.rebalanceTree()
 }
 
-func (n *node[K, V]) search(key K) *node[K, V] {
+func (n *node[K, V]) search(key K, less g.Lesser[K]) *node[K, V] {
 	if n == nil {
 		return nil
 	}
-	if g.Compare(key, n.key) < 0 {
-		return n.left.search(key)
-	} else if g.Compare(key, n.key) > 0 {
-		return n.right.search(key)
+	if g.Compare(key, n.key, less) < 0 {
+		return n.left.search(key, less)
+	} else if g.Compare(key, n.key, less) > 0 {
+		return n.right.search(key, less)
 	} else {
 		return n
 	}

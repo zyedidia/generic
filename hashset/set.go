@@ -2,20 +2,19 @@
 package hashset
 
 import (
-	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/hashmap"
 	"github.com/zyedidia/generic/iter"
 )
 
 // Set implements a hashset, using the hashmap as the underlying storage.
-type Set[K g.Hashable[K]] struct {
+type Set[K any] struct {
 	m *hashmap.Map[K, struct{}]
 }
 
 // New returns an empty hashset.
-func New[K g.Hashable[K]](capacity uint64) *Set[K] {
+func New[K any](capacity uint64, ops hashmap.Ops[K]) *Set[K] {
 	return &Set[K]{
-		m: hashmap.NewMap[K, struct{}](capacity),
+		m: hashmap.NewMap[K, struct{}](capacity, ops),
 	}
 }
 

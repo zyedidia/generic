@@ -10,82 +10,118 @@ Package generic provides types and constraints useful for implementing generic d
 
 ## Index
 
-- [func Compare[T Lesser[T]](a, b T) int](<#func-compare>)
+- [func Compare[T any](a, b T, less func(a, b T) bool) int](<#func-compare>)
+- [func Equals[T comparable](a, b T) bool](<#func-equals>)
+- [func HashBytes(b []byte) uint64](<#func-hashbytes>)
+- [func HashInt(i int) uint64](<#func-hashint>)
+- [func HashInt16(i int32) uint64](<#func-hashint16>)
+- [func HashInt32(i int32) uint64](<#func-hashint32>)
+- [func HashInt64(i int64) uint64](<#func-hashint64>)
+- [func HashInt8(i int32) uint64](<#func-hashint8>)
+- [func HashString(s string) uint64](<#func-hashstring>)
+- [func HashUint(i uint) uint64](<#func-hashuint>)
+- [func HashUint16(u uint16) uint64](<#func-hashuint16>)
+- [func HashUint32(u uint32) uint64](<#func-hashuint32>)
+- [func HashUint64(u uint64) uint64](<#func-hashuint64>)
+- [func HashUint8(u uint8) uint64](<#func-hashuint8>)
+- [func Less[T constraints.Ordered](a, b T) bool](<#func-less>)
 - [func Max[T constraints.Ordered](a, b T) T](<#func-max>)
-- [func MaxG[T Lesser[T]](a, b T) T](<#func-maxg>)
+- [func MaxFunc[T any](a, b T, less func(a, b T) bool) T](<#func-maxfunc>)
 - [func Min[T constraints.Ordered](a, b T) T](<#func-min>)
-- [func MinG[T Lesser[T]](a, b T) T](<#func-ming>)
-- [type Bool](<#type-bool>)
-  - [func (b Bool) Equals(other Bool) bool](<#func-bool-equals>)
-  - [func (b Bool) Hash() uint64](<#func-bool-hash>)
-- [type ByteSlice](<#type-byteslice>)
-  - [func (b ByteSlice) Equals(other ByteSlice) bool](<#func-byteslice-equals>)
-  - [func (b ByteSlice) Hash() uint64](<#func-byteslice-hash>)
-- [type Comparable](<#type-comparable>)
-- [type Float32](<#type-float32>)
-  - [func (f Float32) Equals(other Float32) bool](<#func-float32-equals>)
-  - [func (f Float32) Hash() uint64](<#func-float32-hash>)
-  - [func (f Float32) Less(other Float32) bool](<#func-float32-less>)
-- [type Float64](<#type-float64>)
-  - [func (f Float64) Equals(other Float64) bool](<#func-float64-equals>)
-  - [func (f Float64) Hash() uint64](<#func-float64-hash>)
-  - [func (f Float64) Less(other Float64) bool](<#func-float64-less>)
-- [type Hashable](<#type-hashable>)
-- [type Int](<#type-int>)
-  - [func (i Int) Equals(other Int) bool](<#func-int-equals>)
-  - [func (i Int) Hash() uint64](<#func-int-hash>)
-  - [func (i Int) Less(other Int) bool](<#func-int-less>)
-- [type Int16](<#type-int16>)
-  - [func (i Int16) Equals(other Int16) bool](<#func-int16-equals>)
-  - [func (i Int16) Hash() uint64](<#func-int16-hash>)
-  - [func (i Int16) Less(other Int16) bool](<#func-int16-less>)
-- [type Int32](<#type-int32>)
-  - [func (i Int32) Equals(other Int32) bool](<#func-int32-equals>)
-  - [func (i Int32) Hash() uint64](<#func-int32-hash>)
-  - [func (i Int32) Less(other Int32) bool](<#func-int32-less>)
-- [type Int64](<#type-int64>)
-  - [func (i Int64) Equals(other Int64) bool](<#func-int64-equals>)
-  - [func (i Int64) Hash() uint64](<#func-int64-hash>)
-  - [func (i Int64) Less(other Int64) bool](<#func-int64-less>)
-- [type Int8](<#type-int8>)
-  - [func (i Int8) Equals(other Int8) bool](<#func-int8-equals>)
-  - [func (i Int8) Hash() uint64](<#func-int8-hash>)
-  - [func (i Int8) Less(other Int8) bool](<#func-int8-less>)
+- [func MinFunc[T any](a, b T, less func(a, b T) bool) T](<#func-minfunc>)
+- [type Equaler](<#type-equaler>)
+- [type Hasher](<#type-hasher>)
 - [type Lesser](<#type-lesser>)
-- [type Sliceable](<#type-sliceable>)
-- [type String](<#type-string>)
-  - [func (s String) Append(other String) String](<#func-string-append>)
-  - [func (s String) At(idx int) byte](<#func-string-at>)
-  - [func (s String) Equals(other String) bool](<#func-string-equals>)
-  - [func (s String) Hash() uint64](<#func-string-hash>)
-  - [func (s String) Less(other String) bool](<#func-string-less>)
-  - [func (s String) Slice(low, high int) String](<#func-string-slice>)
-- [type Uint](<#type-uint>)
-  - [func (u Uint) Equals(other Uint) bool](<#func-uint-equals>)
-  - [func (u Uint) Hash() uint64](<#func-uint-hash>)
-  - [func (u Uint) Less(other Uint) bool](<#func-uint-less>)
-- [type Uint16](<#type-uint16>)
-  - [func (u Uint16) Equals(other Uint16) bool](<#func-uint16-equals>)
-  - [func (u Uint16) Hash() uint64](<#func-uint16-hash>)
-  - [func (u Uint16) Less(other Uint16) bool](<#func-uint16-less>)
-- [type Uint32](<#type-uint32>)
-  - [func (u Uint32) Equals(other Uint32) bool](<#func-uint32-equals>)
-  - [func (u Uint32) Hash() uint64](<#func-uint32-hash>)
-  - [func (u Uint32) Less(other Uint32) bool](<#func-uint32-less>)
-- [type Uint64](<#type-uint64>)
-  - [func (u Uint64) Equals(other Uint64) bool](<#func-uint64-equals>)
-  - [func (u Uint64) Hash() uint64](<#func-uint64-hash>)
-  - [func (u Uint64) Less(other Uint64) bool](<#func-uint64-less>)
-- [type Uint8](<#type-uint8>)
-  - [func (u Uint8) Equals(other Uint8) bool](<#func-uint8-equals>)
-  - [func (u Uint8) Hash() uint64](<#func-uint8-hash>)
-  - [func (u Uint8) Less(other Uint8) bool](<#func-uint8-less>)
 
 
 ## func Compare
 
 ```go
-func Compare[T Lesser[T]](a, b T) int
+func Compare[T any](a, b T, less func(a, b T) bool) int
+```
+
+## func Equals
+
+```go
+func Equals[T comparable](a, b T) bool
+```
+
+## func HashBytes
+
+```go
+func HashBytes(b []byte) uint64
+```
+
+## func HashInt
+
+```go
+func HashInt(i int) uint64
+```
+
+## func HashInt16
+
+```go
+func HashInt16(i int32) uint64
+```
+
+## func HashInt32
+
+```go
+func HashInt32(i int32) uint64
+```
+
+## func HashInt64
+
+```go
+func HashInt64(i int64) uint64
+```
+
+## func HashInt8
+
+```go
+func HashInt8(i int32) uint64
+```
+
+## func HashString
+
+```go
+func HashString(s string) uint64
+```
+
+## func HashUint
+
+```go
+func HashUint(i uint) uint64
+```
+
+## func HashUint16
+
+```go
+func HashUint16(u uint16) uint64
+```
+
+## func HashUint32
+
+```go
+func HashUint32(u uint32) uint64
+```
+
+## func HashUint64
+
+```go
+func HashUint64(u uint64) uint64
+```
+
+## func HashUint8
+
+```go
+func HashUint8(u uint8) uint64
+```
+
+## func Less
+
+```go
+func Less[T constraints.Ordered](a, b T) bool
 ```
 
 ## func Max
@@ -94,10 +130,10 @@ func Compare[T Lesser[T]](a, b T) int
 func Max[T constraints.Ordered](a, b T) T
 ```
 
-## func MaxG
+## func MaxFunc
 
 ```go
-func MaxG[T Lesser[T]](a, b T) T
+func MaxFunc[T any](a, b T, less func(a, b T) bool) T
 ```
 
 ## func Min
@@ -106,411 +142,28 @@ func MaxG[T Lesser[T]](a, b T) T
 func Min[T constraints.Ordered](a, b T) T
 ```
 
-## func MinG
+## func MinFunc
 
 ```go
-func MinG[T Lesser[T]](a, b T) T
+func MinFunc[T any](a, b T, less func(a, b T) bool) T
 ```
 
-## type Bool
+## type Equaler
 
 ```go
-type Bool bool
+type Equaler[T any] func(a, b T) bool
 ```
 
-### func \(Bool\) Equals
+## type Hasher
 
 ```go
-func (b Bool) Equals(other Bool) bool
-```
-
-### func \(Bool\) Hash
-
-```go
-func (b Bool) Hash() uint64
-```
-
-## type ByteSlice
-
-```go
-type ByteSlice []byte
-```
-
-### func \(ByteSlice\) Equals
-
-```go
-func (b ByteSlice) Equals(other ByteSlice) bool
-```
-
-### func \(ByteSlice\) Hash
-
-```go
-func (b ByteSlice) Hash() uint64
-```
-
-## type Comparable
-
-```go
-type Comparable[T any] interface {
-    Equals(other T) bool
-}
-```
-
-## type Float32
-
-```go
-type Float32 float32
-```
-
-### func \(Float32\) Equals
-
-```go
-func (f Float32) Equals(other Float32) bool
-```
-
-### func \(Float32\) Hash
-
-```go
-func (f Float32) Hash() uint64
-```
-
-### func \(Float32\) Less
-
-```go
-func (f Float32) Less(other Float32) bool
-```
-
-## type Float64
-
-```go
-type Float64 float64
-```
-
-### func \(Float64\) Equals
-
-```go
-func (f Float64) Equals(other Float64) bool
-```
-
-### func \(Float64\) Hash
-
-```go
-func (f Float64) Hash() uint64
-```
-
-### func \(Float64\) Less
-
-```go
-func (f Float64) Less(other Float64) bool
-```
-
-## type Hashable
-
-```go
-type Hashable[T any] interface {
-    Hash() uint64
-    // contains filtered or unexported methods
-}
-```
-
-## type Int
-
-```go
-type Int int
-```
-
-### func \(Int\) Equals
-
-```go
-func (i Int) Equals(other Int) bool
-```
-
-### func \(Int\) Hash
-
-```go
-func (i Int) Hash() uint64
-```
-
-### func \(Int\) Less
-
-```go
-func (i Int) Less(other Int) bool
-```
-
-## type Int16
-
-```go
-type Int16 int16
-```
-
-### func \(Int16\) Equals
-
-```go
-func (i Int16) Equals(other Int16) bool
-```
-
-### func \(Int16\) Hash
-
-```go
-func (i Int16) Hash() uint64
-```
-
-### func \(Int16\) Less
-
-```go
-func (i Int16) Less(other Int16) bool
-```
-
-## type Int32
-
-```go
-type Int32 int32
-```
-
-### func \(Int32\) Equals
-
-```go
-func (i Int32) Equals(other Int32) bool
-```
-
-### func \(Int32\) Hash
-
-```go
-func (i Int32) Hash() uint64
-```
-
-### func \(Int32\) Less
-
-```go
-func (i Int32) Less(other Int32) bool
-```
-
-## type Int64
-
-```go
-type Int64 int64
-```
-
-### func \(Int64\) Equals
-
-```go
-func (i Int64) Equals(other Int64) bool
-```
-
-### func \(Int64\) Hash
-
-```go
-func (i Int64) Hash() uint64
-```
-
-### func \(Int64\) Less
-
-```go
-func (i Int64) Less(other Int64) bool
-```
-
-## type Int8
-
-```go
-type Int8 int8
-```
-
-### func \(Int8\) Equals
-
-```go
-func (i Int8) Equals(other Int8) bool
-```
-
-### func \(Int8\) Hash
-
-```go
-func (i Int8) Hash() uint64
-```
-
-### func \(Int8\) Less
-
-```go
-func (i Int8) Less(other Int8) bool
+type Hasher[T any] func(t T) uint64
 ```
 
 ## type Lesser
 
 ```go
-type Lesser[T any] interface {
-    Less(other T) bool
-}
-```
-
-## type Sliceable
-
-```go
-type Sliceable[T any] interface {
-    At(idx int) T
-    Slice(low, high int) Sliceable[T]
-    Append(s Sliceable[T]) Sliceable[T]
-}
-```
-
-## type String
-
-```go
-type String string
-```
-
-### func \(String\) Append
-
-```go
-func (s String) Append(other String) String
-```
-
-### func \(String\) At
-
-```go
-func (s String) At(idx int) byte
-```
-
-### func \(String\) Equals
-
-```go
-func (s String) Equals(other String) bool
-```
-
-### func \(String\) Hash
-
-```go
-func (s String) Hash() uint64
-```
-
-### func \(String\) Less
-
-```go
-func (s String) Less(other String) bool
-```
-
-### func \(String\) Slice
-
-```go
-func (s String) Slice(low, high int) String
-```
-
-## type Uint
-
-```go
-type Uint uint
-```
-
-### func \(Uint\) Equals
-
-```go
-func (u Uint) Equals(other Uint) bool
-```
-
-### func \(Uint\) Hash
-
-```go
-func (u Uint) Hash() uint64
-```
-
-### func \(Uint\) Less
-
-```go
-func (u Uint) Less(other Uint) bool
-```
-
-## type Uint16
-
-```go
-type Uint16 uint16
-```
-
-### func \(Uint16\) Equals
-
-```go
-func (u Uint16) Equals(other Uint16) bool
-```
-
-### func \(Uint16\) Hash
-
-```go
-func (u Uint16) Hash() uint64
-```
-
-### func \(Uint16\) Less
-
-```go
-func (u Uint16) Less(other Uint16) bool
-```
-
-## type Uint32
-
-```go
-type Uint32 uint32
-```
-
-### func \(Uint32\) Equals
-
-```go
-func (u Uint32) Equals(other Uint32) bool
-```
-
-### func \(Uint32\) Hash
-
-```go
-func (u Uint32) Hash() uint64
-```
-
-### func \(Uint32\) Less
-
-```go
-func (u Uint32) Less(other Uint32) bool
-```
-
-## type Uint64
-
-```go
-type Uint64 uint64
-```
-
-### func \(Uint64\) Equals
-
-```go
-func (u Uint64) Equals(other Uint64) bool
-```
-
-### func \(Uint64\) Hash
-
-```go
-func (u Uint64) Hash() uint64
-```
-
-### func \(Uint64\) Less
-
-```go
-func (u Uint64) Less(other Uint64) bool
-```
-
-## type Uint8
-
-```go
-type Uint8 uint8
-```
-
-### func \(Uint8\) Equals
-
-```go
-func (u Uint8) Equals(other Uint8) bool
-```
-
-### func \(Uint8\) Hash
-
-```go
-func (u Uint8) Hash() uint64
-```
-
-### func \(Uint8\) Less
-
-```go
-func (u Uint8) Less(other Uint8) bool
+type Lesser[T any] func(a, b T) bool
 ```
 
 

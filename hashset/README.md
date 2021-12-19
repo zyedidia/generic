@@ -17,11 +17,15 @@ package main
 import (
 	"fmt"
 	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/hashmap"
 	"github.com/zyedidia/generic/hashset"
 )
 
 func main() {
-	set := hashset.New[g.String](3)
+	set := hashset.New[string](3, hashmap.Ops[string]{
+		Equals: g.Equals[string],
+		Hash:   g.HashString,
+	})
 	set.Put("foo")
 	set.Put("bar")
 	set.Put("baz")
@@ -44,7 +48,7 @@ false
 ## Index
 
 - [type Set](<#type-set>)
-  - [func New[K g.Hashable[K]](capacity uint64) *Set[K]](<#func-new>)
+  - [func New[K any](capacity uint64, ops hashmap.Ops[K]) *Set[K]](<#func-new>)
   - [func (s *Set[K]) Has(val K) bool](<#func-badrecv-has>)
   - [func (s *Set[K]) Iter() iter.Iter[K]](<#func-badrecv-iter>)
   - [func (s *Set[K]) Put(val K)](<#func-badrecv-put>)
@@ -57,7 +61,7 @@ false
 Set implements a hashset\, using the hashmap as the underlying storage\.
 
 ```go
-type Set[K g.Hashable[K]] struct {
+type Set[K any] struct {
     // contains filtered or unexported fields
 }
 ```
@@ -65,7 +69,7 @@ type Set[K g.Hashable[K]] struct {
 ### func New
 
 ```go
-func New[K g.Hashable[K]](capacity uint64) *Set[K]
+func New[K any](capacity uint64, ops hashmap.Ops[K]) *Set[K]
 ```
 
 New returns an empty hashset\.

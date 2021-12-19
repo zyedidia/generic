@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	g "github.com/zyedidia/generic"
-	"github.com/zyedidia/generic/hashmap"
 	"github.com/zyedidia/generic/hashset"
 )
 
@@ -20,10 +19,7 @@ func checkeq[K any](set *hashset.Set[K], get func(k K) bool, t *testing.T) {
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[int]bool)
-	set := hashset.New[int](1, hashmap.Ops[int]{
-		Equals: g.Equals[int],
-		Hash:   g.HashInt,
-	})
+	set := hashset.New[int](1, g.Equals[int], g.HashInt)
 
 	const nops = 1000
 	for i := 0; i < nops; i++ {
@@ -51,10 +47,7 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func Example() {
-	set := hashset.New[string](3, hashmap.Ops[string]{
-		Equals: g.Equals[string],
-		Hash:   g.HashString,
-	})
+	set := hashset.New[string](3, g.Equals[string], g.HashString)
 	set.Put("foo")
 	set.Put("bar")
 	set.Put("baz")

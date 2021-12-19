@@ -2,6 +2,7 @@
 package hashset
 
 import (
+	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/hashmap"
 	"github.com/zyedidia/generic/iter"
 )
@@ -12,9 +13,9 @@ type Set[K any] struct {
 }
 
 // New returns an empty hashset.
-func New[K any](capacity uint64, ops hashmap.Ops[K]) *Set[K] {
+func New[K any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Set[K] {
 	return &Set[K]{
-		m: hashmap.NewMap[K, struct{}](capacity, ops),
+		m: hashmap.NewMap[K, struct{}](capacity, equals, hash),
 	}
 }
 

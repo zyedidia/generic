@@ -7,6 +7,7 @@
 package hashmap
 
 import (
+	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/iter"
 )
 
@@ -23,34 +24,37 @@ type Map[K, V any] struct {
 	length   uint64
 	readonly bool
 
-	ops Ops[K]
+	ops ops[K]
 }
 
-type Ops[T any] struct {
-	Equals func(a, b T) bool
-	Hash   func(t T) uint64
+type ops[T any] struct {
+	equals func(a, b T) bool
+	hash   func(t T) uint64
 }
 
 // NewMap constructs a new map with the given capacity.
-func NewMap[K, V any](capacity uint64, ops Ops[K]) *Map[K, V] {
+func NewMap[K, V any](capacity uint64, equals g.Equaler[K], hash g.Hasher[K]) *Map[K, V] {
 	if capacity == 0 {
 		capacity = 1
 	}
 	return &Map[K, V]{
 		entries:  make([]entry[K, V], capacity),
 		capacity: capacity,
-		ops:      ops,
+		ops: ops[K]{
+			equals: equals,
+			hash:   hash,
+		},
 	}
 }
 
 // Get returns the value stored for this key, or false if there is no such
 // value.
 func (m *Map[K, V]) Get(key K) (V, bool) {
-	hash := m.ops.Hash(key)
+	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if m.ops.Equals(m.entries[idx].key, key) {
+		if m.ops.equals(m.entries[idx].key, key) {
 			return m.entries[idx].value, true
 		}
 		idx++
@@ -91,11 +95,11 @@ func (m *Map[K, V]) Put(key K, val V) {
 		m.entries = entries
 	}
 
-	hash := m.ops.Hash(key)
+	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if m.ops.Equals(m.entries[idx].key, key) {
+		if m.ops.equals(m.entries[idx].key, key) {
 			m.entries[idx].value = val
 			return
 		}
@@ -122,10 +126,10 @@ func (m *Map[K, V]) remove(idx uint64) {
 
 // Remove removes the specified key-value pair from the map.
 func (m *Map[K, V]) Remove(key K) {
-	hash := m.ops.Hash(key)
+	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
-	for m.entries[idx].filled && !m.ops.Equals(m.entries[idx].key, key) {
+	for m.entries[idx].filled && !m.ops.equals(m.entries[idx].key, key) {
 		idx = (idx + 1) % m.capacity
 	}
 

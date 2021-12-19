@@ -8,7 +8,7 @@ import (
 	g "github.com/zyedidia/generic"
 )
 
-func checkeq[K g.Hashable[K], V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
+func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
 	cm.Iter().For(func(kv KV[K, V]) {
 		if ov, ok := get(kv.Key); !ok {
 			t.Fatalf("key %v should exist", kv.Key)
@@ -19,13 +19,16 @@ func checkeq[K g.Hashable[K], V comparable](cm *Map[K, V], get func(k K) (V, boo
 }
 
 func TestCrossCheck(t *testing.T) {
-	stdm := make(map[g.Uint64]uint32)
-	cowm := NewMap[g.Uint64, uint32](1)
+	stdm := make(map[uint64]uint32)
+	cowm := NewMap[uint64, uint32](1, Ops[uint64]{
+		Equals: g.Equals[uint64],
+		Hash:   g.HashUint64,
+	})
 
 	const nops = 1000
 
 	for i := 0; i < nops; i++ {
-		key := g.Uint64(rand.Intn(100))
+		key := uint64(rand.Intn(100))
 		val := rand.Uint32()
 		op := rand.Intn(2)
 
@@ -34,7 +37,7 @@ func TestCrossCheck(t *testing.T) {
 			stdm[key] = val
 			cowm.Put(key, val)
 		case 1:
-			var del g.Uint64
+			var del uint64
 			for k := range stdm {
 				del = k
 				break
@@ -43,7 +46,7 @@ func TestCrossCheck(t *testing.T) {
 			cowm.Remove(del)
 		}
 
-		checkeq(cowm, func(k g.Uint64) (uint32, bool) {
+		checkeq(cowm, func(k uint64) (uint32, bool) {
 			v, ok := stdm[k]
 			return v, ok
 		}, t)
@@ -51,10 +54,13 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func TestCopy(t *testing.T) {
-	orig := NewMap[g.Uint64, uint32](1)
+	orig := NewMap[uint64, uint32](1, Ops[uint64]{
+		Equals: g.Equals[uint64],
+		Hash:   g.HashUint64,
+	})
 
 	for i := uint32(0); i < 10; i++ {
-		orig.Put(g.Uint64(i), i)
+		orig.Put(uint64(i), i)
 	}
 
 	cpy := orig.Copy()
@@ -69,7 +75,10 @@ func TestCopy(t *testing.T) {
 }
 
 func Example() {
-	m := NewMap[g.String, g.Int](1)
+	m := NewMap[string, int](1, Ops[string]{
+		Equals: g.Equals[string],
+		Hash:   g.HashString,
+	})
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 

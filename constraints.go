@@ -1,29 +1,10 @@
 package generic
 
-type Lesser[T any] interface {
-	Less(other T) bool
-}
-
-func Compare[T Lesser[T]](a, b T) int {
-	if a.Less(b) {
+func Compare[T any](a, b T, less func(a, b T) bool) int {
+	if less(a, b) {
 		return -1
-	} else if b.Less(a) {
+	} else if less(b, a) {
 		return 1
 	}
 	return 0
-}
-
-type Comparable[T any] interface {
-	Equals(other T) bool
-}
-
-type Hashable[T any] interface {
-	Comparable[T]
-	Hash() uint64
-}
-
-type Sliceable[T any] interface {
-	At(idx int) T
-	Slice(low, high int) Sliceable[T]
-	Append(s Sliceable[T]) Sliceable[T]
 }

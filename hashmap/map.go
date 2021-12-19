@@ -7,43 +7,50 @@
 package hashmap
 
 import (
-	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/iter"
 )
 
-type entry[K g.Hashable[K], V any] struct {
+type entry[K, V any] struct {
 	key    K
 	filled bool
 	value  V
 }
 
 // A Map is a hashmap that supports copying via copy-on-write.
-type Map[K g.Hashable[K], V any] struct {
+type Map[K, V any] struct {
 	entries  []entry[K, V]
 	capacity uint64
 	length   uint64
 	readonly bool
+
+	ops Ops[K]
+}
+
+type Ops[T any] struct {
+	Equals func(a, b T) bool
+	Hash   func(t T) uint64
 }
 
 // NewMap constructs a new map with the given capacity.
-func NewMap[K g.Hashable[K], V any](capacity uint64) *Map[K, V] {
+func NewMap[K, V any](capacity uint64, ops Ops[K]) *Map[K, V] {
 	if capacity == 0 {
 		capacity = 1
 	}
 	return &Map[K, V]{
 		entries:  make([]entry[K, V], capacity),
 		capacity: capacity,
+		ops:      ops,
 	}
 }
 
 // Get returns the value stored for this key, or false if there is no such
 // value.
 func (m *Map[K, V]) Get(key K) (V, bool) {
-	hash := key.Hash()
+	hash := m.ops.Hash(key)
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if m.entries[idx].key.Equals(key) {
+		if m.ops.Equals(m.entries[idx].key, key) {
 			return m.entries[idx].value, true
 		}
 		idx++
@@ -61,6 +68,7 @@ func (m *Map[K, V]) resize(newcap uint64) {
 		capacity: newcap,
 		length:   m.length,
 		entries:  make([]entry[K, V], newcap),
+		ops:      m.ops,
 	}
 
 	for _, ent := range m.entries {
@@ -83,11 +91,11 @@ func (m *Map[K, V]) Put(key K, val V) {
 		m.entries = entries
 	}
 
-	hash := key.Hash()
+	hash := m.ops.Hash(key)
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled {
-		if m.entries[idx].key.Equals(key) {
+		if m.ops.Equals(m.entries[idx].key, key) {
 			m.entries[idx].value = val
 			return
 		}
@@ -114,10 +122,10 @@ func (m *Map[K, V]) remove(idx uint64) {
 
 // Remove removes the specified key-value pair from the map.
 func (m *Map[K, V]) Remove(key K) {
-	hash := key.Hash()
+	hash := m.ops.Hash(key)
 	idx := hash & (m.capacity - 1)
 
-	for m.entries[idx].filled && !m.entries[idx].key.Equals(key) {
+	for m.entries[idx].filled && !m.ops.Equals(m.entries[idx].key, key) {
 		idx = (idx + 1) % m.capacity
 	}
 
@@ -157,10 +165,11 @@ func (m *Map[K, V]) Copy() *Map[K, V] {
 		capacity: m.capacity,
 		length:   m.length,
 		readonly: true,
+		ops:      m.ops,
 	}
 }
 
-type KV[K g.Hashable[K], V any] struct {
+type KV[K, V any] struct {
 	Key K
 	Val V
 }

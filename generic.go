@@ -91,10 +91,10 @@ func HashInt64(i int64) uint64 {
 func HashInt32(i int32) uint64 {
 	return hash(uint64(i))
 }
-func HashInt16(i int32) uint64 {
+func HashInt16(i int16) uint64 {
 	return hash(uint64(i))
 }
-func HashInt8(i int32) uint64 {
+func HashInt8(i int8) uint64 {
 	return hash(uint64(i))
 }
 func HashInt(i int) uint64 {

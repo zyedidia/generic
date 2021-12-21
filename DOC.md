@@ -12,10 +12,10 @@ import "github.com/zyedidia/generic"
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
 - [func HashBytes(b []byte) uint64](<#func-hashbytes>)
 - [func HashInt(i int) uint64](<#func-hashint>)
-- [func HashInt16(i int32) uint64](<#func-hashint16>)
+- [func HashInt16(i int16) uint64](<#func-hashint16>)
 - [func HashInt32(i int32) uint64](<#func-hashint32>)
 - [func HashInt64(i int64) uint64](<#func-hashint64>)
-- [func HashInt8(i int32) uint64](<#func-hashint8>)
+- [func HashInt8(i int8) uint64](<#func-hashint8>)
 - [func HashString(s string) uint64](<#func-hashstring>)
 - [func HashUint(i uint) uint64](<#func-hashuint>)
 - [func HashUint16(u uint16) uint64](<#func-hashuint16>)
@@ -69,7 +69,7 @@ func HashInt(i int) uint64
 ## func HashInt16
 
 ```go
-func HashInt16(i int32) uint64
+func HashInt16(i int16) uint64
 ```
 
 ## func HashInt32
@@ -87,7 +87,7 @@ func HashInt64(i int64) uint64
 ## func HashInt8
 
 ```go
-func HashInt8(i int32) uint64
+func HashInt8(i int8) uint64
 ```
 
 ## func HashString

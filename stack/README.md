@@ -47,6 +47,7 @@ foo
 
 - [type Stack](<#type-stack>)
   - [func New[T any]() *Stack[T]](<#func-new>)
+  - [func (s *Stack[T]) Copy() *Stack[T]](<#func-badrecv-copy>)
   - [func (s *Stack[T]) Peek() (t T)](<#func-badrecv-peek>)
   - [func (s *Stack[T]) Pop() (t T)](<#func-badrecv-pop>)
   - [func (s *Stack[T]) Push(value T)](<#func-badrecv-push>)
@@ -70,6 +71,14 @@ func New[T any]() *Stack[T]
 ```
 
 New returns an empty stack\.
+
+### func \(\*BADRECV\) Copy
+
+```go
+func (s *Stack[T]) Copy() *Stack[T]
+```
+
+Copy returns a copy of this stack\.
 
 ### func \(\*BADRECV\) Peek
 

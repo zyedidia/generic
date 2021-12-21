@@ -43,3 +43,12 @@ func (s *Stack[T]) Peek() (t T) {
 func (s *Stack[T]) Size() int {
 	return len(s.entries)
 }
+
+// Copy returns a copy of this stack.
+func (s *Stack[T]) Copy() *Stack[T] {
+	entries := make([]T, len(s.entries))
+	copy(entries, s.entries)
+	return &Stack[T]{
+		entries: entries,
+	}
+}

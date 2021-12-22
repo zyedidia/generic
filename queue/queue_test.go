@@ -7,10 +7,10 @@ import (
 	"github.com/zyedidia/generic/list"
 )
 
-func TestFIFOQueueEmpty(t *testing.T) {
+func TestQueueEmpty(t *testing.T) {
 	cases := []struct {
 		name  string
-		queue *FIFOQueue[int]
+		queue *Queue[int]
 		want  bool
 	}{
 		{
@@ -36,7 +36,7 @@ func TestFIFOQueueEmpty(t *testing.T) {
 	}
 }
 
-func TestFIFOQueuePeek(t *testing.T) {
+func TestQueuePeek(t *testing.T) {
 	t.Run("panics on empty queue", func(t *testing.T) {
 		defer func() {
 			if err := recover(); err == nil {
@@ -57,7 +57,7 @@ func TestFIFOQueuePeek(t *testing.T) {
 	})
 }
 
-func TestFIFOQueueEnqueue(t *testing.T) {
+func TestQueueEnqueue(t *testing.T) {
 	t.Run("empty queue", func(t *testing.T) {
 		q := emptyQueue()
 
@@ -99,7 +99,7 @@ func TestFIFOQueueEnqueue(t *testing.T) {
 	})
 }
 
-func TestFIFOQueueDequeue(t *testing.T) {
+func TestQueueDequeue(t *testing.T) {
 	t.Run("panics on empty queue", func(t *testing.T) {
 		defer func() {
 			if err := recover(); err == nil {
@@ -141,7 +141,7 @@ func TestFIFOQueueDequeue(t *testing.T) {
 	})
 }
 
-func TestFIFOQueueIter(t *testing.T) {
+func TestQueueIter(t *testing.T) {
 	q := nonEmptyQueue()
 
 	i := 1
@@ -153,12 +153,12 @@ func TestFIFOQueueIter(t *testing.T) {
 	})
 }
 
-func ExampleFIFOQueue_Enqueue() {
+func ExampleQueue_Enqueue() {
 	q := New[int]()
 	q.Enqueue(1)
 }
 
-func ExampleFIFOQueue_Peek() {
+func ExampleQueue_Peek() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -166,7 +166,7 @@ func ExampleFIFOQueue_Peek() {
 	// Output: 1
 }
 
-func ExampleFIFOQueue_Dequeue() {
+func ExampleQueue_Dequeue() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -174,7 +174,7 @@ func ExampleFIFOQueue_Dequeue() {
 	// Output: 1
 }
 
-func ExampleFIFOQueue_Iter() {
+func ExampleQueue_Iter() {
 	q := New[int]()
 	q.Enqueue(1)
 	q.Enqueue(2)
@@ -187,14 +187,14 @@ func ExampleFIFOQueue_Iter() {
 	// 2
 }
 
-func ExampleFIFOQueue_Empty_empty() {
+func ExampleQueue_Empty_empty() {
 	q := New[int]()
 
 	fmt.Println(q.Empty())
 	// Output: true
 }
 
-func ExampleFIFOQueue_Empty_nonempty() {
+func ExampleQueue_Empty_nonempty() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -202,11 +202,11 @@ func ExampleFIFOQueue_Empty_nonempty() {
 	// Output: false
 }
 
-func emptyQueue() *FIFOQueue[int] {
+func emptyQueue() *Queue[int] {
 	return New[int]()
 }
 
-func nonEmptyQueue() *FIFOQueue[int] {
+func nonEmptyQueue() *Queue[int] {
 	q := New[int]()
 	q.list.Front = &list.Node[int]{Value: 1}
 	q.list.Front.Next = &list.Node[int]{Value: 2, Prev: q.list.Front}

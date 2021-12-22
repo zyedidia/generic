@@ -6,75 +6,75 @@
 import "github.com/zyedidia/generic/queue"
 ```
 
-Package queue provides an implementation of a First In First Out \(FIFO\) queue\. The FIFO queue is implemented using a doubly\-linked list found in the 'list' package\.
+Package queue provides an implementation of a First In First Out \(FIFO\) queue\. The FIFO queue is implemented using the doubly\-linked list from the 'list' package\.
 
 ## Index
 
-- [type FIFOQueue](<#type-fifoqueue>)
-  - [func New[T any]() *FIFOQueue[T]](<#func-new>)
-  - [func (q *FIFOQueue[T]) Dequeue() T](<#func-badrecv-dequeue>)
-  - [func (q *FIFOQueue[T]) Empty() bool](<#func-badrecv-empty>)
-  - [func (q *FIFOQueue[T]) Enqueue(value T)](<#func-badrecv-enqueue>)
-  - [func (q *FIFOQueue[T]) Iter() iter.Iter[T]](<#func-badrecv-iter>)
-  - [func (q *FIFOQueue[T]) Peek() T](<#func-badrecv-peek>)
+- [type Queue](<#type-queue>)
+  - [func New[T any]() *Queue[T]](<#func-new>)
+  - [func (q *Queue[T]) Dequeue() T](<#func-badrecv-dequeue>)
+  - [func (q *Queue[T]) Empty() bool](<#func-badrecv-empty>)
+  - [func (q *Queue[T]) Enqueue(value T)](<#func-badrecv-enqueue>)
+  - [func (q *Queue[T]) Iter() iter.Iter[T]](<#func-badrecv-iter>)
+  - [func (q *Queue[T]) Peek() T](<#func-badrecv-peek>)
 
 
-## type [FIFOQueue](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L12-L14>)
+## type Queue
 
-FIFOQueue is a simple First In First Out \(FIFO\) queue\.
+Queue is a simple First In First Out \(FIFO\) queue\.
 
 ```go
-type FIFOQueue[T any] struct {
+type Queue[T any] struct {
     // contains filtered or unexported fields
 }
 ```
 
-### func [New](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L17>)
+### func New
 
 ```go
-func New[T any]() *FIFOQueue[T]
+func New[T any]() *Queue[T]
 ```
 
 New returns an empty First In First Out \(FIFO\) queue\.
 
-### func \(\*BADRECV\) [Dequeue](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L31>)
+### func \(\*BADRECV\) Dequeue
 
 ```go
-func (q *FIFOQueue[T]) Dequeue() T
+func (q *Queue[T]) Dequeue() T
 ```
 
 Dequeue removes and returns the item at the front of the queue\.
 
 A panic occurs if the queue is Empty\.
 
-### func \(\*BADRECV\) [Empty](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L46>)
+### func \(\*BADRECV\) Empty
 
 ```go
-func (q *FIFOQueue[T]) Empty() bool
+func (q *Queue[T]) Empty() bool
 ```
 
 Empty returns true if the queue is empty\.
 
-### func \(\*BADRECV\) [Enqueue](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L24>)
+### func \(\*BADRECV\) Enqueue
 
 ```go
-func (q *FIFOQueue[T]) Enqueue(value T)
+func (q *Queue[T]) Enqueue(value T)
 ```
 
 Enqueue inserts 'value' to the end of the queue\.
 
-### func \(\*BADRECV\) [Iter](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L52>)
+### func \(\*BADRECV\) Iter
 
 ```go
-func (q *FIFOQueue[T]) Iter() iter.Iter[T]
+func (q *Queue[T]) Iter() iter.Iter[T]
 ```
 
 Iter returns a forward iterator\, returning items starting from the front to the back of the queue\.
 
-### func \(\*BADRECV\) [Peek](<https://github.com/nchengyeeshen/generic/blob/master/queue/fifo_queue.go#L41>)
+### func \(\*BADRECV\) Peek
 
 ```go
-func (q *FIFOQueue[T]) Peek() T
+func (q *Queue[T]) Peek() T
 ```
 
 Peek returns the item at the front of the queue without removing it\.

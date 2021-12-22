@@ -24,6 +24,7 @@ information about each data structure.
   for arrays of bytes, but this rope is generic.
 * [`stack`](./stack): a LIFO stack.
 * [`trie`](./trie): a ternary search trie.
+* [`queue`](./queue): a First In First Out (FIFO) queue.
 
 The package also includes support for iterators, in the `iter` subpackage.
 Most data structures provide an iterator API, which can be used with some

@@ -153,12 +153,12 @@ func TestQueueIter(t *testing.T) {
 	})
 }
 
-func ExampleQueue_Enqueue() {
+func Example_Enqueue() {
 	q := New[int]()
 	q.Enqueue(1)
 }
 
-func ExampleQueue_Peek() {
+func Example_Peek() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -166,7 +166,7 @@ func ExampleQueue_Peek() {
 	// Output: 1
 }
 
-func ExampleQueue_Dequeue() {
+func Example_Dequeue() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -174,7 +174,7 @@ func ExampleQueue_Dequeue() {
 	// Output: 1
 }
 
-func ExampleQueue_Iter() {
+func Example() {
 	q := New[int]()
 	q.Enqueue(1)
 	q.Enqueue(2)
@@ -187,14 +187,14 @@ func ExampleQueue_Iter() {
 	// 2
 }
 
-func ExampleQueue_Empty_empty() {
+func Example_Empty_empty() {
 	q := New[int]()
 
 	fmt.Println(q.Empty())
 	// Output: true
 }
 
-func ExampleQueue_Empty_nonempty() {
+func Example_Empty_nonempty() {
 	q := New[int]()
 	q.Enqueue(1)
 

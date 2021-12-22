@@ -8,6 +8,132 @@ import "github.com/zyedidia/generic/queue"
 
 Package queue provides an implementation of a First In First Out \(FIFO\) queue\. The FIFO queue is implemented using the doubly\-linked list from the 'list' package\.
 
+<details><summary>Example</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+	q.Enqueue(1)
+	q.Enqueue(2)
+
+	q.Iter().For(func(i int) {
+		fmt.Println(i)
+	})
+
+}
+```
+
+#### Output
+
+```
+1
+2
+```
+
+</p>
+</details>
+
+<details><summary>Example ($equeue)</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Dequeue())
+
+}
+```
+
+#### Output
+
+```
+1
+```
+
+</p>
+</details>
+
+<details><summary>Example (%mpty_empty)</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+
+	fmt.Println(q.Empty())
+
+}
+```
+
+#### Output
+
+```
+true
+```
+
+</p>
+</details>
+
+<details><summary>Example (%mpty_nonempty)</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Empty())
+
+}
+```
+
+#### Output
+
+```
+false
+```
+
+</p>
+</details>
+
+<details><summary>Example (%nqueue)</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+	q.Enqueue(1)
+}
+```
+
+</p>
+</details>
+
+<details><summary>Example (0eek)</summary>
+<p>
+
+```go
+{
+	q := New[int]()
+	q.Enqueue(1)
+
+	fmt.Println(q.Peek())
+
+}
+```
+
+#### Output
+
+```
+1
+```
+
+</p>
+</details>
+
 ## Index
 
 - [type Queue](<#type-queue>)

@@ -1,7 +1,7 @@
 package generic
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 
 	"github.com/segmentio/fasthash/fnv1a"
 )

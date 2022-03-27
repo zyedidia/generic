@@ -9,11 +9,11 @@ import (
 )
 
 func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
-	cm.Iter().For(func(kv KV[K, V]) {
-		if ov, ok := get(kv.Key); !ok {
-			t.Fatalf("key %v should exist", kv.Key)
-		} else if kv.Val != ov {
-			t.Fatalf("value mismatch: %v != %v", kv.Val, ov)
+	cm.Each(func(key K, val V) {
+		if ov, ok := get(key); !ok {
+			t.Fatalf("key %v should exist", key)
+		} else if val != ov {
+			t.Fatalf("value mismatch: %v != %v", val, ov)
 		}
 	})
 }

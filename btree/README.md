@@ -27,8 +27,8 @@ func main() {
 	tree.Put(-10, "bar")
 	tree.Put(0, "baz")
 
-	tree.Iter().For(func(kv btree.KV[int, string]) {
-		fmt.Println(kv.Key, kv.Val)
+	tree.Each(func(key int, val string) {
+		fmt.Println(key, val)
 	})
 
 }
@@ -47,26 +47,16 @@ func main() {
 
 ## Index
 
-- [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
   - [func New[K, V any](less g.LessFn[K]) *Tree[K, V]](<#func-new>)
+  - [func (t *Tree[K, V]) Each(fn func(key K, val V))](<#func-treek-v-each>)
   - [func (t *Tree[K, V]) Get(key K) (V, bool)](<#func-treek-v-get>)
-  - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-treek-v-iter>)
   - [func (t *Tree[K, V]) Put(key K, val V)](<#func-treek-v-put>)
   - [func (t *Tree[K, V]) Remove(key K)](<#func-treek-v-remove>)
   - [func (t *Tree[K, V]) Size() int](<#func-treek-v-size>)
 
 
-## type [KV](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L14-L17>)
-
-```go
-type KV[K, V any] struct {
-    Key K
-    Val V
-}
-```
-
-## type [Tree](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L24-L30>)
+## type [Tree](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L18-L24>)
 
 Tree implements a B\-tree\.
 
@@ -76,7 +66,7 @@ type Tree[K, V any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L45>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L39>)
 
 ```go
 func New[K, V any](less g.LessFn[K]) *Tree[K, V]
@@ -84,7 +74,13 @@ func New[K, V any](less g.LessFn[K]) *Tree[K, V]
 
 New returns an empty B\-tree\.
 
-### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L58>)
+### func \(\*Tree\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L171>)
+
+```go
+func (t *Tree[K, V]) Each(fn func(key K, val V))
+```
+
+### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L52>)
 
 ```go
 func (t *Tree[K, V]) Get(key K) (V, bool)
@@ -92,15 +88,7 @@ func (t *Tree[K, V]) Get(key K) (V, bool)
 
 Get returns the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L179>)
-
-```go
-func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]
-```
-
-Iter returns an iterator over all key\-value pairs that iterates in sorted order from smallest to largest\.
-
-### func \(\*Tree\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L85>)
+### func \(\*Tree\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L79>)
 
 ```go
 func (t *Tree[K, V]) Put(key K, val V)
@@ -108,7 +96,7 @@ func (t *Tree[K, V]) Put(key K, val V)
 
 Put associates 'key' with 'val'\.
 
-### func \(\*Tree\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L108>)
+### func \(\*Tree\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L102>)
 
 ```go
 func (t *Tree[K, V]) Remove(key K)
@@ -116,7 +104,7 @@ func (t *Tree[K, V]) Remove(key K)
 
 Remove removes the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L53>)
+### func \(\*Tree\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L47>)
 
 ```go
 func (t *Tree[K, V]) Size() int

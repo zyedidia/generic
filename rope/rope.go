@@ -253,17 +253,14 @@ func (n *Node[V]) Rebalance() {
 	}
 }
 
-// Each applies the given function to every leaf node in order. The callback
-// returns true if the iteration should continue.
-func (n *Node[V]) Each(fn func(n *Node[V]) bool) bool {
+// Each applies the given function to every leaf node in order.
+func (n *Node[V]) Each(fn func(n *Node[V])) {
 	switch n.kind {
 	case tLeaf:
-		return fn(n)
+		fn(n)
 	default: // case tNode
-		if !n.left.Each(fn) {
-			return false
-		}
-		return n.right.Each(fn)
+		n.left.Each(fn)
+		n.right.Each(fn)
 	}
 }
 

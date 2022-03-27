@@ -17,7 +17,7 @@ Package queue provides an implementation of a First In First Out \(FIFO\) queue\
 	q.Enqueue(1)
 	q.Enqueue(2)
 
-	q.Iter().For(func(i int) {
+	q.Each(func(i int) {
 		fmt.Println(i)
 	})
 
@@ -139,13 +139,13 @@ false
 - [type Queue](<#type-queue>)
   - [func New[T any]() *Queue[T]](<#func-new>)
   - [func (q *Queue[T]) Dequeue() T](<#func-queuet-dequeue>)
+  - [func (q *Queue[T]) Each(fn func(t T))](<#func-queuet-each>)
   - [func (q *Queue[T]) Empty() bool](<#func-queuet-empty>)
   - [func (q *Queue[T]) Enqueue(value T)](<#func-queuet-enqueue>)
-  - [func (q *Queue[T]) Iter() iter.Iter[T]](<#func-queuet-iter>)
   - [func (q *Queue[T]) Peek() T](<#func-queuet-peek>)
 
 
-## type [Queue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L12-L14>)
+## type [Queue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L11-L13>)
 
 Queue is a simple First In First Out \(FIFO\) queue\.
 
@@ -155,7 +155,7 @@ type Queue[T any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L17>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L16>)
 
 ```go
 func New[T any]() *Queue[T]
@@ -163,7 +163,7 @@ func New[T any]() *Queue[T]
 
 New returns an empty First In First Out \(FIFO\) queue\.
 
-### func \(\*Queue\[T\]\) [Dequeue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L31>)
+### func \(\*Queue\[T\]\) [Dequeue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L30>)
 
 ```go
 func (q *Queue[T]) Dequeue() T
@@ -173,7 +173,13 @@ Dequeue removes and returns the item at the front of the queue\.
 
 A panic occurs if the queue is Empty\.
 
-### func \(\*Queue\[T\]\) [Empty](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L46>)
+### func \(\*Queue\[T\]\) [Each](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L49>)
+
+```go
+func (q *Queue[T]) Each(fn func(t T))
+```
+
+### func \(\*Queue\[T\]\) [Empty](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L45>)
 
 ```go
 func (q *Queue[T]) Empty() bool
@@ -181,7 +187,7 @@ func (q *Queue[T]) Empty() bool
 
 Empty returns true if the queue is empty\.
 
-### func \(\*Queue\[T\]\) [Enqueue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L24>)
+### func \(\*Queue\[T\]\) [Enqueue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L23>)
 
 ```go
 func (q *Queue[T]) Enqueue(value T)
@@ -189,15 +195,7 @@ func (q *Queue[T]) Enqueue(value T)
 
 Enqueue inserts 'value' to the end of the queue\.
 
-### func \(\*Queue\[T\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L52>)
-
-```go
-func (q *Queue[T]) Iter() iter.Iter[T]
-```
-
-Iter returns a forward iterator\, returning items starting from the front to the back of the queue\.
-
-### func \(\*Queue\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L41>)
+### func \(\*Queue\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L40>)
 
 ```go
 func (q *Queue[T]) Peek() T

@@ -18,7 +18,6 @@ package interval
 
 import (
 	g "github.com/zyedidia/generic"
-	"github.com/zyedidia/generic/iter"
 )
 
 type KV[V any] struct {
@@ -73,9 +72,8 @@ func (t *Tree[V]) Get(pos int) (V, bool) {
 	return n.value, true
 }
 
-// Iter returns the tree iterator.
-func (t *Tree[V]) Iter() iter.Iter[KV[V]] {
-	return t.root.iter()
+func (t *Tree[V]) Each(fn func(low, high int, val V)) {
+	t.root.each(fn)
 }
 
 // Height returns the height of the tree.
@@ -194,30 +192,13 @@ func (n *node[V]) overlaps(key intrvl, result []V) []V {
 	return result
 }
 
-func (n *node[V]) iter() iter.Iter[KV[V]] {
+func (n *node[V]) each(fn func(low, high int, val V)) {
 	if n == nil {
-		return func() (v KV[V], ok bool) {
-			return v, false
-		}
+		return
 	}
-
-	var didself bool
-	left := n.left.iter()
-	right := n.right.iter()
-	return func() (KV[V], bool) {
-		v, ok := left()
-		if ok {
-			return v, true
-		} else if !didself {
-			didself = true
-			return KV[V]{
-				Low:  n.key.Low,
-				High: n.key.High,
-				Val:  n.value,
-			}, true
-		}
-		return right()
-	}
+	n.left.each(fn)
+	fn(n.key.Low, n.key.High, n.value)
+	n.right.each(fn)
 }
 
 func (n *node[V]) getHeight() int {

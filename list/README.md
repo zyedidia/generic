@@ -26,7 +26,7 @@ func main() {
 	l.PushBack(2)
 	l.PushBack(3)
 
-	l.Front.Iter().For(func(i int) {
+	l.Front.Each(func(i int) {
 		fmt.Println(i)
 	})
 }
@@ -54,11 +54,11 @@ func main() {
   - [func (l *List[V]) PushFrontNode(n *Node[V])](<#func-listv-pushfrontnode>)
   - [func (l *List[V]) Remove(n *Node[V])](<#func-listv-remove>)
 - [type Node](<#type-node>)
-  - [func (n *Node[V]) Iter() iter.Iter[V]](<#func-nodev-iter>)
-  - [func (n *Node[V]) ReverseIter() iter.Iter[V]](<#func-nodev-reverseiter>)
+  - [func (n *Node[V]) Each(fn func(val V))](<#func-nodev-each>)
+  - [func (n *Node[V]) EachReverse(fn func(val V))](<#func-nodev-eachreverse>)
 
 
-## type [List](<https://github.com/zyedidia/generic/blob/master/list/list.go#L9-L11>)
+## type [List](<https://github.com/zyedidia/generic/blob/master/list/list.go#L7-L9>)
 
 List implements a doubly\-linked list\.
 
@@ -68,7 +68,7 @@ type List[V any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/list/list.go#L20>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/list/list.go#L18>)
 
 ```go
 func New[V any]() *List[V]
@@ -76,7 +76,7 @@ func New[V any]() *List[V]
 
 New returns an empty linked list\.
 
-### func \(\*List\[V\]\) [PushBack](<https://github.com/zyedidia/generic/blob/master/list/list.go#L25>)
+### func \(\*List\[V\]\) [PushBack](<https://github.com/zyedidia/generic/blob/master/list/list.go#L23>)
 
 ```go
 func (l *List[V]) PushBack(v V)
@@ -84,7 +84,7 @@ func (l *List[V]) PushBack(v V)
 
 PushBack adds 'v' to the end of the list\.
 
-### func \(\*List\[V\]\) [PushBackNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L39>)
+### func \(\*List\[V\]\) [PushBackNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L37>)
 
 ```go
 func (l *List[V]) PushBackNode(n *Node[V])
@@ -92,7 +92,7 @@ func (l *List[V]) PushBackNode(n *Node[V])
 
 PushBackNode adds the node 'n' to the back of the list\.
 
-### func \(\*List\[V\]\) [PushFront](<https://github.com/zyedidia/generic/blob/master/list/list.go#L32>)
+### func \(\*List\[V\]\) [PushFront](<https://github.com/zyedidia/generic/blob/master/list/list.go#L30>)
 
 ```go
 func (l *List[V]) PushFront(v V)
@@ -100,7 +100,7 @@ func (l *List[V]) PushFront(v V)
 
 PushFront adds 'v' to the beginning of the list\.
 
-### func \(\*List\[V\]\) [PushFrontNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L51>)
+### func \(\*List\[V\]\) [PushFrontNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L49>)
 
 ```go
 func (l *List[V]) PushFrontNode(n *Node[V])
@@ -108,7 +108,7 @@ func (l *List[V]) PushFrontNode(n *Node[V])
 
 PushFrontNode adds the node 'n' to the front of the list\.
 
-### func \(\*List\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/list/list.go#L63>)
+### func \(\*List\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/list/list.go#L61>)
 
 ```go
 func (l *List[V]) Remove(n *Node[V])
@@ -116,7 +116,7 @@ func (l *List[V]) Remove(n *Node[V])
 
 Remove removes the node 'n' from the list\.
 
-## type [Node](<https://github.com/zyedidia/generic/blob/master/list/list.go#L14-L17>)
+## type [Node](<https://github.com/zyedidia/generic/blob/master/list/list.go#L12-L15>)
 
 Node is a node in the linked list\.
 
@@ -127,21 +127,17 @@ type Node[V any] struct {
 }
 ```
 
-### func \(\*Node\[V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/list/list.go#L78>)
+### func \(\*Node\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/list/list.go#L74>)
 
 ```go
-func (n *Node[V]) Iter() iter.Iter[V]
+func (n *Node[V]) Each(fn func(val V))
 ```
 
-Iter returns a forward iterator\, going from front to back starting at node 'n'\.
-
-### func \(\*Node\[V\]\) [ReverseIter](<https://github.com/zyedidia/generic/blob/master/list/list.go#L92>)
+### func \(\*Node\[V\]\) [EachReverse](<https://github.com/zyedidia/generic/blob/master/list/list.go#L82>)
 
 ```go
-func (n *Node[V]) ReverseIter() iter.Iter[V]
+func (n *Node[V]) EachReverse(fn func(val V))
 ```
-
-Iter returns a reverse iterator\, going from back to front starting at node 'n'\.
 
 
 

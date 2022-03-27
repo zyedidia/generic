@@ -10,7 +10,7 @@ import (
 )
 
 func checkeq[K any](set *hashset.Set[K], get func(k K) bool, t *testing.T) {
-	set.Iter().For(func(key K) {
+	set.Each(func(key K) {
 		if !get(key) {
 			t.Fatalf("value %v should be in the set", key)
 		}

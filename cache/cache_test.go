@@ -14,8 +14,8 @@ func Example() {
 	c.Get(42)
 	c.Put(0, 0) // evicts 10
 
-	c.Iter().For(func(kv cache.KV[int, int]) {
-		fmt.Println(kv.Key)
+	c.Each(func(key int, val int) {
+		fmt.Println(key)
 	})
 	// Output:
 	// 0

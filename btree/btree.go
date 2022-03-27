@@ -6,15 +6,9 @@ package btree
 
 import (
 	g "github.com/zyedidia/generic"
-	"github.com/zyedidia/generic/iter"
 )
 
 const maxChildren = 64 // must be even and > 2
-
-type KV[K, V any] struct {
-	Key K
-	Val V
-}
 
 // Adapted from the B-tree implementation in Algorithms, 4th ed., by Robert
 // Sedgewick and Kevin Wayne.
@@ -174,29 +168,21 @@ func (t *Tree[K, V]) split(h *node[K, V]) *node[K, V] {
 	return n
 }
 
-// Iter returns an iterator over all key-value pairs that iterates in sorted
-// order from smallest to largest.
-func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
-	var result []KV[K, V]
-	slice := t.iter(t.root, t.height, result)
-	return iter.Slice(slice)
+func (t *Tree[K, V]) Each(fn func(key K, val V)) {
+	t.each(t.root, t.height, fn)
 }
 
-func (t *Tree[K, V]) iter(n *node[K, V], height int, result []KV[K, V]) []KV[K, V] {
+func (t *Tree[K, V]) each(n *node[K, V], height int, fn func(key K, val V)) {
 	if height == 0 {
 		for j := 0; j < n.m; j++ {
 			if !n.children[j].valid {
 				continue
 			}
-			result = append(result, KV[K, V]{
-				Key: n.children[j].key,
-				Val: n.children[j].val,
-			})
+			fn(n.children[j].key, n.children[j].val)
 		}
 	} else {
 		for j := 0; j < n.m; j++ {
-			result = t.iter(n.children[j].next, height-1, result)
+			t.each(n.children[j].next, height-1, fn)
 		}
 	}
-	return result
 }

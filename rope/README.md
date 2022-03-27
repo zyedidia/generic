@@ -58,7 +58,7 @@ hello rope
   - [func Join[V any](a, b *Node[V], more ...*Node[V]) *Node[V]](<#func-join>)
   - [func New[V any](b []V) *Node[V]](<#func-new>)
   - [func (n *Node[V]) At(pos int) V](<#func-nodev-at>)
-  - [func (n *Node[V]) Each(fn func(n *Node[V]) bool) bool](<#func-nodev-each>)
+  - [func (n *Node[V]) Each(fn func(n *Node[V]))](<#func-nodev-each>)
   - [func (n *Node[V]) Insert(pos int, value []V)](<#func-nodev-insert>)
   - [func (n *Node[V]) Len() int](<#func-nodev-len>)
   - [func (n *Node[V]) Rebalance()](<#func-nodev-rebalance>)
@@ -119,13 +119,13 @@ func (n *Node[V]) At(pos int) V
 
 At returns the element at the given position\.
 
-### func \(\*Node\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/rope/rope.go#L258>)
+### func \(\*Node\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/rope/rope.go#L257>)
 
 ```go
-func (n *Node[V]) Each(fn func(n *Node[V]) bool) bool
+func (n *Node[V]) Each(fn func(n *Node[V]))
 ```
 
-Each applies the given function to every leaf node in order\. The callback returns true if the iteration should continue\.
+Each applies the given function to every leaf node in order\.
 
 ### func \(\*Node\[V\]\) [Insert](<https://github.com/zyedidia/generic/blob/master/rope/rope.go#L131>)
 

@@ -5,7 +5,6 @@
 package cache
 
 import (
-	"github.com/zyedidia/generic/iter"
 	"github.com/zyedidia/generic/list"
 )
 
@@ -115,6 +114,8 @@ func (t *Cache[K, V]) Capacity() int {
 
 // Iter returns an iterator over all key-value pairs in the cache. It iterates
 // in order of most recently used to least recently used.
-func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]] {
-	return t.lru.Front.Iter()
+func (t *Cache[K, V]) Each(fn func(key K, val V)) {
+	t.lru.Front.Each(func(kv KV[K, V]) {
+		fn(kv.Key, kv.Val)
+	})
 }

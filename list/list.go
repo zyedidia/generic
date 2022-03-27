@@ -3,8 +3,6 @@
 // user can have fine-grained control over the list.
 package list
 
-import "github.com/zyedidia/generic/iter"
-
 // List implements a doubly-linked list.
 type List[V any] struct {
 	Front, Back *Node[V]
@@ -73,30 +71,18 @@ func (l *List[V]) Remove(n *Node[V]) {
 	}
 }
 
-// Iter returns a forward iterator, going from front to back starting at node
-// 'n'.
-func (n *Node[V]) Iter() iter.Iter[V] {
+func (n *Node[V]) Each(fn func(val V)) {
 	node := n
-	return func() (v V, ok bool) {
-		if node == nil {
-			return v, false
-		}
-		v = node.Value
+	for node != nil {
+		fn(node.Value)
 		node = node.Next
-		return v, true
 	}
 }
 
-// Iter returns a reverse iterator, going from back to front starting at node
-// 'n'.
-func (n *Node[V]) ReverseIter() iter.Iter[V] {
+func (n *Node[V]) EachReverse(fn func(val V)) {
 	node := n
-	return func() (v V, ok bool) {
-		if node == nil {
-			return v, false
-		}
-		v = node.Value
+	for node != nil {
+		fn(node.Value)
 		node = node.Prev
-		return v, true
 	}
 }

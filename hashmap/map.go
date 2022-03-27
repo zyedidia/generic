@@ -8,7 +8,6 @@ package hashmap
 
 import (
 	g "github.com/zyedidia/generic"
-	"github.com/zyedidia/generic/iter"
 )
 
 type entry[K, V any] struct {
@@ -173,21 +172,11 @@ func (m *Map[K, V]) Copy() *Map[K, V] {
 	}
 }
 
-type KV[K, V any] struct {
-	Key K
-	Val V
-}
-
 // Iter returns an iterator over all key-value pairs in the map.
-func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]] {
-	kvs := make([]KV[K, V], 0, m.length)
+func (m *Map[K, V]) Each(fn func(key K, val V)) {
 	for _, ent := range m.entries {
 		if ent.filled {
-			kvs = append(kvs, KV[K, V]{
-				Key: ent.key,
-				Val: ent.value,
-			})
+			fn(ent.key, ent.value)
 		}
 	}
-	return iter.Slice(kvs)
 }

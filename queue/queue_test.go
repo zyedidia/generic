@@ -141,11 +141,11 @@ func TestQueueDequeue(t *testing.T) {
 	})
 }
 
-func TestQueueIter(t *testing.T) {
+func TestQueueEach(t *testing.T) {
 	q := nonEmptyQueue()
 
 	i := 1
-	q.Iter().For(func(item int) {
+	q.Each(func(item int) {
 		if item != i {
 			t.Errorf("got %v, want %v", item, i)
 		}
@@ -179,7 +179,7 @@ func Example() {
 	q.Enqueue(1)
 	q.Enqueue(2)
 
-	q.Iter().For(func(i int) {
+	q.Each(func(i int) {
 		fmt.Println(i)
 	})
 	// Output:

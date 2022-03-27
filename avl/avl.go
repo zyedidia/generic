@@ -6,13 +6,7 @@ package avl
 
 import (
 	g "github.com/zyedidia/generic"
-	"github.com/zyedidia/generic/iter"
 )
-
-type KV[K, V any] struct {
-	Key K
-	Val V
-}
 
 // Tree implements an AVL tree.
 type Tree[K, V any] struct {
@@ -47,10 +41,9 @@ func (t *Tree[K, V]) Get(key K) (V, bool) {
 	return n.value, true
 }
 
-// Iter returns an iterator over all key-value pairs, iterating in sorted order
-// from smallest to largest.
-func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]] {
-	return t.root.iter()
+// Each calls 'fn' on every node in the tree in order
+func (t *Tree[K, V]) Each(fn func(key K, val V)) {
+	t.root.each(fn)
 }
 
 // Height returns the height of the tree.
@@ -133,29 +126,13 @@ func (n *node[K, V]) search(key K, less g.LessFn[K]) *node[K, V] {
 	}
 }
 
-func (n *node[K, V]) iter() iter.Iter[KV[K, V]] {
+func (n *node[K, V]) each(fn func(key K, val V)) {
 	if n == nil {
-		return func() (v KV[K, V], ok bool) {
-			return v, false
-		}
+		return
 	}
-
-	var didself bool
-	left := n.left.iter()
-	right := n.right.iter()
-	return func() (KV[K, V], bool) {
-		v, ok := left()
-		if ok {
-			return v, true
-		} else if !didself {
-			didself = true
-			return KV[K, V]{
-				Key: n.key,
-				Val: n.value,
-			}, true
-		}
-		return right()
-	}
+	n.left.each(fn)
+	fn(n.key, n.value)
+	n.right.each(fn)
 }
 
 func (n *node[K, V]) getHeight() int {

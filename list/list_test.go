@@ -13,7 +13,7 @@ func Example() {
 	l.PushBack(2)
 	l.PushBack(3)
 
-	l.Front.Iter().For(func(i int) {
+	l.Front.Each(func(i int) {
 		fmt.Println(i)
 	})
 	// Output:

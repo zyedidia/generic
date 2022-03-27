@@ -10,11 +10,11 @@ import (
 )
 
 func checkeq[K any, V comparable](cm *btree.Tree[K, V], get func(k K) (V, bool), t *testing.T) {
-	cm.Iter().For(func(kv btree.KV[K, V]) {
-		if ov, ok := get(kv.Key); !ok {
-			t.Fatalf("key %v should exist", kv.Key)
-		} else if kv.Val != ov {
-			t.Fatalf("value mismatch: %v != %v", kv.Val, ov)
+	cm.Each(func(key K, val V) {
+		if ov, ok := get(key); !ok {
+			t.Fatalf("key %v should exist", key)
+		} else if val != ov {
+			t.Fatalf("value mismatch: %v != %v", val, ov)
 		}
 	})
 }
@@ -58,8 +58,8 @@ func Example() {
 	tree.Put(-10, "bar")
 	tree.Put(0, "baz")
 
-	tree.Iter().For(func(kv btree.KV[int, string]) {
-		fmt.Println(kv.Key, kv.Val)
+	tree.Each(func(key int, val string) {
+		fmt.Println(key, val)
 	})
 
 	// Output:

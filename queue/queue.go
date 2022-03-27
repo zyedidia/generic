@@ -4,7 +4,6 @@
 package queue
 
 import (
-	"github.com/zyedidia/generic/iter"
 	"github.com/zyedidia/generic/list"
 )
 
@@ -47,8 +46,6 @@ func (q *Queue[T]) Empty() bool {
 	return q.list.Front == nil
 }
 
-// Iter returns a forward iterator, returning items starting from the front to
-// the back of the queue.
-func (q *Queue[T]) Iter() iter.Iter[T] {
-	return q.list.Front.Iter()
+func (q *Queue[T]) Each(fn func(t T)) {
+	q.list.Front.Each(fn)
 }

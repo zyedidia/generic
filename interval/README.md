@@ -50,16 +50,16 @@ bar
 - [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
   - [func New[V any]() *Tree[V]](<#func-new>)
+  - [func (t *Tree[V]) Each(fn func(low, high int, val V))](<#func-treev-each>)
   - [func (t *Tree[V]) Get(pos int) (V, bool)](<#func-treev-get>)
   - [func (t *Tree[V]) Height() int](<#func-treev-height>)
-  - [func (t *Tree[V]) Iter() iter.Iter[KV[V]]](<#func-treev-iter>)
   - [func (t *Tree[V]) Overlaps(low, high int) []V](<#func-treev-overlaps>)
   - [func (t *Tree[V]) Put(low, high int, value V)](<#func-treev-put>)
   - [func (t *Tree[V]) Remove(pos int)](<#func-treev-remove>)
   - [func (t *Tree[V]) Size() int](<#func-treev-size>)
 
 
-## type [KV](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L24-L27>)
+## type [KV](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L23-L26>)
 
 ```go
 type KV[V any] struct {
@@ -68,7 +68,7 @@ type KV[V any] struct {
 }
 ```
 
-## type [Tree](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L40-L42>)
+## type [Tree](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L39-L41>)
 
 Tree implements an interval tree\. All intervals must have unique starting positions\.
 
@@ -78,7 +78,7 @@ type Tree[V any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L45>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L44>)
 
 ```go
 func New[V any]() *Tree[V]
@@ -86,7 +86,13 @@ func New[V any]() *Tree[V]
 
 New returns an empty interval tree\.
 
-### func \(\*Tree\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L67>)
+### func \(\*Tree\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L75>)
+
+```go
+func (t *Tree[V]) Each(fn func(low, high int, val V))
+```
+
+### func \(\*Tree\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L66>)
 
 ```go
 func (t *Tree[V]) Get(pos int) (V, bool)
@@ -94,7 +100,7 @@ func (t *Tree[V]) Get(pos int) (V, bool)
 
 Get returns the value associated with the interval starting at 'pos'\, or 'false' if no such value exists\.
 
-### func \(\*Tree\[V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L82>)
+### func \(\*Tree\[V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L80>)
 
 ```go
 func (t *Tree[V]) Height() int
@@ -102,15 +108,7 @@ func (t *Tree[V]) Height() int
 
 Height returns the height of the tree\.
 
-### func \(\*Tree\[V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L77>)
-
-```go
-func (t *Tree[V]) Iter() iter.Iter[KV[V]]
-```
-
-Iter returns the tree iterator\.
-
-### func \(\*Tree\[V\]\) [Overlaps](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L55>)
+### func \(\*Tree\[V\]\) [Overlaps](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L54>)
 
 ```go
 func (t *Tree[V]) Overlaps(low, high int) []V
@@ -118,7 +116,7 @@ func (t *Tree[V]) Overlaps(low, high int) []V
 
 Overlaps returns all values that overlap with the given range\.
 
-### func \(\*Tree\[V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L50>)
+### func \(\*Tree\[V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L49>)
 
 ```go
 func (t *Tree[V]) Put(low, high int, value V)
@@ -126,7 +124,7 @@ func (t *Tree[V]) Put(low, high int, value V)
 
 Put associates the interval 'key' with 'value'\.
 
-### func \(\*Tree\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L61>)
+### func \(\*Tree\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L60>)
 
 ```go
 func (t *Tree[V]) Remove(pos int)
@@ -134,7 +132,7 @@ func (t *Tree[V]) Remove(pos int)
 
 Remove deletes the interval starting at 'pos'\.
 
-### func \(\*Tree\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L87>)
+### func \(\*Tree\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L85>)
 
 ```go
 func (t *Tree[V]) Size() int

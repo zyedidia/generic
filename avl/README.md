@@ -29,8 +29,8 @@ func main() {
 	tree.Put(10, "quux")
 	tree.Remove(10)
 
-	tree.Iter().For(func(kv avl.KV[int, string]) {
-		fmt.Println(kv.Key, kv.Val)
+	tree.Each(func(key int, val string) {
+		fmt.Println(key, val)
 	})
 
 }
@@ -49,27 +49,17 @@ func main() {
 
 ## Index
 
-- [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
   - [func New[K, V any](less g.LessFn[K]) *Tree[K, V]](<#func-new>)
+  - [func (t *Tree[K, V]) Each(fn func(key K, val V))](<#func-treek-v-each>)
   - [func (t *Tree[K, V]) Get(key K) (V, bool)](<#func-treek-v-get>)
   - [func (t *Tree[K, V]) Height() int](<#func-treek-v-height>)
-  - [func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-treek-v-iter>)
   - [func (t *Tree[K, V]) Put(key K, value V)](<#func-treek-v-put>)
   - [func (t *Tree[K, V]) Remove(key K)](<#func-treek-v-remove>)
   - [func (t *Tree[K, V]) Size() int](<#func-treek-v-size>)
 
 
-## type [KV](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L12-L15>)
-
-```go
-type KV[K, V any] struct {
-    Key K
-    Val V
-}
-```
-
-## type [Tree](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L18-L21>)
+## type [Tree](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L12-L15>)
 
 Tree implements an AVL tree\.
 
@@ -79,7 +69,7 @@ type Tree[K, V any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L24>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L18>)
 
 ```go
 func New[K, V any](less g.LessFn[K]) *Tree[K, V]
@@ -87,7 +77,15 @@ func New[K, V any](less g.LessFn[K]) *Tree[K, V]
 
 New returns an empty AVL tree\.
 
-### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L41>)
+### func \(\*Tree\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L45>)
+
+```go
+func (t *Tree[K, V]) Each(fn func(key K, val V))
+```
+
+Each calls 'fn' on every node in the tree in order
+
+### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L35>)
 
 ```go
 func (t *Tree[K, V]) Get(key K) (V, bool)
@@ -95,7 +93,7 @@ func (t *Tree[K, V]) Get(key K) (V, bool)
 
 Get returns the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L57>)
+### func \(\*Tree\[K\, V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L50>)
 
 ```go
 func (t *Tree[K, V]) Height() int
@@ -103,15 +101,7 @@ func (t *Tree[K, V]) Height() int
 
 Height returns the height of the tree\.
 
-### func \(\*Tree\[K\, V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L52>)
-
-```go
-func (t *Tree[K, V]) Iter() iter.Iter[KV[K, V]]
-```
-
-Iter returns an iterator over all key\-value pairs\, iterating in sorted order from smallest to largest\.
-
-### func \(\*Tree\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L31>)
+### func \(\*Tree\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L25>)
 
 ```go
 func (t *Tree[K, V]) Put(key K, value V)
@@ -119,7 +109,7 @@ func (t *Tree[K, V]) Put(key K, value V)
 
 Put associates 'key' with 'value'\.
 
-### func \(\*Tree\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L36>)
+### func \(\*Tree\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L30>)
 
 ```go
 func (t *Tree[K, V]) Remove(key K)
@@ -127,7 +117,7 @@ func (t *Tree[K, V]) Remove(key K)
 
 Remove removes the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L62>)
+### func \(\*Tree\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/avl/avl.go#L55>)
 
 ```go
 func (t *Tree[K, V]) Size() int

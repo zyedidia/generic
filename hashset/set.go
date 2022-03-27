@@ -4,7 +4,6 @@ package hashset
 import (
 	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/hashmap"
-	"github.com/zyedidia/generic/iter"
 )
 
 // Set implements a hashset, using the hashmap as the underlying storage.
@@ -40,11 +39,8 @@ func (s *Set[K]) Size() int {
 	return s.m.Size()
 }
 
-// Iter returns an iterator over all values in the set.
-func (s *Set[K]) Iter() iter.Iter[K] {
-	it := s.m.Iter()
-	return func() (K, bool) {
-		kv, ok := it()
-		return kv.Key, ok
-	}
+func (s *Set[K]) Each(fn func(key K)) {
+	s.m.Each(func(key K, v struct{}) {
+		fn(key)
+	})
 }

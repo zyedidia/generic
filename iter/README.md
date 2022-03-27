@@ -12,12 +12,12 @@ import "github.com/zyedidia/generic/iter"
   - [func Map[K comparable, V any](m map[K]V) Iter[KV[K, V]]](<#func-map>)
   - [func Slice[T any](slice []T) Iter[T]](<#func-slice>)
   - [func SliceReverse[T any](slice []T) Iter[T]](<#func-slicereverse>)
-  - [func (it Iter[T]) For(fn func(t T))](<#func-badrecv-for>)
-  - [func (it Iter[T]) ForBreak(fn func(t T) bool)](<#func-badrecv-forbreak>)
+  - [func (it Iter[T]) For(fn func(t T))](<#func-itert-for>)
+  - [func (it Iter[T]) ForBreak(fn func(t T) bool)](<#func-itert-forbreak>)
 - [type KV](<#type-kv>)
 
 
-## type Iter
+## type [Iter](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L5>)
 
 Iter is a generic iterator\. When called it returns the next item\, along with an ok indicator\. If no remaining item exists the bool will be false\.
 
@@ -25,7 +25,7 @@ Iter is a generic iterator\. When called it returns the next item\, along with a
 type Iter[T any] func() (T, bool)
 ```
 
-### func Map
+### func [Map](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L58>)
 
 ```go
 func Map[K comparable, V any](m map[K]V) Iter[KV[K, V]]
@@ -33,7 +33,7 @@ func Map[K comparable, V any](m map[K]V) Iter[KV[K, V]]
 
 Map returns an iterator for a map\.
 
-### func Slice
+### func [Slice](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L25>)
 
 ```go
 func Slice[T any](slice []T) Iter[T]
@@ -41,7 +41,7 @@ func Slice[T any](slice []T) Iter[T]
 
 Slice returns an iterator for a slice\.
 
-### func SliceReverse
+### func [SliceReverse](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L39>)
 
 ```go
 func SliceReverse[T any](slice []T) Iter[T]
@@ -49,7 +49,7 @@ func SliceReverse[T any](slice []T) Iter[T]
 
 SliceReverse returns an iterator over a slice that iterates in reverse\.
 
-### func \(BADRECV\) For
+### func \(Iter\[T\]\) [For](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L8>)
 
 ```go
 func (it Iter[T]) For(fn func(t T))
@@ -57,7 +57,7 @@ func (it Iter[T]) For(fn func(t T))
 
 For calls 'fn' on every value returned by the iterator\.
 
-### func \(BADRECV\) ForBreak
+### func \(Iter\[T\]\) [ForBreak](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L16>)
 
 ```go
 func (it Iter[T]) ForBreak(fn func(t T) bool)
@@ -65,7 +65,7 @@ func (it Iter[T]) ForBreak(fn func(t T) bool)
 
 ForBreak is the same as 'For' but if 'fn' returns false it breaks from the loop early\.
 
-## type KV
+## type [KV](<https://github.com/zyedidia/generic/blob/master/iter/iter.go#L52-L55>)
 
 KV is a key\-value pair used in a standard map\.
 

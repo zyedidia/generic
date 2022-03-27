@@ -138,14 +138,14 @@ false
 
 - [type Queue](<#type-queue>)
   - [func New[T any]() *Queue[T]](<#func-new>)
-  - [func (q *Queue[T]) Dequeue() T](<#func-badrecv-dequeue>)
-  - [func (q *Queue[T]) Empty() bool](<#func-badrecv-empty>)
-  - [func (q *Queue[T]) Enqueue(value T)](<#func-badrecv-enqueue>)
-  - [func (q *Queue[T]) Iter() iter.Iter[T]](<#func-badrecv-iter>)
-  - [func (q *Queue[T]) Peek() T](<#func-badrecv-peek>)
+  - [func (q *Queue[T]) Dequeue() T](<#func-queuet-dequeue>)
+  - [func (q *Queue[T]) Empty() bool](<#func-queuet-empty>)
+  - [func (q *Queue[T]) Enqueue(value T)](<#func-queuet-enqueue>)
+  - [func (q *Queue[T]) Iter() iter.Iter[T]](<#func-queuet-iter>)
+  - [func (q *Queue[T]) Peek() T](<#func-queuet-peek>)
 
 
-## type Queue
+## type [Queue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L12-L14>)
 
 Queue is a simple First In First Out \(FIFO\) queue\.
 
@@ -155,7 +155,7 @@ type Queue[T any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L17>)
 
 ```go
 func New[T any]() *Queue[T]
@@ -163,7 +163,7 @@ func New[T any]() *Queue[T]
 
 New returns an empty First In First Out \(FIFO\) queue\.
 
-### func \(\*BADRECV\) Dequeue
+### func \(\*Queue\[T\]\) [Dequeue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L31>)
 
 ```go
 func (q *Queue[T]) Dequeue() T
@@ -173,7 +173,7 @@ Dequeue removes and returns the item at the front of the queue\.
 
 A panic occurs if the queue is Empty\.
 
-### func \(\*BADRECV\) Empty
+### func \(\*Queue\[T\]\) [Empty](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L46>)
 
 ```go
 func (q *Queue[T]) Empty() bool
@@ -181,7 +181,7 @@ func (q *Queue[T]) Empty() bool
 
 Empty returns true if the queue is empty\.
 
-### func \(\*BADRECV\) Enqueue
+### func \(\*Queue\[T\]\) [Enqueue](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L24>)
 
 ```go
 func (q *Queue[T]) Enqueue(value T)
@@ -189,7 +189,7 @@ func (q *Queue[T]) Enqueue(value T)
 
 Enqueue inserts 'value' to the end of the queue\.
 
-### func \(\*BADRECV\) Iter
+### func \(\*Queue\[T\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L52>)
 
 ```go
 func (q *Queue[T]) Iter() iter.Iter[T]
@@ -197,7 +197,7 @@ func (q *Queue[T]) Iter() iter.Iter[T]
 
 Iter returns a forward iterator\, returning items starting from the front to the back of the queue\.
 
-### func \(\*BADRECV\) Peek
+### func \(\*Queue\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L41>)
 
 ```go
 func (q *Queue[T]) Peek() T

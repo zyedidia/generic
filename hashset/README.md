@@ -45,14 +45,14 @@ false
 
 - [type Set](<#type-set>)
   - [func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]](<#func-new>)
-  - [func (s *Set[K]) Has(val K) bool](<#func-badrecv-has>)
-  - [func (s *Set[K]) Iter() iter.Iter[K]](<#func-badrecv-iter>)
-  - [func (s *Set[K]) Put(val K)](<#func-badrecv-put>)
-  - [func (s *Set[K]) Remove(val K)](<#func-badrecv-remove>)
-  - [func (s *Set[K]) Size() int](<#func-badrecv-size>)
+  - [func (s *Set[K]) Has(val K) bool](<#func-setk-has>)
+  - [func (s *Set[K]) Iter() iter.Iter[K]](<#func-setk-iter>)
+  - [func (s *Set[K]) Put(val K)](<#func-setk-put>)
+  - [func (s *Set[K]) Remove(val K)](<#func-setk-remove>)
+  - [func (s *Set[K]) Size() int](<#func-setk-size>)
 
 
-## type Set
+## type [Set](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L11-L13>)
 
 Set implements a hashset\, using the hashmap as the underlying storage\.
 
@@ -62,7 +62,7 @@ type Set[K any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L16>)
 
 ```go
 func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
@@ -70,7 +70,7 @@ func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
 
 New returns an empty hashset\.
 
-### func \(\*BADRECV\) Has
+### func \(\*Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L28>)
 
 ```go
 func (s *Set[K]) Has(val K) bool
@@ -78,7 +78,7 @@ func (s *Set[K]) Has(val K) bool
 
 Has returns true only if 'val' is in the set\.
 
-### func \(\*BADRECV\) Iter
+### func \(\*Set\[K\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L44>)
 
 ```go
 func (s *Set[K]) Iter() iter.Iter[K]
@@ -86,7 +86,7 @@ func (s *Set[K]) Iter() iter.Iter[K]
 
 Iter returns an iterator over all values in the set\.
 
-### func \(\*BADRECV\) Put
+### func \(\*Set\[K\]\) [Put](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L23>)
 
 ```go
 func (s *Set[K]) Put(val K)
@@ -94,7 +94,7 @@ func (s *Set[K]) Put(val K)
 
 Put adds 'val' to the set\.
 
-### func \(\*BADRECV\) Remove
+### func \(\*Set\[K\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L34>)
 
 ```go
 func (s *Set[K]) Remove(val K)
@@ -102,7 +102,7 @@ func (s *Set[K]) Remove(val K)
 
 Remove removes 'val' from the set\.
 
-### func \(\*BADRECV\) Size
+### func \(\*Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L39>)
 
 ```go
 func (s *Set[K]) Size() int

@@ -48,17 +48,17 @@ func main() {
 
 - [type List](<#type-list>)
   - [func New[V any]() *List[V]](<#func-new>)
-  - [func (l *List[V]) PushBack(v V)](<#func-badrecv-pushback>)
-  - [func (l *List[V]) PushBackNode(n *Node[V])](<#func-badrecv-pushbacknode>)
-  - [func (l *List[V]) PushFront(v V)](<#func-badrecv-pushfront>)
-  - [func (l *List[V]) PushFrontNode(n *Node[V])](<#func-badrecv-pushfrontnode>)
-  - [func (l *List[V]) Remove(n *Node[V])](<#func-badrecv-remove>)
+  - [func (l *List[V]) PushBack(v V)](<#func-listv-pushback>)
+  - [func (l *List[V]) PushBackNode(n *Node[V])](<#func-listv-pushbacknode>)
+  - [func (l *List[V]) PushFront(v V)](<#func-listv-pushfront>)
+  - [func (l *List[V]) PushFrontNode(n *Node[V])](<#func-listv-pushfrontnode>)
+  - [func (l *List[V]) Remove(n *Node[V])](<#func-listv-remove>)
 - [type Node](<#type-node>)
-  - [func (n *Node[V]) Iter() iter.Iter[V]](<#func-badrecv-iter>)
-  - [func (n *Node[V]) ReverseIter() iter.Iter[V]](<#func-badrecv-reverseiter>)
+  - [func (n *Node[V]) Iter() iter.Iter[V]](<#func-nodev-iter>)
+  - [func (n *Node[V]) ReverseIter() iter.Iter[V]](<#func-nodev-reverseiter>)
 
 
-## type List
+## type [List](<https://github.com/zyedidia/generic/blob/master/list/list.go#L9-L11>)
 
 List implements a doubly\-linked list\.
 
@@ -68,7 +68,7 @@ type List[V any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/list/list.go#L20>)
 
 ```go
 func New[V any]() *List[V]
@@ -76,7 +76,7 @@ func New[V any]() *List[V]
 
 New returns an empty linked list\.
 
-### func \(\*BADRECV\) PushBack
+### func \(\*List\[V\]\) [PushBack](<https://github.com/zyedidia/generic/blob/master/list/list.go#L25>)
 
 ```go
 func (l *List[V]) PushBack(v V)
@@ -84,7 +84,7 @@ func (l *List[V]) PushBack(v V)
 
 PushBack adds 'v' to the end of the list\.
 
-### func \(\*BADRECV\) PushBackNode
+### func \(\*List\[V\]\) [PushBackNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L39>)
 
 ```go
 func (l *List[V]) PushBackNode(n *Node[V])
@@ -92,7 +92,7 @@ func (l *List[V]) PushBackNode(n *Node[V])
 
 PushBackNode adds the node 'n' to the back of the list\.
 
-### func \(\*BADRECV\) PushFront
+### func \(\*List\[V\]\) [PushFront](<https://github.com/zyedidia/generic/blob/master/list/list.go#L32>)
 
 ```go
 func (l *List[V]) PushFront(v V)
@@ -100,7 +100,7 @@ func (l *List[V]) PushFront(v V)
 
 PushFront adds 'v' to the beginning of the list\.
 
-### func \(\*BADRECV\) PushFrontNode
+### func \(\*List\[V\]\) [PushFrontNode](<https://github.com/zyedidia/generic/blob/master/list/list.go#L51>)
 
 ```go
 func (l *List[V]) PushFrontNode(n *Node[V])
@@ -108,7 +108,7 @@ func (l *List[V]) PushFrontNode(n *Node[V])
 
 PushFrontNode adds the node 'n' to the front of the list\.
 
-### func \(\*BADRECV\) Remove
+### func \(\*List\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/list/list.go#L63>)
 
 ```go
 func (l *List[V]) Remove(n *Node[V])
@@ -116,7 +116,7 @@ func (l *List[V]) Remove(n *Node[V])
 
 Remove removes the node 'n' from the list\.
 
-## type Node
+## type [Node](<https://github.com/zyedidia/generic/blob/master/list/list.go#L14-L17>)
 
 Node is a node in the linked list\.
 
@@ -127,7 +127,7 @@ type Node[V any] struct {
 }
 ```
 
-### func \(\*BADRECV\) Iter
+### func \(\*Node\[V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/list/list.go#L78>)
 
 ```go
 func (n *Node[V]) Iter() iter.Iter[V]
@@ -135,7 +135,7 @@ func (n *Node[V]) Iter() iter.Iter[V]
 
 Iter returns a forward iterator\, going from front to back starting at node 'n'\.
 
-### func \(\*BADRECV\) ReverseIter
+### func \(\*Node\[V\]\) [ReverseIter](<https://github.com/zyedidia/generic/blob/master/list/list.go#L92>)
 
 ```go
 func (n *Node[V]) ReverseIter() iter.Iter[V]

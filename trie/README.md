@@ -46,17 +46,17 @@ false
 
 - [type Trie](<#type-trie>)
   - [func New[V any]() *Trie[V]](<#func-new>)
-  - [func (t *Trie[V]) Contains(key string) bool](<#func-badrecv-contains>)
-  - [func (t *Trie[V]) Get(key string) (v V, ok bool)](<#func-badrecv-get>)
-  - [func (t *Trie[V]) Keys() (queue []string)](<#func-badrecv-keys>)
-  - [func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)](<#func-badrecv-keyswithprefix>)
-  - [func (t *Trie[V]) LongestPrefix(query string) string](<#func-badrecv-longestprefix>)
-  - [func (t *Trie[V]) Put(key string, val V)](<#func-badrecv-put>)
-  - [func (t *Trie[V]) Remove(key string)](<#func-badrecv-remove>)
-  - [func (t *Trie[V]) Size() int](<#func-badrecv-size>)
+  - [func (t *Trie[V]) Contains(key string) bool](<#func-triev-contains>)
+  - [func (t *Trie[V]) Get(key string) (v V, ok bool)](<#func-triev-get>)
+  - [func (t *Trie[V]) Keys() (queue []string)](<#func-triev-keys>)
+  - [func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)](<#func-triev-keyswithprefix>)
+  - [func (t *Trie[V]) LongestPrefix(query string) string](<#func-triev-longestprefix>)
+  - [func (t *Trie[V]) Put(key string, val V)](<#func-triev-put>)
+  - [func (t *Trie[V]) Remove(key string)](<#func-triev-remove>)
+  - [func (t *Trie[V]) Size() int](<#func-triev-size>)
 
 
-## type Trie
+## type [Trie](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L9-L12>)
 
 A Trie is a data structure that supports common prefix operations\.
 
@@ -66,7 +66,7 @@ type Trie[V any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L22>)
 
 ```go
 func New[V any]() *Trie[V]
@@ -74,7 +74,7 @@ func New[V any]() *Trie[V]
 
 New returns an empty trie\.
 
-### func \(\*BADRECV\) Contains
+### func \(\*Trie\[V\]\) [Contains](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L32>)
 
 ```go
 func (t *Trie[V]) Contains(key string) bool
@@ -82,7 +82,7 @@ func (t *Trie[V]) Contains(key string) bool
 
 Contains returns whether this trie contains 'key'\.
 
-### func \(\*BADRECV\) Get
+### func \(\*Trie\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L41>)
 
 ```go
 func (t *Trie[V]) Get(key string) (v V, ok bool)
@@ -90,7 +90,7 @@ func (t *Trie[V]) Get(key string) (v V, ok bool)
 
 Get returns the value associated with 'key'\.
 
-### func \(\*BADRECV\) Keys
+### func \(\*Trie\[V\]\) [Keys](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L136>)
 
 ```go
 func (t *Trie[V]) Keys() (queue []string)
@@ -98,7 +98,7 @@ func (t *Trie[V]) Keys() (queue []string)
 
 Keys returns all keys in the trie\.
 
-### func \(\*BADRECV\) KeysWithPrefix
+### func \(\*Trie\[V\]\) [KeysWithPrefix](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L141>)
 
 ```go
 func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)
@@ -106,7 +106,7 @@ func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)
 
 KeysWithPrefix returns all keys with prefix 'prefix'\.
 
-### func \(\*BADRECV\) LongestPrefix
+### func \(\*Trie\[V\]\) [LongestPrefix](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L111>)
 
 ```go
 func (t *Trie[V]) LongestPrefix(query string) string
@@ -114,7 +114,7 @@ func (t *Trie[V]) LongestPrefix(query string) string
 
 LongestPrefix returns the key that is the longest prefix of 'query'\.
 
-### func \(\*BADRECV\) Put
+### func \(\*Trie\[V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L69>)
 
 ```go
 func (t *Trie[V]) Put(key string, val V)
@@ -122,7 +122,7 @@ func (t *Trie[V]) Put(key string, val V)
 
 Put associates 'val' with 'key'\.
 
-### func \(\*BADRECV\) Remove
+### func \(\*Trie\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L80>)
 
 ```go
 func (t *Trie[V]) Remove(key string)
@@ -130,7 +130,7 @@ func (t *Trie[V]) Remove(key string)
 
 Remove removes the value associated with 'key'\.
 
-### func \(\*BADRECV\) Size
+### func \(\*Trie\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L27>)
 
 ```go
 func (t *Trie[V]) Size() int

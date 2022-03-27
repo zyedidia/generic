@@ -47,14 +47,14 @@ foo
 
 - [type Stack](<#type-stack>)
   - [func New[T any]() *Stack[T]](<#func-new>)
-  - [func (s *Stack[T]) Copy() *Stack[T]](<#func-badrecv-copy>)
-  - [func (s *Stack[T]) Peek() (t T)](<#func-badrecv-peek>)
-  - [func (s *Stack[T]) Pop() (t T)](<#func-badrecv-pop>)
-  - [func (s *Stack[T]) Push(value T)](<#func-badrecv-push>)
-  - [func (s *Stack[T]) Size() int](<#func-badrecv-size>)
+  - [func (s *Stack[T]) Copy() *Stack[T]](<#func-stackt-copy>)
+  - [func (s *Stack[T]) Peek() (t T)](<#func-stackt-peek>)
+  - [func (s *Stack[T]) Pop() (t T)](<#func-stackt-pop>)
+  - [func (s *Stack[T]) Push(value T)](<#func-stackt-push>)
+  - [func (s *Stack[T]) Size() int](<#func-stackt-size>)
 
 
-## type Stack
+## type [Stack](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L6-L8>)
 
 Stack implements a LIFO stack with peeking\.
 
@@ -64,7 +64,7 @@ type Stack[T any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L11>)
 
 ```go
 func New[T any]() *Stack[T]
@@ -72,7 +72,7 @@ func New[T any]() *Stack[T]
 
 New returns an empty stack\.
 
-### func \(\*BADRECV\) Copy
+### func \(\*Stack\[T\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L48>)
 
 ```go
 func (s *Stack[T]) Copy() *Stack[T]
@@ -80,7 +80,7 @@ func (s *Stack[T]) Copy() *Stack[T]
 
 Copy returns a copy of this stack\.
 
-### func \(\*BADRECV\) Peek
+### func \(\*Stack\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L35>)
 
 ```go
 func (s *Stack[T]) Peek() (t T)
@@ -88,7 +88,7 @@ func (s *Stack[T]) Peek() (t T)
 
 Peek returns the stack's top element but does not remove it\. If the stack is empty the zero value is returned\.
 
-### func \(\*BADRECV\) Pop
+### func \(\*Stack\[T\]\) [Pop](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L24>)
 
 ```go
 func (s *Stack[T]) Pop() (t T)
@@ -96,7 +96,7 @@ func (s *Stack[T]) Pop() (t T)
 
 Pop removes the stack's top element and returns it\. If the stack is empty it returns the zero value\.
 
-### func \(\*BADRECV\) Push
+### func \(\*Stack\[T\]\) [Push](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L18>)
 
 ```go
 func (s *Stack[T]) Push(value T)
@@ -104,7 +104,7 @@ func (s *Stack[T]) Push(value T)
 
 Push places 'value' at the top of the stack\.
 
-### func \(\*BADRECV\) Size
+### func \(\*Stack\[T\]\) [Size](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L43>)
 
 ```go
 func (s *Stack[T]) Size() int

@@ -47,17 +47,17 @@ func main() {
 
 - [type Cache](<#type-cache>)
   - [func New[K comparable, V any](capacity int) *Cache[K, V]](<#func-new>)
-  - [func (t *Cache[K, V]) Capacity() int](<#func-badrecv-capacity>)
-  - [func (t *Cache[K, V]) Get(k K) (V, bool)](<#func-badrecv-get>)
-  - [func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
-  - [func (t *Cache[K, V]) Put(k K, e V)](<#func-badrecv-put>)
-  - [func (t *Cache[K, V]) Remove(k K)](<#func-badrecv-remove>)
-  - [func (t *Cache[K, V]) Resize(size int)](<#func-badrecv-resize>)
-  - [func (t *Cache[K, V]) Size() int](<#func-badrecv-size>)
+  - [func (t *Cache[K, V]) Capacity() int](<#func-cachek-v-capacity>)
+  - [func (t *Cache[K, V]) Get(k K) (V, bool)](<#func-cachek-v-get>)
+  - [func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-cachek-v-iter>)
+  - [func (t *Cache[K, V]) Put(k K, e V)](<#func-cachek-v-put>)
+  - [func (t *Cache[K, V]) Remove(k K)](<#func-cachek-v-remove>)
+  - [func (t *Cache[K, V]) Resize(size int)](<#func-cachek-v-resize>)
+  - [func (t *Cache[K, V]) Size() int](<#func-cachek-v-size>)
 - [type KV](<#type-kv>)
 
 
-## type Cache
+## type [Cache](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L16-L21>)
 
 A Cache is an LRU cache for keys and values\. Each entry is put into the table with an associated key used for looking up the entry\. The cache has a maximum size\, and uses a least\-recently\-used eviction policy when there is not space for a new entry\.
 
@@ -67,7 +67,7 @@ type Cache[K comparable, V any] struct {
 }
 ```
 
-### func New
+### func [New](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L29>)
 
 ```go
 func New[K comparable, V any](capacity int) *Cache[K, V]
@@ -75,7 +75,7 @@ func New[K comparable, V any](capacity int) *Cache[K, V]
 
 New returns a new Cache with the given capacity\.
 
-### func \(\*BADRECV\) Capacity
+### func \(\*Cache\[K\, V\]\) [Capacity](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L112>)
 
 ```go
 func (t *Cache[K, V]) Capacity() int
@@ -83,7 +83,7 @@ func (t *Cache[K, V]) Capacity() int
 
 Capacity returns the maximum capacity of the cache\.
 
-### func \(\*BADRECV\) Get
+### func \(\*Cache\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L40>)
 
 ```go
 func (t *Cache[K, V]) Get(k K) (V, bool)
@@ -91,7 +91,7 @@ func (t *Cache[K, V]) Get(k K) (V, bool)
 
 Get returns the entry associated with a given key\, and a boolean indicating whether the key exists in the table\.
 
-### func \(\*BADRECV\) Iter
+### func \(\*Cache\[K\, V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L118>)
 
 ```go
 func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]]
@@ -99,7 +99,7 @@ func (t *Cache[K, V]) Iter() iter.Iter[KV[K, V]]
 
 Iter returns an iterator over all key\-value pairs in the cache\. It iterates in order of most recently used to least recently used\.
 
-### func \(\*BADRECV\) Put
+### func \(\*Cache\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L51>)
 
 ```go
 func (t *Cache[K, V]) Put(k K, e V)
@@ -107,7 +107,7 @@ func (t *Cache[K, V]) Put(k K, e V)
 
 Put adds a new key\-entry pair to the table\.
 
-### func \(\*BADRECV\) Remove
+### func \(\*Cache\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L82>)
 
 ```go
 func (t *Cache[K, V]) Remove(k K)
@@ -115,7 +115,7 @@ func (t *Cache[K, V]) Remove(k K)
 
 Remove causes the entry associated with the given key to be immediately evicted from the cache\.
 
-### func \(\*BADRECV\) Resize
+### func \(\*Cache\[K\, V\]\) [Resize](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L91>)
 
 ```go
 func (t *Cache[K, V]) Resize(size int)
@@ -123,7 +123,7 @@ func (t *Cache[K, V]) Resize(size int)
 
 Resize changes the maximum capacity for this cache to 'size'\.
 
-### func \(\*BADRECV\) Size
+### func \(\*Cache\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L107>)
 
 ```go
 func (t *Cache[K, V]) Size() int
@@ -131,7 +131,7 @@ func (t *Cache[K, V]) Size() int
 
 Size returns the number of active elements in the cache\.
 
-## type KV
+## type [KV](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L23-L26>)
 
 ```go
 type KV[K comparable, V any] struct {

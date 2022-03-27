@@ -1,5 +1,8 @@
 # Generic Data Structures
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/zyedidia/generic.svg)](https://pkg.go.dev/github.com/zyedidia/generic)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/zyedidia/generic/blob/master/LICENSE)
+
 > This project is currently in-progress and the API is not stable. A stable
 > version will be released when Go 1.18 is released. Currently this serves as an
 > experiment to get familiar with Go's generics, and figure out what approaches

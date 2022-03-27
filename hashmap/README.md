@@ -43,15 +43,15 @@ Package hashmap provides an implementation of a hashmap\. The map uses linear pr
 - [type KV](<#type-kv>)
 - [type Map](<#type-map>)
   - [func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]](<#func-newmap>)
-  - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-badrecv-copy>)
-  - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-badrecv-get>)
-  - [func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-badrecv-iter>)
-  - [func (m *Map[K, V]) Put(key K, val V)](<#func-badrecv-put>)
-  - [func (m *Map[K, V]) Remove(key K)](<#func-badrecv-remove>)
-  - [func (m *Map[K, V]) Size() int](<#func-badrecv-size>)
+  - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-mapk-v-copy>)
+  - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-mapk-v-get>)
+  - [func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]](<#func-mapk-v-iter>)
+  - [func (m *Map[K, V]) Put(key K, val V)](<#func-mapk-v-put>)
+  - [func (m *Map[K, V]) Remove(key K)](<#func-mapk-v-remove>)
+  - [func (m *Map[K, V]) Size() int](<#func-mapk-v-size>)
 
 
-## type KV
+## type [KV](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L176-L179>)
 
 ```go
 type KV[K, V any] struct {
@@ -60,7 +60,7 @@ type KV[K, V any] struct {
 }
 ```
 
-## type Map
+## type [Map](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L21-L28>)
 
 A Map is a hashmap that supports copying via copy\-on\-write\.
 
@@ -70,7 +70,7 @@ type Map[K, V any] struct {
 }
 ```
 
-### func NewMap
+### func [NewMap](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L36>)
 
 ```go
 func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]
@@ -78,7 +78,7 @@ func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *
 
 NewMap constructs a new map with the given capacity\.
 
-### func \(\*BADRECV\) Copy
+### func \(\*Map\[K\, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L165>)
 
 ```go
 func (m *Map[K, V]) Copy() *Map[K, V]
@@ -86,7 +86,7 @@ func (m *Map[K, V]) Copy() *Map[K, V]
 
 Copy returns a copy of this map\. The copy will not allocate any memory until the first write\, so any number of read\-only copies can be made without any additional allocations\.
 
-### func \(\*BADRECV\) Get
+### func \(\*Map\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L52>)
 
 ```go
 func (m *Map[K, V]) Get(key K) (V, bool)
@@ -94,7 +94,7 @@ func (m *Map[K, V]) Get(key K) (V, bool)
 
 Get returns the value stored for this key\, or false if there is no such value\.
 
-### func \(\*BADRECV\) Iter
+### func \(\*Map\[K\, V\]\) [Iter](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L182>)
 
 ```go
 func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]
@@ -102,7 +102,7 @@ func (m *Map[K, V]) Iter() iter.Iter[KV[K, V]]
 
 Iter returns an iterator over all key\-value pairs in the map\.
 
-### func \(\*BADRECV\) Put
+### func \(\*Map\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L89>)
 
 ```go
 func (m *Map[K, V]) Put(key K, val V)
@@ -110,7 +110,7 @@ func (m *Map[K, V]) Put(key K, val V)
 
 Put maps the given key to the given value\. If the key already exists its value will be overwritten with the new value\.
 
-### func \(\*BADRECV\) Remove
+### func \(\*Map\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L128>)
 
 ```go
 func (m *Map[K, V]) Remove(key K)
@@ -118,7 +118,7 @@ func (m *Map[K, V]) Remove(key K)
 
 Remove removes the specified key\-value pair from the map\.
 
-### func \(\*BADRECV\) Size
+### func \(\*Map\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L158>)
 
 ```go
 func (m *Map[K, V]) Size() int

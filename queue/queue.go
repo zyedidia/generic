@@ -46,6 +46,8 @@ func (q *Queue[T]) Empty() bool {
 	return q.list.Front == nil
 }
 
+// Each calls 'fn' on every item in the queue, starting with the least
+// recently pushed element.
 func (q *Queue[T]) Each(fn func(t T)) {
 	q.list.Front.Each(fn)
 }

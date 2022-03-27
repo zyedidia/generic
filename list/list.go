@@ -71,6 +71,7 @@ func (l *List[V]) Remove(n *Node[V]) {
 	}
 }
 
+// Each calls 'fn' on every element from this node onward in the list.
 func (n *Node[V]) Each(fn func(val V)) {
 	node := n
 	for node != nil {
@@ -79,6 +80,7 @@ func (n *Node[V]) Each(fn func(val V)) {
 	}
 }
 
+// EachReverse calls 'fn' on every element from this node backward in the list.
 func (n *Node[V]) EachReverse(fn func(val V)) {
 	node := n
 	for node != nil {

@@ -72,6 +72,8 @@ func (t *Tree[V]) Get(pos int) (V, bool) {
 	return n.value, true
 }
 
+// Each calls 'fn' on every element in the tree, and its corresponding
+// interval, in order sorted by starting position.
 func (t *Tree[V]) Each(fn func(low, high int, val V)) {
 	t.root.each(fn)
 }

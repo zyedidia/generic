@@ -172,7 +172,8 @@ func (m *Map[K, V]) Copy() *Map[K, V] {
 	}
 }
 
-// Iter returns an iterator over all key-value pairs in the map.
+// Each calls 'fn' on every key-value pair in the hashmap in no particular
+// order.
 func (m *Map[K, V]) Each(fn func(key K, val V)) {
 	for _, ent := range m.entries {
 		if ent.filled {

@@ -39,6 +39,7 @@ func (s *Set[K]) Size() int {
 	return s.m.Size()
 }
 
+// Each calls 'fn' on every item in the set in no particular order.
 func (s *Set[K]) Each(fn func(key K)) {
 	s.m.Each(func(key K, v struct{}) {
 		fn(key)

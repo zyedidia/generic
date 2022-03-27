@@ -168,6 +168,7 @@ func (t *Tree[K, V]) split(h *node[K, V]) *node[K, V] {
 	return n
 }
 
+// Each calls 'fn' on every node in the tree in order.
 func (t *Tree[K, V]) Each(fn func(key K, val V)) {
 	t.each(t.root, t.height, fn)
 }

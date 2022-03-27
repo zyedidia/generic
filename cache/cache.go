@@ -112,8 +112,8 @@ func (t *Cache[K, V]) Capacity() int {
 	return t.capacity
 }
 
-// Iter returns an iterator over all key-value pairs in the cache. It iterates
-// in order of most recently used to least recently used.
+// Each calls 'fn' on every value in the cache, from most recently used to
+// least recently used.
 func (t *Cache[K, V]) Each(fn func(key K, val V)) {
 	t.lru.Front.Each(func(kv KV[K, V]) {
 		fn(kv.Key, kv.Val)

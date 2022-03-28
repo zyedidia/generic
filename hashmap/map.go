@@ -92,6 +92,7 @@ func (m *Map[K, V]) Put(key K, val V) {
 		entries := make([]entry[K, V], len(m.entries))
 		copy(entries, m.entries)
 		m.entries = entries
+		m.readonly = false
 	}
 
 	hash := m.ops.hash(key)

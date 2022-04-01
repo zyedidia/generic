@@ -45,6 +45,7 @@ false
 
 - [type Set](<#type-set>)
   - [func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]](<#func-new>)
+  - [func (s *Set[K]) Copy() *Set[K]](<#func-setk-copy>)
   - [func (s *Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s *Set[K]) Has(val K) bool](<#func-setk-has>)
   - [func (s *Set[K]) Put(val K)](<#func-setk-put>)
@@ -69,6 +70,14 @@ func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
 ```
 
 New returns an empty hashset\.
+
+### func \(\*Set\[K\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L50>)
+
+```go
+func (s *Set[K]) Copy() *Set[K]
+```
+
+Copy returns a copy of this set\.
 
 ### func \(\*Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L43>)
 

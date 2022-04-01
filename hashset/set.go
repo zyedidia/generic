@@ -14,7 +14,7 @@ type Set[K any] struct {
 // New returns an empty hashset.
 func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K] {
 	return &Set[K]{
-		m: hashmap.NewMap[K, struct{}](capacity, equals, hash),
+		m: hashmap.New[K, struct{}](capacity, equals, hash),
 	}
 }
 
@@ -44,4 +44,11 @@ func (s *Set[K]) Each(fn func(key K)) {
 	s.m.Each(func(key K, v struct{}) {
 		fn(key)
 	})
+}
+
+// Copy returns a copy of this set.
+func (s *Set[K]) Copy() *Set[K] {
+	return &Set[K]{
+		m: s.m.Copy(),
+	}
 }

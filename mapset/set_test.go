@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"testing"
 
-	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/mapset"
 )
 
@@ -19,7 +18,7 @@ func checkeq[K comparable](set mapset.Set[K], get func(k K) bool, t *testing.T) 
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[int]bool)
-	set := mapset.New[int](1, g.Equals[int], g.HashInt)
+	set := mapset.New[int]()
 
 	const nops = 1000
 	for i := 0; i < nops; i++ {
@@ -47,7 +46,7 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func Example() {
-	set := mapset.New[string](3, g.Equals[string], g.HashString)
+	set := mapset.New[string]()
 	set.Put("foo")
 	set.Put("bar")
 	set.Put("baz")

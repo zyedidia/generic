@@ -173,11 +173,13 @@ Dequeue removes and returns the item at the front of the queue\.
 
 A panic occurs if the queue is Empty\.
 
-### func \(\*Queue\[T\]\) [Each](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L49>)
+### func \(\*Queue\[T\]\) [Each](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L51>)
 
 ```go
 func (q *Queue[T]) Each(fn func(t T))
 ```
+
+Each calls 'fn' on every item in the queue\, starting with the least recently pushed element\.
 
 ### func \(\*Queue\[T\]\) [Empty](<https://github.com/zyedidia/generic/blob/master/queue/queue.go#L45>)
 

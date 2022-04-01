@@ -1,4 +1,4 @@
-package hashmap
+package hashmap_test
 
 import (
 	"fmt"
@@ -6,9 +6,10 @@ import (
 	"testing"
 
 	g "github.com/zyedidia/generic"
+	"github.com/zyedidia/generic/hashmap"
 )
 
-func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
+func checkeq[K any, V comparable](cm *hashmap.Map[K, V], get func(k K) (V, bool), t *testing.T) {
 	cm.Each(func(key K, val V) {
 		if ov, ok := get(key); !ok {
 			t.Fatalf("key %v should exist", key)
@@ -20,7 +21,7 @@ func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *tes
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[uint64]uint32)
-	cowm := NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
+	cowm := hashmap.New[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
 
 	const nops = 1000
 
@@ -51,7 +52,7 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func TestCopy(t *testing.T) {
-	orig := NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
+	orig := hashmap.New[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
 
 	for i := uint32(0); i < 10; i++ {
 		orig.Put(uint64(i), i)
@@ -69,7 +70,7 @@ func TestCopy(t *testing.T) {
 }
 
 func Example() {
-	m := NewMap[string, int](1, g.Equals[string], g.HashString)
+	m := hashmap.New[string, int](1, g.Equals[string], g.HashString)
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 

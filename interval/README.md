@@ -86,11 +86,13 @@ func New[V any]() *Tree[V]
 
 New returns an empty interval tree\.
 
-### func \(\*Tree\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L75>)
+### func \(\*Tree\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L77>)
 
 ```go
 func (t *Tree[V]) Each(fn func(low, high int, val V))
 ```
+
+Each calls 'fn' on every element in the tree\, and its corresponding interval\, in order sorted by starting position\.
 
 ### func \(\*Tree\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L66>)
 
@@ -100,7 +102,7 @@ func (t *Tree[V]) Get(pos int) (V, bool)
 
 Get returns the value associated with the interval starting at 'pos'\, or 'false' if no such value exists\.
 
-### func \(\*Tree\[V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L80>)
+### func \(\*Tree\[V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L82>)
 
 ```go
 func (t *Tree[V]) Height() int
@@ -132,7 +134,7 @@ func (t *Tree[V]) Remove(pos int)
 
 Remove deletes the interval starting at 'pos'\.
 
-### func \(\*Tree\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L85>)
+### func \(\*Tree\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L87>)
 
 ```go
 func (t *Tree[V]) Size() int

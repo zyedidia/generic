@@ -89,7 +89,7 @@ Capacity returns the maximum capacity of the cache\.
 func (t *Cache[K, V]) Each(fn func(key K, val V))
 ```
 
-Iter returns an iterator over all key\-value pairs in the cache\. It iterates in order of most recently used to least recently used\.
+Each calls 'fn' on every value in the cache\, from most recently used to least recently used\.
 
 ### func \(\*Cache\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/cache/cache.go#L39>)
 

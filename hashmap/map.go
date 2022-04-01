@@ -31,8 +31,8 @@ type ops[T any] struct {
 	hash   func(t T) uint64
 }
 
-// NewMap constructs a new map with the given capacity.
-func NewMap[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V] {
+// New constructs a new map with the given capacity.
+func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V] {
 	if capacity == 0 {
 		capacity = 1
 	}

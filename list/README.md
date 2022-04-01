@@ -127,17 +127,21 @@ type Node[V any] struct {
 }
 ```
 
-### func \(\*Node\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/list/list.go#L74>)
+### func \(\*Node\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/list/list.go#L75>)
 
 ```go
 func (n *Node[V]) Each(fn func(val V))
 ```
 
-### func \(\*Node\[V\]\) [EachReverse](<https://github.com/zyedidia/generic/blob/master/list/list.go#L82>)
+Each calls 'fn' on every element from this node onward in the list\.
+
+### func \(\*Node\[V\]\) [EachReverse](<https://github.com/zyedidia/generic/blob/master/list/list.go#L84>)
 
 ```go
 func (n *Node[V]) EachReverse(fn func(val V))
 ```
+
+EachReverse calls 'fn' on every element from this node backward in the list\.
 
 
 

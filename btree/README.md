@@ -74,11 +74,13 @@ func New[K, V any](less g.LessFn[K]) *Tree[K, V]
 
 New returns an empty B\-tree\.
 
-### func \(\*Tree\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L171>)
+### func \(\*Tree\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L172>)
 
 ```go
 func (t *Tree[K, V]) Each(fn func(key K, val V))
 ```
+
+Each calls 'fn' on every node in the tree in order\.
 
 ### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L52>)
 

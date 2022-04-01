@@ -70,11 +70,13 @@ func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
 
 New returns an empty hashset\.
 
-### func \(\*Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L42>)
+### func \(\*Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L43>)
 
 ```go
 func (s *Set[K]) Each(fn func(key K))
 ```
+
+Each calls 'fn' on every item in the set in no particular order\.
 
 ### func \(\*Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L27>)
 

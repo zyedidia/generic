@@ -16,12 +16,11 @@ package main
 
 import (
 	"fmt"
-	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/mapset"
 )
 
 func main() {
-	set := mapset.New[string](3, g.Equals[string], g.HashString)
+	set := mapset.New[string]()
 	set.Put("foo")
 	set.Put("bar")
 	set.Put("baz")

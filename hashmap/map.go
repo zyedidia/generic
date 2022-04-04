@@ -89,7 +89,7 @@ func (m *Map[K, V]) Put(key K, val V) {
 	if m.length >= m.capacity/2 {
 		m.resize(m.capacity * 2)
 	} else if m.readonly {
-		entries := make([]entry[K, V], len(m.entries))
+		entries := make([]entry[K, V], len(m.entries), cap(m.entries))
 		copy(entries, m.entries)
 		m.entries = entries
 		m.readonly = false

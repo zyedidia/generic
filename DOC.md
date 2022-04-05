@@ -8,6 +8,8 @@ import "github.com/zyedidia/generic"
 
 ## Index
 
+- [func Clamp[T constraints.Ordered](x, lo, hi T) T](<#func-clamp>)
+- [func ClampFunc[T constraints.Ordered](x, lo, hi T, less LessFn[T]) T](<#func-clampfunc>)
 - [func Compare[T any](a, b T, less LessFn[T]) int](<#func-compare>)
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
 - [func HashBytes(b []byte) uint64](<#func-hashbytes>)
@@ -32,7 +34,66 @@ import "github.com/zyedidia/generic"
 - [type LessFn](<#type-lessfn>)
 
 
-## func [Compare](<https://github.com/zyedidia/generic/blob/master/generic.go#L35>)
+## func Clamp
+
+```go
+func Clamp[T constraints.Ordered](x, lo, hi T) T
+```
+
+Clamp returns x constrained within \[lo:hi\] range\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"time"
+)
+
+func main() {
+	fmt.Println(generic.Clamp(500, 400, 600))
+	fmt.Println(generic.Clamp(200, 400, 600))
+	fmt.Println(generic.Clamp(800, 400, 600))
+
+	fmt.Println(generic.Clamp(5*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
+	fmt.Println(generic.Clamp(2*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
+	fmt.Println(generic.Clamp(8*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
+
+	fmt.Println(generic.Clamp(1.5, 1.8, 1.8))
+	fmt.Println(generic.Clamp(1.5, 2.1, 1.9))
+
+}
+```
+
+#### Output
+
+```
+500
+400
+600
+5000
+4000
+6000
+1.8
+2.1
+```
+
+</p>
+</details>
+
+## func ClampFunc
+
+```go
+func ClampFunc[T constraints.Ordered](x, lo, hi T, less LessFn[T]) T
+```
+
+ClampFunc returns x constrained within \[lo:hi\] range using the less func\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+
+## func Compare
 
 ```go
 func Compare[T any](a, b T, less LessFn[T]) int
@@ -46,7 +107,7 @@ Compare uses a less function to determine the ordering of 'a' and 'b'\. It retur
 
 \* 0 if a == b
 
-## func [Equals](<https://github.com/zyedidia/generic/blob/master/generic.go#L19>)
+## func Equals
 
 ```go
 func Equals[T comparable](a, b T) bool
@@ -54,79 +115,79 @@ func Equals[T comparable](a, b T) bool
 
 Equals wraps the '==' operator for comparable types\.
 
-## func [HashBytes](<https://github.com/zyedidia/generic/blob/master/generic.go#L109>)
+## func HashBytes
 
 ```go
 func HashBytes(b []byte) uint64
 ```
 
-## func [HashInt](<https://github.com/zyedidia/generic/blob/master/generic.go#L100>)
+## func HashInt
 
 ```go
 func HashInt(i int) uint64
 ```
 
-## func [HashInt16](<https://github.com/zyedidia/generic/blob/master/generic.go#L94>)
+## func HashInt16
 
 ```go
 func HashInt16(i int16) uint64
 ```
 
-## func [HashInt32](<https://github.com/zyedidia/generic/blob/master/generic.go#L91>)
+## func HashInt32
 
 ```go
 func HashInt32(i int32) uint64
 ```
 
-## func [HashInt64](<https://github.com/zyedidia/generic/blob/master/generic.go#L88>)
+## func HashInt64
 
 ```go
 func HashInt64(i int64) uint64
 ```
 
-## func [HashInt8](<https://github.com/zyedidia/generic/blob/master/generic.go#L97>)
+## func HashInt8
 
 ```go
 func HashInt8(i int8) uint64
 ```
 
-## func [HashString](<https://github.com/zyedidia/generic/blob/master/generic.go#L106>)
+## func HashString
 
 ```go
 func HashString(s string) uint64
 ```
 
-## func [HashUint](<https://github.com/zyedidia/generic/blob/master/generic.go#L103>)
+## func HashUint
 
 ```go
 func HashUint(i uint) uint64
 ```
 
-## func [HashUint16](<https://github.com/zyedidia/generic/blob/master/generic.go#L82>)
+## func HashUint16
 
 ```go
 func HashUint16(u uint16) uint64
 ```
 
-## func [HashUint32](<https://github.com/zyedidia/generic/blob/master/generic.go#L79>)
+## func HashUint32
 
 ```go
 func HashUint32(u uint32) uint64
 ```
 
-## func [HashUint64](<https://github.com/zyedidia/generic/blob/master/generic.go#L76>)
+## func HashUint64
 
 ```go
 func HashUint64(u uint64) uint64
 ```
 
-## func [HashUint8](<https://github.com/zyedidia/generic/blob/master/generic.go#L85>)
+## func HashUint8
 
 ```go
 func HashUint8(u uint8) uint64
 ```
 
-## func [Less](<https://github.com/zyedidia/generic/blob/master/generic.go#L24>)
+## func Less
 
 ```go
 func Less[T constraints.Ordered](a, b T) bool
@@ -134,7 +195,7 @@ func Less[T constraints.Ordered](a, b T) bool
 
 Less wraps the '\<' operator for ordered types\.
 
-## func [Max](<https://github.com/zyedidia/generic/blob/master/generic.go#L45>)
+## func Max
 
 ```go
 func Max[T constraints.Ordered](a, b T) T
@@ -142,7 +203,35 @@ func Max[T constraints.Ordered](a, b T) T
 
 Max returns the max of a and b\.
 
-## func [MaxFunc](<https://github.com/zyedidia/generic/blob/master/generic.go#L61>)
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"time"
+)
+
+func main() {
+	fmt.Println(generic.Max(7, 3))
+	fmt.Println(generic.Max(2*time.Second, 3*time.Second).Milliseconds())
+}
+```
+
+#### Output
+
+```
+7
+3000
+```
+
+</p>
+</details>
+
+## func MaxFunc
 
 ```go
 func MaxFunc[T any](a, b T, less LessFn[T]) T
@@ -150,7 +239,36 @@ func MaxFunc[T any](a, b T, less LessFn[T]) T
 
 MaxFunc returns the max of a and b using the less func\.
 
-## func [Min](<https://github.com/zyedidia/generic/blob/master/generic.go#L53>)
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"math"
+)
+
+func main() {
+	lessMagnitude := func(a, b float64) bool {
+		return math.Abs(a) < math.Abs(b)
+	}
+	fmt.Println(generic.MaxFunc(2.5, -3.1, lessMagnitude))
+}
+```
+
+#### Output
+
+```
+-3.1
+```
+
+</p>
+</details>
+
+## func Min
 
 ```go
 func Min[T constraints.Ordered](a, b T) T
@@ -158,7 +276,35 @@ func Min[T constraints.Ordered](a, b T) T
 
 Min returns the min of a and b\.
 
-## func [MinFunc](<https://github.com/zyedidia/generic/blob/master/generic.go#L69>)
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"time"
+)
+
+func main() {
+	fmt.Println(generic.Min(7, 3))
+	fmt.Println(generic.Min(2*time.Second, 3*time.Second).Milliseconds())
+}
+```
+
+#### Output
+
+```
+3
+2000
+```
+
+</p>
+</details>
+
+## func MinFunc
 
 ```go
 func MinFunc[T any](a, b T, less LessFn[T]) T
@@ -166,7 +312,36 @@ func MinFunc[T any](a, b T, less LessFn[T]) T
 
 MinFunc returns the min of a and b using the less func\.
 
-## type [EqualsFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L10>)
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"math"
+)
+
+func main() {
+	lessMagnitude := func(a, b float64) bool {
+		return math.Abs(a) < math.Abs(b)
+	}
+	fmt.Println(generic.MinFunc(2.5, -3.1, lessMagnitude))
+}
+```
+
+#### Output
+
+```
+2.5
+```
+
+</p>
+</details>
+
+## type EqualsFn
 
 EqualsFn is a function that returns whether 'a' and 'b' are equal\.
 
@@ -174,7 +349,7 @@ EqualsFn is a function that returns whether 'a' and 'b' are equal\.
 type EqualsFn[T any] func(a, b T) bool
 ```
 
-## type [HashFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L16>)
+## type HashFn
 
 HashFn is a function that returns the hash of 't'\.
 
@@ -182,7 +357,7 @@ HashFn is a function that returns the hash of 't'\.
 type HashFn[T any] func(t T) uint64
 ```
 
-## type [LessFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L13>)
+## type LessFn
 
 LessFn is a function that returns whether 'a' is less than 'b'\.
 

@@ -28,11 +28,12 @@ documentation.
 
 # Contributing
 
-There are more data structures that may be useful to have, such as bloom
-filters, graph representations, and more kinds of search trees.
-If you would like to contribute a data structure please let me know.
+If you would like to contribute a new feature, please let me know first what
+you would like to add (via email or issue tracker). Here are some ideas:
 
-It would also be useful to have comprehensive benchmarks for the data
-structures, comparing to standard library implementations when possible, or
-just on their own. Benchmarks will also allow us to profile and optimize
-the implementations.
+* New data structures (bloom filters, graph structures, concurrent data
+  structures, adaptive radix tree, or other kinds of search trees).
+* Benchmarks, and optimization of the existing data structures based on those
+  benchmarks. The hashmap is an especially good target.
+* Design and implement a nice iterator API.
+* Improving tests (perhaps we can use Go's new fuzzing capabilities).

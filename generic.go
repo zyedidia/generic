@@ -57,6 +57,12 @@ func Min[T constraints.Ordered](a, b T) T {
 	return b
 }
 
+// Clamp returns x constrained within [lo:hi] range.
+// If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
+func Clamp[T constraints.Ordered](x, lo, hi T) T {
+	return Max(lo, Min(x, hi))
+}
+
 // MaxFunc returns the max of a and b using the less func.
 func MaxFunc[T any](a, b T, less LessFn[T]) T {
 	if less(b, a) {
@@ -71,6 +77,12 @@ func MinFunc[T any](a, b T, less LessFn[T]) T {
 		return a
 	}
 	return b
+}
+
+// ClampFunc returns x constrained within [lo:hi] range using the less func.
+// If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
+func ClampFunc[T constraints.Ordered](x, lo, hi T, less LessFn[T]) T {
+	return MinFunc(MaxFunc(lo, x, less), hi, less)
 }
 
 func HashUint64(u uint64) uint64 {

@@ -196,12 +196,8 @@ func (n *node[K, V]) findSmallest() *node[K, V] {
 }
 
 func (n *node[K, V]) size() int {
-	s := 1
-	if n.left != nil {
-		s += n.left.size()
+	if n == nil {
+		return 0
 	}
-	if n.right != nil {
-		s += n.left.size()
-	}
-	return s
+	return 1 + n.left.size() + n.right.size()
 }

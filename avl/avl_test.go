@@ -9,7 +9,10 @@ import (
 	"github.com/zyedidia/generic/avl"
 )
 
-func checkeq[K any, V comparable](cm *avl.Tree[K, V], get func(k K) (V, bool), t *testing.T) {
+func checkeq[K any, V comparable](cm *avl.Tree[K, V], n int, get func(k K) (V, bool), t *testing.T) {
+	if sz := cm.Size(); sz != n {
+		t.Fatalf("size mismatch: %d != %d", sz, n)
+	}
 	cm.Each(func(key K, val V) {
 		if ov, ok := get(key); !ok {
 			t.Fatalf("key %v should exist", key)
@@ -21,10 +24,14 @@ func checkeq[K any, V comparable](cm *avl.Tree[K, V], get func(k K) (V, bool), t
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[int]int)
+	get := func(k int) (int, bool) {
+		v, ok := stdm[int(k)]
+		return v, ok
+	}
 	tree := avl.New[int, int](g.Less[int])
+	checkeq(tree, len(stdm), get, t)
 
 	const nops = 1000
-
 	for i := 0; i < nops; i++ {
 		key := rand.Intn(100)
 		val := rand.Int()
@@ -44,10 +51,7 @@ func TestCrossCheck(t *testing.T) {
 			tree.Remove(del)
 		}
 
-		checkeq(tree, func(k int) (int, bool) {
-			v, ok := stdm[int(k)]
-			return v, ok
-		}, t)
+		checkeq(tree, len(stdm), get, t)
 	}
 }
 

@@ -62,11 +62,9 @@ func ExampleSet_Intersection() {
 	s := NewMapset(1, 4, 7)
 	o := NewHashset(1, generic.Equals[int], generic.HashInt, 1, 7)
 	inter := s.Intersection(o)
-	keys := inter.Keys()
-	sort.Ints(keys)
 
-	fmt.Println(keys)
-	fmt.Printf("%T", inter.SetOf) // the same as the first map
+	fmt.Println(inter)
+	fmt.Printf("%T", inter.SetOf) // the same type as the receiver
 	// Output:
 	// [1 7]
 	// mapset.Set[int]
@@ -75,12 +73,10 @@ func ExampleSet_Intersection() {
 func ExampleSet_Difference() {
 	s := NewHashset(1, generic.Equals[int], generic.HashInt, 3, 4, 5, 6, 7)
 	o := NewMapset(5)
-	inter := s.Difference(o)
-	keys := inter.Keys()
-	sort.Ints(keys)
+	diff := s.Difference(o)
 
-	fmt.Println(keys)
-	fmt.Printf("%T", inter.SetOf) // the same as the first map
+	fmt.Println(diff)
+	fmt.Printf("%T", diff.SetOf) // the same type as the receiver
 	// Output:
 	// [3 4 6 7]
 	// *hashset.Set[int]

@@ -68,7 +68,7 @@ type Map[K, V any] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L35>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L43>)
 
 ```go
 func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]
@@ -76,7 +76,7 @@ func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map
 
 New constructs a new map with the given capacity\.
 
-### func \(\*Map\[K\, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L165>)
+### func \(\*Map\[K\, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L174>)
 
 ```go
 func (m *Map[K, V]) Copy() *Map[K, V]
@@ -84,7 +84,7 @@ func (m *Map[K, V]) Copy() *Map[K, V]
 
 Copy returns a copy of this map\. The copy will not allocate any memory until the first write\, so any number of read\-only copies can be made without any additional allocations\.
 
-### func \(\*Map\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L178>)
+### func \(\*Map\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L187>)
 
 ```go
 func (m *Map[K, V]) Each(fn func(key K, val V))
@@ -92,7 +92,7 @@ func (m *Map[K, V]) Each(fn func(key K, val V))
 
 Each calls 'fn' on every key\-value pair in the hashmap in no particular order\.
 
-### func \(\*Map\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L51>)
+### func \(\*Map\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L60>)
 
 ```go
 func (m *Map[K, V]) Get(key K) (V, bool)
@@ -100,7 +100,7 @@ func (m *Map[K, V]) Get(key K) (V, bool)
 
 Get returns the value stored for this key\, or false if there is no such value\.
 
-### func \(\*Map\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L88>)
+### func \(\*Map\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L97>)
 
 ```go
 func (m *Map[K, V]) Put(key K, val V)
@@ -108,7 +108,7 @@ func (m *Map[K, V]) Put(key K, val V)
 
 Put maps the given key to the given value\. If the key already exists its value will be overwritten with the new value\.
 
-### func \(\*Map\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L128>)
+### func \(\*Map\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L137>)
 
 ```go
 func (m *Map[K, V]) Remove(key K)
@@ -116,7 +116,7 @@ func (m *Map[K, V]) Remove(key K)
 
 Remove removes the specified key\-value pair from the map\.
 
-### func \(\*Map\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L158>)
+### func \(\*Map\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L167>)
 
 ```go
 func (m *Map[K, V]) Size() int

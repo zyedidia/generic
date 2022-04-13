@@ -19,7 +19,7 @@ There are four implementations of the MultiMap data structure\, identified by se
   - [func NewMapSlice[K, V comparable]() MultiMap[K, V]](<#func-newmapslice>)
 
 
-## type MultiMap
+## type [MultiMap](<https://github.com/zyedidia/generic/blob/master/multimap/multimap.go#L11-L40>)
 
 MultiMap is an associative container that contains a list of key\-value pairs\, while permitting multiple entries with the same key\.
 
@@ -56,7 +56,7 @@ type MultiMap[K, V any] interface {
 }
 ```
 
-### func NewAvlSet
+### func [NewAvlSet](<https://github.com/zyedidia/generic/blob/master/multimap/avl.go#L109>)
 
 ```go
 func NewAvlSet[K, V any](keyLess g.LessFn[K], valueLess g.LessFn[V]) MultiMap[K, V]
@@ -64,7 +64,7 @@ func NewAvlSet[K, V any](keyLess g.LessFn[K], valueLess g.LessFn[V]) MultiMap[K,
 
 NewAvlSet creates a MultiMap using AVL tree and AVL set\. \- Duplicate entries are not permitted\. \- Both keys and values are sorted\.
 
-### func NewAvlSlice
+### func [NewAvlSlice](<https://github.com/zyedidia/generic/blob/master/multimap/avl.go#L95>)
 
 ```go
 func NewAvlSlice[K any, V comparable](keyLess g.LessFn[K]) MultiMap[K, V]
@@ -72,7 +72,7 @@ func NewAvlSlice[K any, V comparable](keyLess g.LessFn[K]) MultiMap[K, V]
 
 NewAvlSlice creates a MultiMap using AVL tree and builtin slice\. \- Value type must be comparable\. \- Duplicate entries are permitted\. \- Keys are sorted\, but values are unsorted\.
 
-### func NewMapSet
+### func [NewMapSet](<https://github.com/zyedidia/generic/blob/master/multimap/map.go#L108>)
 
 ```go
 func NewMapSet[K comparable, V any](valueLess g.LessFn[V]) MultiMap[K, V]
@@ -80,7 +80,7 @@ func NewMapSet[K comparable, V any](valueLess g.LessFn[V]) MultiMap[K, V]
 
 NewMapSet creates a MultiMap using builtin map and AVL set\. \- Key type must be comparable\. \- Duplicate entries are not permitted\. \- Values are sorted\, but keys are unsorted\.
 
-### func NewMapSlice
+### func [NewMapSlice](<https://github.com/zyedidia/generic/blob/master/multimap/map.go#L94>)
 
 ```go
 func NewMapSlice[K, V comparable]() MultiMap[K, V]

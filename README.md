@@ -13,6 +13,7 @@ This package implements some generic data structures.
   the hashmap can be efficiently copied, using copy-on-write under the hood.
 * [`hashset`](./hashset): a hashset that uses the hashmap as the underlying storage.
 * [`mapset`](./mapset): a set that uses Go's built-in map as the underlying storage.
+* [`multimap`](./multimap): an associative container that permits multiple entries with the same key.
 * [`interval`](./interval): an interval tree, implemented as an augmented AVL tree.
 * [`list`](./list): a doubly-linked list.
 * [`rope`](./rope): a generic rope, which is similar to an array but supports efficient

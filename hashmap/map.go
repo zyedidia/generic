@@ -31,11 +31,20 @@ type ops[T any] struct {
 	hash   func(t T) uint64
 }
 
+func pow2ceil(num uint64) uint64 {
+	power := uint64(1)
+	for power < num {
+		power *= 2
+	}
+	return power
+}
+
 // New constructs a new map with the given capacity.
 func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V] {
 	if capacity == 0 {
 		capacity = 1
 	}
+	capacity = pow2ceil(capacity)
 	return &Map[K, V]{
 		entries:  make([]entry[K, V], capacity),
 		capacity: capacity,

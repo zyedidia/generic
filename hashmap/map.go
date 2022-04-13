@@ -139,7 +139,7 @@ func (m *Map[K, V]) Remove(key K) {
 	idx := hash & (m.capacity - 1)
 
 	for m.entries[idx].filled && !m.ops.equals(m.entries[idx].key, key) {
-		idx = (idx + 1) % m.capacity
+		idx = (idx + 1) & (m.capacity - 1)
 	}
 
 	if !m.entries[idx].filled {
@@ -148,13 +148,13 @@ func (m *Map[K, V]) Remove(key K) {
 
 	m.remove(idx)
 
-	idx = (idx + 1) % m.capacity
+	idx = (idx + 1) & (m.capacity - 1)
 	for m.entries[idx].filled {
 		krehash := m.entries[idx].key
 		vrehash := m.entries[idx].value
 		m.remove(idx)
 		m.Put(krehash, vrehash)
-		idx = (idx + 1) % m.capacity
+		idx = (idx + 1) & (m.capacity - 1)
 	}
 
 	// halves the array if it is 12.5% full or less

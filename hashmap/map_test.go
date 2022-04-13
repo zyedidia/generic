@@ -21,7 +21,7 @@ func checkeq[K any, V comparable](cm *hashmap.Map[K, V], get func(k K) (V, bool)
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[uint64]uint32)
-	cowm := hashmap.New[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
+	cowm := hashmap.New[uint64, uint32](uint64(rand.Intn(1024)), g.Equals[uint64], g.HashUint64)
 
 	const nops = 1000
 

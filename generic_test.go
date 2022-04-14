@@ -33,6 +33,7 @@ func ExampleClamp() {
 	fmt.Println(generic.Clamp(2*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
 	fmt.Println(generic.Clamp(8*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
 
+	fmt.Println(generic.Clamp(1.5, 1.4, 1.8))
 	fmt.Println(generic.Clamp(1.5, 1.8, 1.8))
 	fmt.Println(generic.Clamp(1.5, 2.1, 1.9))
 
@@ -43,24 +44,42 @@ func ExampleClamp() {
 	// 5000
 	// 4000
 	// 6000
+	// 1.5
 	// 1.8
 	// 2.1
 }
 
+func lessMagnitude(a, b float64) bool {
+	return math.Abs(a) < math.Abs(b)
+}
+
 func ExampleMaxFunc() {
-	lessMagnitude := func(a, b float64) bool {
-		return math.Abs(a) < math.Abs(b)
-	}
 	fmt.Println(generic.MaxFunc(2.5, -3.1, lessMagnitude))
 	// Output:
 	// -3.1
 }
 
 func ExampleMinFunc() {
-	lessMagnitude := func(a, b float64) bool {
-		return math.Abs(a) < math.Abs(b)
-	}
 	fmt.Println(generic.MinFunc(2.5, -3.1, lessMagnitude))
 	// Output:
 	// 2.5
+}
+
+func ExampleClampFunc() {
+	fmt.Println(generic.ClampFunc(1.5, 1.4, 1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, 1.8, 1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, 2.1, 1.9, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -1.4, -1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -1.8, -1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -2.1, -1.9, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, -1.5, -1.5, lessMagnitude))
+
+	// Output:
+	// 1.5
+	// 1.8
+	// 2.1
+	// -1.5
+	// -1.8
+	// -2.1
+	// 1.5
 }

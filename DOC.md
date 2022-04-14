@@ -9,7 +9,7 @@ import "github.com/zyedidia/generic"
 ## Index
 
 - [func Clamp[T constraints.Ordered](x, lo, hi T) T](<#func-clamp>)
-- [func ClampFunc[T constraints.Ordered](x, lo, hi T, less LessFn[T]) T](<#func-clampfunc>)
+- [func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T](<#func-clampfunc>)
 - [func Compare[T any](a, b T, less LessFn[T]) int](<#func-compare>)
 - [func Equals[T comparable](a, b T) bool](<#func-equals>)
 - [func HashBytes(b []byte) uint64](<#func-hashbytes>)
@@ -63,6 +63,7 @@ func main() {
 	fmt.Println(generic.Clamp(2*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
 	fmt.Println(generic.Clamp(8*time.Second, 4*time.Second, 6*time.Second).Milliseconds())
 
+	fmt.Println(generic.Clamp(1.5, 1.4, 1.8))
 	fmt.Println(generic.Clamp(1.5, 1.8, 1.8))
 	fmt.Println(generic.Clamp(1.5, 2.1, 1.9))
 
@@ -78,6 +79,7 @@ func main() {
 5000
 4000
 6000
+1.5
 1.8
 2.1
 ```
@@ -88,10 +90,53 @@ func main() {
 ## func [ClampFunc](<https://github.com/zyedidia/generic/blob/master/generic.go#L84>)
 
 ```go
-func ClampFunc[T constraints.Ordered](x, lo, hi T, less LessFn[T]) T
+func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T
 ```
 
 ClampFunc returns x constrained within \[lo:hi\] range using the less func\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/zyedidia/generic"
+	"math"
+)
+
+func lessMagnitude(a, b float64) bool {
+	return math.Abs(a) < math.Abs(b)
+}
+
+func main() {
+	fmt.Println(generic.ClampFunc(1.5, 1.4, 1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, 1.8, 1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, 2.1, 1.9, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -1.4, -1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -1.8, -1.8, lessMagnitude))
+	fmt.Println(generic.ClampFunc(-1.5, -2.1, -1.9, lessMagnitude))
+	fmt.Println(generic.ClampFunc(1.5, -1.5, -1.5, lessMagnitude))
+
+}
+```
+
+#### Output
+
+```
+1.5
+1.8
+2.1
+-1.5
+-1.8
+-2.1
+1.5
+```
+
+</p>
+</details>
 
 ## func [Compare](<https://github.com/zyedidia/generic/blob/master/generic.go#L35>)
 
@@ -251,10 +296,11 @@ import (
 	"math"
 )
 
+func lessMagnitude(a, b float64) bool {
+	return math.Abs(a) < math.Abs(b)
+}
+
 func main() {
-	lessMagnitude := func(a, b float64) bool {
-		return math.Abs(a) < math.Abs(b)
-	}
 	fmt.Println(generic.MaxFunc(2.5, -3.1, lessMagnitude))
 }
 ```
@@ -324,10 +370,11 @@ import (
 	"math"
 )
 
+func lessMagnitude(a, b float64) bool {
+	return math.Abs(a) < math.Abs(b)
+}
+
 func main() {
-	lessMagnitude := func(a, b float64) bool {
-		return math.Abs(a) < math.Abs(b)
-	}
 	fmt.Println(generic.MinFunc(2.5, -3.1, lessMagnitude))
 }
 ```

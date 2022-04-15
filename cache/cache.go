@@ -13,10 +13,10 @@ import (
 // The cache has a maximum size, and uses a least-recently-used eviction
 // policy when there is not space for a new entry.
 type Cache[K comparable, V any] struct {
-	size     int
 	capacity int
 	lru      list.List[KV[K, V]]
 	table    map[K]*list.Node[KV[K, V]]
+	evictCb  func(key K, val V)
 }
 
 type KV[K comparable, V any] struct {
@@ -27,7 +27,6 @@ type KV[K comparable, V any] struct {
 // New returns a new Cache with the given capacity.
 func New[K comparable, V any](capacity int) *Cache[K, V] {
 	return &Cache[K, V]{
-		size:     0,
 		capacity: capacity,
 		lru:      list.List[KV[K, V]]{},
 		table:    make(map[K]*list.Node[KV[K, V]]),
@@ -55,7 +54,7 @@ func (t *Cache[K, V]) Put(k K, e V) {
 		return
 	}
 
-	if t.size == t.capacity {
+	if len(t.table) == t.capacity {
 		t.evict()
 	}
 	n := &list.Node[KV[K, V]]{
@@ -65,15 +64,16 @@ func (t *Cache[K, V]) Put(k K, e V) {
 		},
 	}
 	t.lru.PushFrontNode(n)
-	t.size++
 	t.table[k] = n
 }
 
 func (t *Cache[K, V]) evict() {
-	key := t.lru.Back.Value.Key
+	entry := t.lru.Back.Value
+	if t.evictCb != nil {
+		t.evictCb(entry.Key, entry.Val)
+	}
 	t.lru.Remove(t.lru.Back)
-	t.size--
-	delete(t.table, key)
+	delete(t.table, entry.Key)
 }
 
 // Remove causes the entry associated with the given key to be immediately
@@ -81,30 +81,21 @@ func (t *Cache[K, V]) evict() {
 func (t *Cache[K, V]) Remove(k K) {
 	if n, ok := t.table[k]; ok {
 		t.lru.Remove(n)
-		t.size--
 		delete(t.table, k)
 	}
 }
 
-// Resize changes the maximum capacity for this cache to 'size'.
-func (t *Cache[K, V]) Resize(size int) {
-	if t.capacity == size {
-		return
-	} else if t.capacity < size {
-		t.capacity = size
-		return
-	}
-
-	for i := 0; i < t.capacity-size; i++ {
+// Resize changes the maximum capacity for this cache to 'capacity'.
+func (t *Cache[K, V]) Resize(capacity int) {
+	t.capacity = capacity
+	for len(t.table) > capacity {
 		t.evict()
 	}
-
-	t.capacity = size
 }
 
 // Size returns the number of active elements in the cache.
 func (t *Cache[K, V]) Size() int {
-	return t.size
+	return len(t.table)
 }
 
 // Capacity returns the maximum capacity of the cache.
@@ -118,4 +109,10 @@ func (t *Cache[K, V]) Each(fn func(key K, val V)) {
 	t.lru.Front.Each(func(kv KV[K, V]) {
 		fn(kv.Key, kv.Val)
 	})
+}
+
+// SetEvictCallback sets a callback to be invoked before an entry is evicted.
+// This replaces any prior callback set by this method.
+func (t *Cache[K, V]) SetEvictCallback(fn func(key K, val V)) {
+	t.evictCb = fn
 }

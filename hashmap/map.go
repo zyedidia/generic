@@ -146,6 +146,13 @@ func (m *Map[K, V]) Remove(key K) {
 		return
 	}
 
+	if m.readonly {
+		entries := make([]entry[K, V], len(m.entries), cap(m.entries))
+		copy(entries, m.entries)
+		m.entries = entries
+		m.readonly = false
+	}
+
 	m.remove(idx)
 
 	idx = (idx + 1) & (m.capacity - 1)

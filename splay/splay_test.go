@@ -6,10 +6,11 @@ import (
 	"testing"
 
 	g "github.com/zyedidia/generic"
+	agg "github.com/zyedidia/generic/aggregator"
 	"github.com/zyedidia/generic/splay"
 )
 
-func checkeq[K, V comparable, A any](cm *splay.Tree[K, V, A], stdm map[K]V, t *testing.T) {
+func checkeq[K, V comparable, A, R any](cm *splay.Tree[K, V, A, R], stdm map[K]V, t *testing.T) {
 	n := len(stdm)
 	if sz := cm.Size(); sz != n {
 		t.Fatalf("size mismatch: %d != %d", sz, n)
@@ -26,7 +27,7 @@ func checkeq[K, V comparable, A any](cm *splay.Tree[K, V, A], stdm map[K]V, t *t
 
 func TestCrossCheck1(t *testing.T) {
 	stdm := make(map[int]int)
-	tree := splay.New(g.Less[int], splay.NewValueAggregator[int]())
+	tree := splay.New(g.Less[int], agg.NewValueAggregator[int]())
 	checkeq(tree, stdm, t)
 
 	const nops = 3000
@@ -61,7 +62,7 @@ func TestCrossCheck1(t *testing.T) {
 
 func TestCrossCheck2(t *testing.T) {
 	stdm := make(map[int]int)
-	tree := splay.New(g.Less[int], splay.NewValueAggregator[int]())
+	tree := splay.New(g.Less[int], agg.NewValueAggregator[int]())
 	checkeq(tree, stdm, t)
 
 	const nops = 1000
@@ -89,7 +90,7 @@ func TestCrossCheck2(t *testing.T) {
 
 func TestPopUp(t *testing.T) {
 	stdm := [100]int{}
-	tree := splay.New(g.Less[int], splay.NewMinMaxAggregator(g.Less[int]))
+	tree := splay.New(g.Less[int], agg.NewMinMaxAggregator(g.Less[int]))
 
 	for i := 0; i < len(stdm); i++ {
 		stdm[i] = -1
@@ -139,7 +140,7 @@ func TestPopUp(t *testing.T) {
 
 func TestPushDown(t *testing.T) {
 	stdm := make(map[int]int)
-	tree := splay.New(g.Less[int], splay.NewRangeAssignAggregator[int]())
+	tree := splay.New(g.Less[int], agg.NewRangeAssignAggregator[int]())
 	checkeq(tree, stdm, t)
 
 	const nops = 1000
@@ -180,7 +181,7 @@ func TestPushDown(t *testing.T) {
 }
 
 func Example() {
-	tree := splay.New(g.Less[int], splay.NewMinMaxAggregator(g.Less[string]))
+	tree := splay.New(g.Less[int], agg.NewMinMaxAggregator(g.Less[string]))
 
 	tree.Put(42, "foo")
 	tree.Put(-10, "bar")

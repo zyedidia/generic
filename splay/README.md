@@ -17,11 +17,12 @@ package main
 import (
 	"fmt"
 	g "github.com/zyedidia/generic"
+	agg "github.com/zyedidia/generic/aggregator"
 	"github.com/zyedidia/generic/splay"
 )
 
 func main() {
-	tree := splay.New(g.Less[int], splay.NewMinMaxAggregator(g.Less[string]))
+	tree := splay.New(g.Less[int], agg.NewMinMaxAggregator(g.Less[string]))
 
 	tree.Put(42, "foo")
 	tree.Put(-10, "bar")
@@ -52,126 +53,78 @@ bar
 
 ## Index
 
-- [type Aggregator](<#type-aggregator>)
-  - [func NewMinMaxAggregator[V any](less g.LessFn[V]) Aggregator[V, minMaxAgg[V]]](<#func-newminmaxaggregator>)
-  - [func NewRangeAssignAggregator[V any]() Aggregator[V, rangeAssignAgg[V]]](<#func-newrangeassignaggregator>)
-  - [func NewValueAggregator[V any]() Aggregator[V, V]](<#func-newvalueaggregator>)
 - [type Tree](<#type-tree>)
-  - [func New[K, V, A any](less g.LessFn[K], aggregator Aggregator[V, A]) *Tree[K, V, A]](<#func-new>)
-  - [func (t *Tree[K, V, A]) Each(fn func(K, V))](<#func-treek-v-a-each>)
-  - [func (t *Tree[K, V, A]) Get(key K) (V, bool)](<#func-treek-v-a-get>)
-  - [func (t *Tree[K, V, A]) Put(key K, value V)](<#func-treek-v-a-put>)
-  - [func (t *Tree[K, V, A]) Range(l, r K) *A](<#func-treek-v-a-range>)
-  - [func (t *Tree[K, V, A]) Remove(key K)](<#func-treek-v-a-remove>)
-  - [func (t *Tree[K, V, A]) Size() int](<#func-treek-v-a-size>)
+  - [func New[K, V, A, R any](less g.LessFn[K], aggregator agg.Aggregator[V, A, R]) *Tree[K, V, A, R]](<#func-new>)
+  - [func (t *Tree[K, V, A, R]) Each(fn func(K, V))](<#func-treek-v-a-r-each>)
+  - [func (t *Tree[K, V, A, R]) Get(key K) (V, bool)](<#func-treek-v-a-r-get>)
+  - [func (t *Tree[K, V, A, R]) Put(key K, value V)](<#func-treek-v-a-r-put>)
+  - [func (t *Tree[K, V, A, R]) Range(l, r K) R](<#func-treek-v-a-r-range>)
+  - [func (t *Tree[K, V, A, R]) Remove(key K)](<#func-treek-v-a-r-remove>)
+  - [func (t *Tree[K, V, A, R]) Size() int](<#func-treek-v-a-r-size>)
 
 
-## type [Aggregator](<https://github.com/zjkmxy/generic/blob/master/splay/aggregator.go#L10-L22>)
-
-Aggregator is an interface for aggregating values from a range\. V is the value type A is the structure stored at each node which is used for aggregation\.
-
-```go
-type Aggregator[V, A any] interface {
-    // PopUp aggregates values from the children of the parent node.
-    PopUp(self, lchd, rchd *A) *A
-
-    // PushDown populates the updates attached at a node to its children.
-    PushDown(self, lchd, rchd *A)
-
-    // FromValue generates an A from a value.
-    FromValue(value V) *A
-
-    // Value returns the value stored in a node.
-    Value(self *A) V
-}
-```
-
-### func [NewMinMaxAggregator](<https://github.com/zjkmxy/generic/blob/master/splay/aggregator.go#L123>)
-
-```go
-func NewMinMaxAggregator[V any](less g.LessFn[V]) Aggregator[V, minMaxAgg[V]]
-```
-
-NewMinMaxAggregator creates a MinMaxAggregator\, which collects minimal and maximal values in a range\.
-
-### func [NewRangeAssignAggregator](<https://github.com/zjkmxy/generic/blob/master/splay/aggregator.go#L179>)
-
-```go
-func NewRangeAssignAggregator[V any]() Aggregator[V, rangeAssignAgg[V]]
-```
-
-NewRangeSetAggregator creates a RangeAssignAggregator\, which can update the values associated to a range of keys\.
-
-### func [NewValueAggregator](<https://github.com/zjkmxy/generic/blob/master/splay/aggregator.go#L45>)
-
-```go
-func NewValueAggregator[V any]() Aggregator[V, V]
-```
-
-NewValueAggregator creates a ValueAggregator\, which only stores the value\.
-
-## type [Tree](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L23-L38>)
+## type [Tree](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L24-L39>)
 
 Tree implements a Splay tree\.
 
 ```go
-type Tree[K, V, A any] struct {
+type Tree[K, V, A, R any] struct {
     // contains filtered or unexported fields
 }
 ```
 
-### func [New](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L243>)
+### func [New](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L246>)
 
 ```go
-func New[K, V, A any](less g.LessFn[K], aggregator Aggregator[V, A]) *Tree[K, V, A]
+func New[K, V, A, R any](less g.LessFn[K], aggregator agg.Aggregator[V, A, R]) *Tree[K, V, A, R]
 ```
 
 New returns an empty Splay tree\.
 
-### func \(\*Tree\[K\, V\, A\]\) [Each](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L235>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Each](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L238>)
 
 ```go
-func (t *Tree[K, V, A]) Each(fn func(K, V))
+func (t *Tree[K, V, A, R]) Each(fn func(K, V))
 ```
 
 Each calls 'fn' on every node in the tree in order
 
-### func \(\*Tree\[K\, V\, A\]\) [Get](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L182>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Get](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L184>)
 
 ```go
-func (t *Tree[K, V, A]) Get(key K) (V, bool)
+func (t *Tree[K, V, A, R]) Get(key K) (V, bool)
 ```
 
 Get returns the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\, A\]\) [Put](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L192>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Put](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L194>)
 
 ```go
-func (t *Tree[K, V, A]) Put(key K, value V)
+func (t *Tree[K, V, A, R]) Put(key K, value V)
 ```
 
 Put associates 'key' with 'value'\.
 
-### func \(\*Tree\[K\, V\, A\]\) [Range](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L261>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Range](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L263>)
 
 ```go
-func (t *Tree[K, V, A]) Range(l, r K) *A
+func (t *Tree[K, V, A, R]) Range(l, r K) R
 ```
 
 Range returns the aggregator associated with key range \[l\, r\)\, which can be used to obtain statistics or do range\-based update\. Note that the range is only valid before next operation on the tree\.
 
-### func \(\*Tree\[K\, V\, A\]\) [Remove](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L213>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Remove](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L216>)
 
 ```go
-func (t *Tree[K, V, A]) Remove(key K)
+func (t *Tree[K, V, A, R]) Remove(key K)
 ```
 
 Remove removes the value associated with 'key'\.
 
-### func \(\*Tree\[K\, V\, A\]\) [Size](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L230>)
+### func \(\*Tree\[K\, V\, A\, R\]\) [Size](<https://github.com/zjkmxy/generic/blob/master/splay/splay.go#L233>)
 
 ```go
-func (t *Tree[K, V, A]) Size() int
+func (t *Tree[K, V, A, R]) Size() int
 ```
 
 Size returns the number of elements in the tree\.

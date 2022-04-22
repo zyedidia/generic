@@ -9,6 +9,7 @@ package splay
 
 import (
 	g "github.com/zyedidia/generic"
+	agg "github.com/zyedidia/generic/aggregator"
 )
 
 type direction int
@@ -20,47 +21,48 @@ const (
 )
 
 // Tree implements a Splay tree.
-type Tree[K, V, A any] struct {
+type Tree[K, V, A, R any] struct {
 	// null is the sential node representing an empty node.
 	// When not splaying, its children are pointing to itself when the tree.
 	// When splaying, its children are pointing to a temporary tree that
 	// will be attached to the updated root in the reverse order.
-	null node[K, V, A]
+	null node[K, V, A, R]
 
 	// root is the root of the tree.
-	root *node[K, V, A]
+	root *node[K, V, A, R]
 
 	// less is the '<' function used to compare keys.
 	less g.LessFn[K]
 
 	// aggregator gives a set of functions used to operate on aggregators.
-	aggregator Aggregator[V, A]
+	aggregator agg.Aggregator[V, A, R]
 }
 
-type node[K, V, A any] struct {
+type node[K, V, A, R any] struct {
 	key K
 	agg *A
 
 	size int
-	chd  [2]*node[K, V, A]
+	chd  [2]*node[K, V, A, R]
 }
 
-func (n *node[K, V, A]) popUp(aggregator Aggregator[V, A]) *node[K, V, A] {
+func (n *node[K, V, A, R]) popUp(aggregator agg.Aggregator[V, A, R]) *node[K, V, A, R] {
 	n.size = 1 + n.chd[dirLeft].size + n.chd[dirRight].size
-	n.agg = aggregator.PopUp(n.agg, n.chd[dirLeft].agg, n.chd[dirRight].agg)
+	aggregator.PopUp(n.agg, []*A{n.chd[dirLeft].agg, n.chd[dirRight].agg})
 	return n
 }
 
-func (n *node[K, V, A]) pushDown(aggregator Aggregator[V, A]) *node[K, V, A] {
-	aggregator.PushDown(n.agg, n.chd[dirLeft].agg, n.chd[dirRight].agg)
+func (n *node[K, V, A, R]) pushDown(aggregator agg.Aggregator[V, A, R]) *node[K, V, A, R] {
+	aggregator.PushDown(n.agg, []*A{n.chd[dirLeft].agg, n.chd[dirRight].agg})
 	return n
 }
 
-func (t *Tree[K, V, A]) newNode(key K, value V, lchd *node[K, V, A], rchd *node[K, V, A]) *node[K, V, A] {
-	return (&node[K, V, A]{
+func (t *Tree[K, V, A, R]) newNode(key K, value V, lchd *node[K, V, A, R], rchd *node[K, V, A, R]) *node[K, V, A, R] {
+	agg := t.aggregator.FromValue(value)
+	return (&node[K, V, A, R]{
 		key: key,
-		agg: t.aggregator.FromValue(value),
-		chd: [2]*node[K, V, A]{
+		agg: &agg,
+		chd: [2]*node[K, V, A, R]{
 			lchd,
 			rchd,
 		},
@@ -69,7 +71,7 @@ func (t *Tree[K, V, A]) newNode(key K, value V, lchd *node[K, V, A], rchd *node[
 
 // zig moves one step in a direction during a splay.
 // Note: cleanUp() is required after splay.
-func (t *Tree[K, V, A]) zig(d direction) {
+func (t *Tree[K, V, A, R]) zig(d direction) {
 	newRoot := t.root.pushDown(t.aggregator).chd[d]
 	t.root.chd[d] = t.null.chd[d]
 	t.null.chd[d] = t.root
@@ -78,7 +80,7 @@ func (t *Tree[K, V, A]) zig(d direction) {
 
 // zigzig moves two steps in a direction during a splay.
 // Note: cleanUp() is required after splay.
-func (t *Tree[K, V, A]) zigzig(d direction) {
+func (t *Tree[K, V, A, R]) zigzig(d direction) {
 	middle := t.root.pushDown(t.aggregator).chd[d]
 	newRoot := middle.pushDown(t.aggregator).chd[d]
 	middle.chd[d] = t.null.chd[d]
@@ -90,7 +92,7 @@ func (t *Tree[K, V, A]) zigzig(d direction) {
 
 // cleanUp puts the nodes in the temporary tree (i.e. null.chd)
 // back into the tree, attached to the new root in the reverse order.
-func (t *Tree[K, V, A]) cleanUp(d direction) {
+func (t *Tree[K, V, A, R]) cleanUp(d direction) {
 	// The first node of the reversed temporary tree
 	head := t.null.chd[d]
 	//  The new child of head after putting head back
@@ -107,7 +109,7 @@ func (t *Tree[K, V, A]) cleanUp(d direction) {
 
 // splay performs a splay operation with respect to a given predicate function
 // that tells the direction to move.
-func (t *Tree[K, V, A]) splay(pred func(*node[K, V, A]) direction) {
+func (t *Tree[K, V, A, R]) splay(pred func(*node[K, V, A, R]) direction) {
 	for {
 		d1 := pred(t.root)
 		if d1 == dirNone || t.root.chd[d1] == &t.null {
@@ -134,8 +136,8 @@ func (t *Tree[K, V, A]) splay(pred func(*node[K, V, A]) direction) {
 
 // splayNth splays the n-th node in the tree to be the root if 0 <= n < Size().
 // Otherwise, splay the closest node.
-func (t *Tree[K, V, A]) splayNth(n int) {
-	pred := func(cur *node[K, V, A]) direction {
+func (t *Tree[K, V, A, R]) splayNth(n int) {
+	pred := func(cur *node[K, V, A, R]) direction {
 		pos := cur.chd[dirLeft].size
 		if n == pos {
 			return dirNone
@@ -151,8 +153,8 @@ func (t *Tree[K, V, A]) splayNth(n int) {
 
 // splayLowerbound splays the first node >= 'key' to be the root.
 // If there is no such node, splay the largest node.
-func (t *Tree[K, V, A]) splayLowerbound(key K) {
-	t.splay(func(cur *node[K, V, A]) direction {
+func (t *Tree[K, V, A, R]) splayLowerbound(key K) {
+	t.splay(func(cur *node[K, V, A, R]) direction {
 		if t.less(cur.key, key) {
 			return dirRight
 		} else {
@@ -166,8 +168,8 @@ func (t *Tree[K, V, A]) splayLowerbound(key K) {
 
 // splayAt splays the node with 'key' to be the root.
 // If there is no such node, splay an arbitrary node.
-func (t *Tree[K, V, A]) splayAt(key K) {
-	t.splay(func(cur *node[K, V, A]) direction {
+func (t *Tree[K, V, A, R]) splayAt(key K) {
+	t.splay(func(cur *node[K, V, A, R]) direction {
 		if t.less(cur.key, key) {
 			return dirRight
 		} else if t.less(key, cur.key) {
@@ -179,7 +181,7 @@ func (t *Tree[K, V, A]) splayAt(key K) {
 }
 
 // Get returns the value associated with 'key'.
-func (t *Tree[K, V, A]) Get(key K) (V, bool) {
+func (t *Tree[K, V, A, R]) Get(key K) (V, bool) {
 	t.splayAt(key)
 	if t.root == &t.null || g.Compare(t.root.key, key, t.less) != 0 {
 		return t.aggregator.Value(nil), false
@@ -189,7 +191,7 @@ func (t *Tree[K, V, A]) Get(key K) (V, bool) {
 }
 
 // Put associates 'key' with 'value'.
-func (t *Tree[K, V, A]) Put(key K, value V) {
+func (t *Tree[K, V, A, R]) Put(key K, value V) {
 	t.splayLowerbound(key)
 	if t.root == &t.null {
 		t.root = t.newNode(key, value, &t.null, &t.null)
@@ -197,7 +199,8 @@ func (t *Tree[K, V, A]) Put(key K, value V) {
 		oldRoot := t.root
 		switch g.Compare(t.root.key, key, t.less) {
 		case 0:
-			t.root.agg = t.aggregator.FromValue(value)
+			agg := t.aggregator.FromValue(value)
+			t.root.agg = &agg
 		case 1:
 			t.root = t.newNode(key, value, oldRoot.chd[dirLeft], oldRoot)
 			oldRoot.chd[dirLeft] = &t.null
@@ -210,7 +213,7 @@ func (t *Tree[K, V, A]) Put(key K, value V) {
 }
 
 // Remove removes the value associated with 'key'.
-func (t *Tree[K, V, A]) Remove(key K) {
+func (t *Tree[K, V, A, R]) Remove(key K) {
 	t.splayAt(key)
 	if t.root == &t.null || g.Compare(t.root.key, key, t.less) != 0 {
 		return
@@ -227,12 +230,12 @@ func (t *Tree[K, V, A]) Remove(key K) {
 }
 
 // Size returns the number of elements in the tree.
-func (t *Tree[K, V, A]) Size() int {
+func (t *Tree[K, V, A, R]) Size() int {
 	return t.root.size
 }
 
 // Each calls 'fn' on every node in the tree in order
-func (t *Tree[K, V, A]) Each(fn func(K, V)) {
+func (t *Tree[K, V, A, R]) Each(fn func(K, V)) {
 	for i := 0; i < t.root.size; i++ {
 		t.splayNth(i)
 		fn(t.root.key, t.aggregator.Value(t.root.agg))
@@ -240,12 +243,11 @@ func (t *Tree[K, V, A]) Each(fn func(K, V)) {
 }
 
 // New returns an empty Splay tree.
-func New[K, V, A any](less g.LessFn[K], aggregator Aggregator[V, A]) *Tree[K, V, A] {
-	ret := &Tree[K, V, A]{
+func New[K, V, A, R any](less g.LessFn[K], aggregator agg.Aggregator[V, A, R]) *Tree[K, V, A, R] {
+	ret := &Tree[K, V, A, R]{
 		less:       less,
 		aggregator: aggregator,
-		null: node[K, V, A]{
-			agg:  nil,
+		null: node[K, V, A, R]{
 			size: 0,
 		},
 	}
@@ -258,35 +260,36 @@ func New[K, V, A any](less g.LessFn[K], aggregator Aggregator[V, A]) *Tree[K, V,
 // Range returns the aggregator associated with key range [l, r),
 // which can be used to obtain statistics or do range-based update.
 // Note that the range is only valid before next operation on the tree.
-func (t *Tree[K, V, A]) Range(l, r K) *A {
+func (t *Tree[K, V, A, R]) Range(l, r K) R {
 	t.splayLowerbound(l)
 	if t.root == &t.null || !t.less(t.root.key, r) {
 		// Minumum >= r
-		return nil
+		return t.aggregator.RangeView([]*A{}, []*A{})
 	}
 	rank := t.root.chd[dirLeft].size - 1
 	t.splayLowerbound(r)
 	if t.root == &t.null || t.less(t.root.key, l) {
 		// Maximum < l
-		return nil
+		return t.aggregator.RangeView([]*A{}, []*A{})
 	}
+	// Splay has a good property s.t. every range view only contains one node
 	t.zig(dirLeft) // Make sure the current root is on the right
 	t.splayNth(rank)
 	if t.less(t.root.key, l) {
 		if t.less(t.root.chd[dirRight].key, r) {
 			// Maximum < r
-			return t.root.chd[dirRight].agg
+			return t.aggregator.RangeView([]*A{t.root.chd[dirRight].agg}, []*A{})
 		} else {
-			return t.root.chd[dirRight].chd[dirLeft].agg
+			return t.aggregator.RangeView([]*A{t.root.chd[dirRight].chd[dirLeft].agg}, []*A{})
 		}
 	} else {
 		// Minimum >= l
 		t.splayLowerbound(r)
 		if t.less(t.root.key, r) {
 			// Maximum < r
-			return t.root.agg
+			return t.aggregator.RangeView([]*A{t.root.agg}, []*A{})
 		} else {
-			return t.root.chd[dirLeft].agg
+			return t.aggregator.RangeView([]*A{t.root.chd[dirLeft].agg}, []*A{})
 		}
 	}
 }

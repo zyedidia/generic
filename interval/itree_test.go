@@ -17,7 +17,7 @@ func TestOverlaps(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("test", func(t *testing.T) {
-			if overlaps(intrvl{tt.l1, tt.h1}, tt.l2, tt.h2) != tt.expect {
+			if overlaps(newIntrvl(tt.l1, tt.h1), tt.l2, tt.h2) != tt.expect {
 				t.Fatalf("[%d, %d) vs [%d, %d): expected %v, got %v", tt.l1, tt.h1, tt.l2, tt.h2, tt.expect, !tt.expect)
 			}
 		})
@@ -25,7 +25,7 @@ func TestOverlaps(t *testing.T) {
 }
 
 func Example() {
-	tree := New[string]()
+	tree := New[int, string]()
 	tree.Put(0, 10, "foo")
 	tree.Put(5, 9, "bar")
 	tree.Put(10, 11, "baz")

@@ -18,6 +18,7 @@ package interval
 
 import (
 	g "github.com/zyedidia/generic"
+	"golang.org/x/exp/constraints"
 )
 
 type KV[V any] struct {
@@ -26,44 +27,47 @@ type KV[V any] struct {
 }
 
 // intrvl represents an interval over [low, high).
-type intrvl struct {
-	Low, High int
+type intrvl[I constraints.Ordered] struct {
+	low, high I
 }
 
-func overlaps(i1 intrvl, low, high int) bool {
-	return i1.Low < high && i1.High > low
+func newIntrvl[I constraints.Ordered](low, high I) intrvl[I] {
+	return intrvl[I]{low, high}
+}
+
+func overlaps[I constraints.Ordered](i1 intrvl[I], low, high I) bool {
+	return i1.low < high && i1.high > low
 }
 
 // Tree implements an interval tree. All intervals must have unique starting
 // positions.
-type Tree[V any] struct {
-	root *node[V]
+type Tree[I constraints.Ordered, V any] struct {
+	root *node[I, V]
 }
 
 // New returns an empty interval tree.
-func New[V any]() *Tree[V] {
-	return &Tree[V]{}
+func New[I constraints.Ordered, V any]() *Tree[I, V] {
+	return &Tree[I, V]{}
 }
 
 // Put associates the interval 'key' with 'value'.
-func (t *Tree[V]) Put(low, high int, value V) {
-	t.root = t.root.add(intrvl{low, high}, value)
+func (t *Tree[I, V]) Put(low, high I, value V) {
+	t.root = t.root.add(newIntrvl(low, high), value)
 }
 
 // Overlaps returns all values that overlap with the given range.
-func (t *Tree[V]) Overlaps(low, high int) []V {
-	var result []V
-	return t.root.overlaps(intrvl{low, high}, result)
+func (t *Tree[I, V]) Overlaps(low, high I) []V {
+	return t.root.overlaps(newIntrvl(low, high), nil)
 }
 
 // Remove deletes the interval starting at 'pos'.
-func (t *Tree[V]) Remove(pos int) {
+func (t *Tree[I, V]) Remove(pos I) {
 	t.root = t.root.remove(pos)
 }
 
 // Get returns the value associated with the interval starting at 'pos', or
 // 'false' if no such value exists.
-func (t *Tree[V]) Get(pos int) (V, bool) {
+func (t *Tree[I, V]) Get(pos I) (V, bool) {
 	n := t.root.search(pos)
 	if n == nil {
 		var v V
@@ -74,45 +78,45 @@ func (t *Tree[V]) Get(pos int) (V, bool) {
 
 // Each calls 'fn' on every element in the tree, and its corresponding
 // interval, in order sorted by starting position.
-func (t *Tree[V]) Each(fn func(low, high int, val V)) {
+func (t *Tree[I, V]) Each(fn func(low, high I, val V)) {
 	t.root.each(fn)
 }
 
 // Height returns the height of the tree.
-func (t *Tree[V]) Height() int {
+func (t *Tree[I, V]) Height() int {
 	return t.root.getHeight()
 }
 
 // Size returns the number of elements in the tree.
-func (t *Tree[V]) Size() int {
+func (t *Tree[I, V]) Size() int {
 	return t.root.size()
 }
 
-type node[V any] struct {
-	key   intrvl
+type node[I constraints.Ordered, V any] struct {
+	key   intrvl[I]
 	value V
 
-	max    int
+	max    I
 	height int
-	left   *node[V]
-	right  *node[V]
+	left   *node[I, V]
+	right  *node[I, V]
 }
 
-func (n *node[V]) add(key intrvl, value V) *node[V] {
+func (n *node[I, V]) add(key intrvl[I], value V) *node[I, V] {
 	if n == nil {
-		return &node[V]{
+		return &node[I, V]{
 			key:    key,
 			value:  value,
-			max:    key.High,
+			max:    key.high,
 			height: 1,
 			left:   nil,
 			right:  nil,
 		}
 	}
 
-	if key.Low < n.key.Low {
+	if key.low < n.key.low {
 		n.left = n.left.add(key, value)
-	} else if key.Low > n.key.Low {
+	} else if key.low > n.key.low {
 		n.right = n.right.add(key, value)
 	} else {
 		n.value = value
@@ -120,7 +124,7 @@ func (n *node[V]) add(key intrvl, value V) *node[V] {
 	return n.rebalanceTree()
 }
 
-func (n *node[V]) updateMax() {
+func (n *node[I, V]) updateMax() {
 	if n != nil {
 		if n.right != nil {
 			n.max = g.Max(n.max, n.right.max)
@@ -131,20 +135,20 @@ func (n *node[V]) updateMax() {
 	}
 }
 
-func (n *node[V]) remove(pos int) *node[V] {
+func (n *node[I, V]) remove(pos I) *node[I, V] {
 	if n == nil {
 		return nil
 	}
-	if pos < n.key.Low {
+	if pos < n.key.low {
 		n.left = n.left.remove(pos)
-	} else if pos > n.key.Low {
+	} else if pos > n.key.low {
 		n.right = n.right.remove(pos)
 	} else {
 		if n.left != nil && n.right != nil {
 			rightMinNode := n.right.findSmallest()
 			n.key = rightMinNode.key
 			n.value = rightMinNode.value
-			n.right = n.right.remove(rightMinNode.key.Low)
+			n.right = n.right.remove(rightMinNode.key.low)
 		} else if n.left != nil {
 			n = n.left
 		} else if n.right != nil {
@@ -158,35 +162,35 @@ func (n *node[V]) remove(pos int) *node[V] {
 	return n.rebalanceTree()
 }
 
-func (n *node[V]) search(pos int) *node[V] {
+func (n *node[I, V]) search(pos I) *node[I, V] {
 	if n == nil {
 		return nil
 	}
-	if pos < n.key.Low {
+	if pos < n.key.low {
 		return n.left.search(pos)
-	} else if pos > n.key.Low {
+	} else if pos > n.key.low {
 		return n.right.search(pos)
 	} else {
 		return n
 	}
 }
 
-func (n *node[V]) overlaps(key intrvl, result []V) []V {
+func (n *node[I, V]) overlaps(key intrvl[I], result []V) []V {
 	if n == nil {
 		return result
 	}
 
-	if key.Low >= n.max {
+	if key.low >= n.max {
 		return result
 	}
 
 	result = n.left.overlaps(key, result)
 
-	if overlaps(n.key, key.Low, key.High) {
+	if overlaps(n.key, key.low, key.high) {
 		result = append(result, n.value)
 	}
 
-	if key.High <= n.key.Low {
+	if key.high <= n.key.low {
 		return result
 	}
 
@@ -194,27 +198,27 @@ func (n *node[V]) overlaps(key intrvl, result []V) []V {
 	return result
 }
 
-func (n *node[V]) each(fn func(low, high int, val V)) {
+func (n *node[I, V]) each(fn func(low, high I, val V)) {
 	if n == nil {
 		return
 	}
 	n.left.each(fn)
-	fn(n.key.Low, n.key.High, n.value)
+	fn(n.key.low, n.key.high, n.value)
 	n.right.each(fn)
 }
 
-func (n *node[V]) getHeight() int {
+func (n *node[I, V]) getHeight() int {
 	if n == nil {
 		return 0
 	}
 	return n.height
 }
 
-func (n *node[V]) recalculateHeight() {
+func (n *node[I, V]) recalculateHeight() {
 	n.height = 1 + g.Max(n.left.getHeight(), n.right.getHeight())
 }
 
-func (n *node[V]) rebalanceTree() *node[V] {
+func (n *node[I, V]) rebalanceTree() *node[I, V] {
 	if n == nil {
 		return n
 	}
@@ -236,7 +240,7 @@ func (n *node[V]) rebalanceTree() *node[V] {
 	return n
 }
 
-func (n *node[V]) rotateLeft() *node[V] {
+func (n *node[I, V]) rotateLeft() *node[I, V] {
 	newRoot := n.right
 	n.right = newRoot.left
 	newRoot.left = n
@@ -248,7 +252,7 @@ func (n *node[V]) rotateLeft() *node[V] {
 	return newRoot
 }
 
-func (n *node[V]) rotateRight() *node[V] {
+func (n *node[I, V]) rotateRight() *node[I, V] {
 	newRoot := n.left
 	n.left = newRoot.right
 	newRoot.right = n
@@ -260,7 +264,7 @@ func (n *node[V]) rotateRight() *node[V] {
 	return newRoot
 }
 
-func (n *node[V]) findSmallest() *node[V] {
+func (n *node[I, V]) findSmallest() *node[I, V] {
 	if n.left != nil {
 		return n.left.findSmallest()
 	} else {
@@ -268,7 +272,7 @@ func (n *node[V]) findSmallest() *node[V] {
 	}
 }
 
-func (n *node[V]) size() int {
+func (n *node[I, V]) size() int {
 	s := 1
 	if n.left != nil {
 		s += n.left.size()

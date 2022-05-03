@@ -21,7 +21,7 @@ Package interval provides an implementation of an interval tree built using an a
 
 ```go
 {
-	tree := New[string]()
+	tree := New[int, string]()
 	tree.Put(0, 10, "foo")
 	tree.Put(5, 9, "bar")
 	tree.Put(10, 11, "baz")
@@ -29,7 +29,7 @@ Package interval provides an implementation of an interval tree built using an a
 
 	vals := tree.Overlaps(4, 10)
 	for _, v := range vals {
-		fmt.Println(v)
+		fmt.Println(v.Val)
 	}
 
 }
@@ -49,95 +49,108 @@ bar
 
 - [type KV](<#type-kv>)
 - [type Tree](<#type-tree>)
-  - [func New[V any]() *Tree[V]](<#func-new>)
-  - [func (t *Tree[V]) Each(fn func(low, high int, val V))](<#func-treev-each>)
-  - [func (t *Tree[V]) Get(pos int) (V, bool)](<#func-treev-get>)
-  - [func (t *Tree[V]) Height() int](<#func-treev-height>)
-  - [func (t *Tree[V]) Overlaps(low, high int) []V](<#func-treev-overlaps>)
-  - [func (t *Tree[V]) Put(low, high int, value V)](<#func-treev-put>)
-  - [func (t *Tree[V]) Remove(pos int)](<#func-treev-remove>)
-  - [func (t *Tree[V]) Size() int](<#func-treev-size>)
+  - [func New[I constraints.Ordered, V any]() *Tree[I, V]](<#func-new>)
+  - [func (t *Tree[I, V]) Add(low, high I, value V) (KV[I, V], bool)](<#func-treei-v-add>)
+  - [func (t *Tree[I, V]) Each(fn func(low, high I, val V))](<#func-treei-v-each>)
+  - [func (t *Tree[I, V]) Get(low I) (KV[I, V], bool)](<#func-treei-v-get>)
+  - [func (t *Tree[I, V]) Height() int](<#func-treei-v-height>)
+  - [func (t *Tree[I, V]) Overlaps(low, high I) []KV[I, V]](<#func-treei-v-overlaps>)
+  - [func (t *Tree[I, V]) Put(low, high I, value V) (KV[I, V], bool)](<#func-treei-v-put>)
+  - [func (t *Tree[I, V]) Remove(low I) (KV[I, V], bool)](<#func-treei-v-remove>)
+  - [func (t *Tree[I, V]) Size() int](<#func-treei-v-size>)
 
 
-## type [KV](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L23-L26>)
+## type [KV](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L26-L29>)
 
 ```go
-type KV[V any] struct {
-    Low, High int
+type KV[I constraints.Ordered, V any] struct {
+    Low, High I
     Val       V
 }
 ```
 
-## type [Tree](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L39-L41>)
+## type [Tree](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L58-L60>)
 
-Tree implements an interval tree\. All intervals must have unique starting positions\.
+Tree implements an interval tree\. All intervals must have unique starting positions\. Every low bound if an interval is inclusive\, while high is exclusive\.
 
 ```go
-type Tree[V any] struct {
+type Tree[I constraints.Ordered, V any] struct {
     // contains filtered or unexported fields
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L44>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L63>)
 
 ```go
-func New[V any]() *Tree[V]
+func New[I constraints.Ordered, V any]() *Tree[I, V]
 ```
 
 New returns an empty interval tree\.
 
-### func \(\*Tree\[V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L77>)
+### func \(\*Tree\[I\, V\]\) [Add](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L71>)
 
 ```go
-func (t *Tree[V]) Each(fn func(low, high int, val V))
+func (t *Tree[I, V]) Add(low, high I, value V) (KV[I, V], bool)
+```
+
+Add associates the interval \[low\, high\) with value\.
+
+If an interval starting at low already exists in t\, this method doesn't perform any change of the tree\, but returns the conflicting interval\.
+
+### func \(\*Tree\[I\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L113>)
+
+```go
+func (t *Tree[I, V]) Each(fn func(low, high I, val V))
 ```
 
 Each calls 'fn' on every element in the tree\, and its corresponding interval\, in order sorted by starting position\.
 
-### func \(\*Tree\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L66>)
+### func \(\*Tree\[I\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L103>)
 
 ```go
-func (t *Tree[V]) Get(pos int) (V, bool)
+func (t *Tree[I, V]) Get(low I) (KV[I, V], bool)
 ```
 
-Get returns the value associated with the interval starting at 'pos'\, or 'false' if no such value exists\.
+Get returns the interval and value associated with the interval starting at low\, or false if no such value exists\.
 
-### func \(\*Tree\[V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L82>)
+### func \(\*Tree\[I\, V\]\) [Height](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L118>)
 
 ```go
-func (t *Tree[V]) Height() int
+func (t *Tree[I, V]) Height() int
 ```
 
 Height returns the height of the tree\.
 
-### func \(\*Tree\[V\]\) [Overlaps](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L54>)
+### func \(\*Tree\[I\, V\]\) [Overlaps](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L89>)
 
 ```go
-func (t *Tree[V]) Overlaps(low, high int) []V
+func (t *Tree[I, V]) Overlaps(low, high I) []KV[I, V]
 ```
 
-Overlaps returns all values that overlap with the given range\.
+Overlaps returns all values that overlap with the given range\. List returned is sorted by low positions of intervals\.
 
-### func \(\*Tree\[V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L49>)
+### func \(\*Tree\[I\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L81>)
 
 ```go
-func (t *Tree[V]) Put(low, high int, value V)
+func (t *Tree[I, V]) Put(low, high I, value V) (KV[I, V], bool)
 ```
 
-Put associates the interval 'key' with 'value'\.
+Put associates the interval \[low\, high\) with value\.
 
-### func \(\*Tree\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L60>)
+If an interval starting at low already exists\, this method will replace it\. In such a case the conflicting \(replaced\) interval is returned\.
+
+### func \(\*Tree\[I\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L95>)
 
 ```go
-func (t *Tree[V]) Remove(pos int)
+func (t *Tree[I, V]) Remove(low I) (KV[I, V], bool)
 ```
 
-Remove deletes the interval starting at 'pos'\.
+Remove deletes the interval starting at low\. The removed interval is returned\. If no such interval existed in a tree\, the returned value is false\.
 
-### func \(\*Tree\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L87>)
+### func \(\*Tree\[I\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/interval/itree.go#L123>)
 
 ```go
-func (t *Tree[V]) Size() int
+func (t *Tree[I, V]) Size() int
 ```
 
 Size returns the number of elements in the tree\.

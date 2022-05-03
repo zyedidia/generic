@@ -76,7 +76,7 @@ func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map
 
 New constructs a new map with the given capacity\.
 
-### func \(\*Map\[K\, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L174>)
+### func \(\*Map\[K\, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L181>)
 
 ```go
 func (m *Map[K, V]) Copy() *Map[K, V]
@@ -84,7 +84,7 @@ func (m *Map[K, V]) Copy() *Map[K, V]
 
 Copy returns a copy of this map\. The copy will not allocate any memory until the first write\, so any number of read\-only copies can be made without any additional allocations\.
 
-### func \(\*Map\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L187>)
+### func \(\*Map\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L194>)
 
 ```go
 func (m *Map[K, V]) Each(fn func(key K, val V))
@@ -116,7 +116,7 @@ func (m *Map[K, V]) Remove(key K)
 
 Remove removes the specified key\-value pair from the map\.
 
-### func \(\*Map\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L167>)
+### func \(\*Map\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L174>)
 
 ```go
 func (m *Map[K, V]) Size() int

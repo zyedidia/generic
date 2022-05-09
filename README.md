@@ -22,6 +22,7 @@ This package implements some generic data structures.
 * [`stack`](./stack): a LIFO stack.
 * [`trie`](./trie): a ternary search trie.
 * [`queue`](./queue): a First In First Out (FIFO) queue.
+* [`heap`](./heap): a binary heap.
 
 See each subpackage for documentation and examples. The top-level `generic`
 package provides some useful types and constraints. See [DOC.md](DOC.md) for

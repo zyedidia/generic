@@ -86,3 +86,25 @@ func Example() {
 	// 0 false
 	// 0 false
 }
+
+func ExamplePointerHash() {
+	m := hashmap.New[*string, int](1, g.Equals[*string], g.HashPointer[string, *string])
+	s1 := "s1"
+	s2 := "s2"
+	s3 := "s3"
+	m.Put(&s1, 10)
+	m.Put(&s2, 100)
+
+	fmt.Println(m.Get(&s1))
+	fmt.Println(m.Get(&s2))
+	fmt.Println(m.Get(&s3))
+	
+	m.Remove(&s1)
+	fmt.Println(m.Get(&s1))
+
+	// Output:
+	// 10 true
+	// 100 true
+	// 0 false
+	// 0 false
+}

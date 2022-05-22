@@ -1,6 +1,8 @@
 package generic
 
 import (
+	"unsafe"
+
 	"golang.org/x/exp/constraints"
 
 	"github.com/segmentio/fasthash/fnv1a"
@@ -120,6 +122,14 @@ func HashString(s string) uint64 {
 }
 func HashBytes(b []byte) uint64 {
 	return fnv1a.HashBytes64(b)
+}
+
+type pointerConstraint[T any] interface {
+	~*T
+}
+
+func HashPointer[T any, PT pointerConstraint[T]](pt PT) uint64 {
+	return hash(uint64(uintptr(unsafe.Pointer(pt))))
 }
 
 func hash(u uint64) uint64 {

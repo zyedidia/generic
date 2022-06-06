@@ -3,6 +3,7 @@ package trie_test
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"testing"
 
 	"github.com/zyedidia/generic/trie"
@@ -19,13 +20,22 @@ func randstring(n int) string {
 }
 
 func checkeq(tr *trie.Trie[int], m map[string]int, t *testing.T) {
+	keys := make([]string, 0, len(m))
 	for k, v := range m {
+		keys = append(keys, k)
 		tv, ok := tr.Get(k)
 		if !ok {
 			t.Fatalf("%v should exist", k)
 		}
 		if tv != v {
 			t.Fatalf("%v != %v, key: %v", tv, v, k)
+		}
+	}
+	trieKeys := tr.Keys()
+	sort.Strings(keys)
+	for i := range keys {
+		if keys[i] != trieKeys[i] {
+			t.Fatalf("%d, %s != %s", i, keys, trieKeys)
 		}
 	}
 }
@@ -56,6 +66,17 @@ func TestCrossCheck(t *testing.T) {
 		}
 
 		checkeq(tree, stdm, t)
+	}
+}
+
+func TestKeys(t *testing.T) {
+	tr := trie.New[int]()
+	tr.Put("topic1", 1)
+	tr.Put("topic2", 2)
+
+	keys := tr.Keys()
+	if len(keys) != 2 || keys[0] != "topic1" || keys[1] != "topic2" {
+		t.Fatal(keys)
 	}
 }
 

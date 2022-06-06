@@ -161,8 +161,5 @@ func (t *Trie[V]) collect(x *node[V], prefix string, queue []string) []string {
 		queue = append(queue, prefix+string(x.c))
 	}
 	queue = t.collect(x.mid, prefix+string(x.c), queue)
-	if len(prefix) > 0 {
-		prefix = prefix[:len(prefix)-1]
-	}
 	return t.collect(x.right, prefix, queue)
 }

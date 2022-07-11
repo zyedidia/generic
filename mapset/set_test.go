@@ -45,6 +45,30 @@ func TestCrossCheck(t *testing.T) {
 	}
 }
 
+func TestOf(t *testing.T) {
+	testcases := []struct {
+		name  string
+		input []string
+	}{
+		{"init with several items", []string{"foo", "bar", "baz"}},
+		{"init without values", []string{}},
+	}
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			set := mapset.Of[string](tc.input...)
+
+			if len(tc.input) != set.Size() {
+				t.Fatalf("expected %d elements in set, got %d", len(tc.input), set.Size())
+			}
+			for _, val := range tc.input {
+				if !set.Has(val) {
+					t.Fatalf("expected to find val '%s' in set but did not", val)
+				}
+			}
+		})
+	}
+}
+
 func Example() {
 	set := mapset.New[string]()
 	set.Put("foo")

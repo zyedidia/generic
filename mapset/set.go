@@ -13,6 +13,15 @@ func New[K comparable]() Set[K] {
 	}
 }
 
+// Of returns a new hashset initialized with the given 'vals'
+func Of[K comparable](vals ...K) Set[K] {
+	s := New[K]()
+	for _, val := range vals {
+		s.Put(val)
+	}
+	return s
+}
+
 // Put adds 'val' to the set.
 func (s Set[K]) Put(val K) {
 	s.m[val] = struct{}{}

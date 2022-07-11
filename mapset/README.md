@@ -44,6 +44,7 @@ false
 
 - [type Set](<#type-set>)
   - [func New[K comparable]() Set[K]](<#func-new>)
+  - [func Of[K comparable](vals ...K) Set[K]](<#func-of>)
   - [func (s Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s Set[K]) Has(val K) bool](<#func-setk-has>)
   - [func (s Set[K]) Put(val K)](<#func-setk-put>)
@@ -68,6 +69,14 @@ func New[K comparable]() Set[K]
 ```
 
 New returns an empty hashset\.
+
+### func [Of](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L17>)
+
+```go
+func Of[K comparable](vals ...K) Set[K]]
+```
+
+Returns a new hashset initialized with the given values\.
 
 ### func \(Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L38>)
 

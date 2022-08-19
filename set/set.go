@@ -45,35 +45,49 @@ type Set[K comparable] struct {
 	new func() SetOf[K]
 }
 
+// Intersection returns the intersection of the current set with `others`. A new set is returned. Non-mutating action.
 func (s Set[K]) Intersection(others ...SetOf[K]) Set[K] {
 	return s.Clone().InPlaceIntersection(others...)
 }
+
+// Difference returns the elements of the current set that are not in `others`. A new set is returned. Non-mutating action.
 func (s Set[K]) Difference(others ...SetOf[K]) Set[K] {
 	return s.Clone().InPlaceDifference(others...)
 }
+
+// Union returns the elements of the current set that are common with `others`. A new set is returned. Non-mutating action.
 func (s Set[K]) Union(others ...SetOf[K]) Set[K] {
 	return s.Clone().InPlaceUnion(others...)
 }
 
+// ConstSymmetricDifference returns the elements of the current set, or the provided elements that do not match each other.
 func (s Set[K]) ConstSymmetricDifference(with ...K) Set[K] {
 	return s.SymmetricDifference(NewSet(s.new, with...))
 }
+
+// ConstIntersection returns the elements of the current set that are common with the provided elements.
 func (s Set[K]) ConstIntersection(with ...K) Set[K] {
 	return s.Clone().InPlaceIntersection(NewSet(s.new, with...))
 }
+
+// ConstDifference returns the elements of the current set that do not match provided elements.
 func (s Set[K]) ConstDifference(with ...K) Set[K] {
 	return s.Clone().InPlaceDifference(NewSet(s.new, with...))
 }
+
+// ConstUnion returns the elements of the current set that match the provided elements.
 func (s Set[K]) ConstUnion(with ...K) Set[K] {
 	return s.Clone().InPlaceUnion(NewSet(s.new, with...))
 }
 
+// Clone returns a copy of the current set
 func (s Set[K]) Clone() Set[K] {
 	new := NewSet(s.new)
 	s.Each(func(key K) { new.Put(key) })
 	return new
 }
 
+// String provides a sorted list of strings representing the set.
 func (s Set[K]) String() string {
 	out := make([]string, 0, s.Size())
 	s.Each(func(key K) { out = append(out, fmt.Sprintf(`%v`, key)) })
@@ -81,6 +95,7 @@ func (s Set[K]) String() string {
 	return fmt.Sprintf("%v", out)
 }
 
+// Map converts the current set to a map where each value in the set is a key of the map. This is useful for converting sets to standard go types.
 func (s Set[K]) Map() map[K]struct{} {
 	out := make(map[K]struct{}, s.Size())
 	s.Each(func(key K) {
@@ -89,6 +104,7 @@ func (s Set[K]) Map() map[K]struct{} {
 	return out
 }
 
+// SymmetricDifference returns a Set of elements from the current set, or the comparator sets, that do not match each other.
 func (s Set[K]) SymmetricDifference(others ...SetOf[K]) Set[K] {
 	new := s.Clone()
 	seen := new.Clone()
@@ -105,6 +121,7 @@ func (s Set[K]) SymmetricDifference(others ...SetOf[K]) Set[K] {
 	return new
 }
 
+// InPlaceIntersection removes any elements from the current set that match any elements from provided other sets. This mutates the current set.
 func (s Set[K]) InPlaceIntersection(others ...SetOf[K]) Set[K] {
 	for _, other := range others {
 		s.Each(func(key K) {
@@ -116,6 +133,7 @@ func (s Set[K]) InPlaceIntersection(others ...SetOf[K]) Set[K] {
 	return s
 }
 
+// InPlaceDifference removes the matching elements of N provided sets from the current set. This is mutates the current set.
 func (s Set[K]) InPlaceDifference(others ...SetOf[K]) Set[K] {
 	for _, other := range others {
 		other.Each(func(key K) {
@@ -125,6 +143,7 @@ func (s Set[K]) InPlaceDifference(others ...SetOf[K]) Set[K] {
 	return s
 }
 
+// InPlaceUnion adds the matching elements of N provided sets to the current set. This is mutates the current set.
 func (s Set[K]) InPlaceUnion(others ...SetOf[K]) Set[K] {
 	for _, other := range others {
 		other.Each(func(key K) {
@@ -134,6 +153,7 @@ func (s Set[K]) InPlaceUnion(others ...SetOf[K]) Set[K] {
 	return s
 }
 
+// Keys provides the keys of the set.
 func (s Set[K]) Keys() []K {
 	out := make([]K, 0, s.Size())
 	s.Each(func(key K) {
@@ -142,11 +162,13 @@ func (s Set[K]) Keys() []K {
 	return out
 }
 
+// IsDisjoint returns true if neither set contains an element matching the other.
 func (s Set[K]) IsDisjoint(other SetOf[K]) bool {
 	// TODO: maybe optimize?
 	return s.Intersection(other).Size() > 0
 }
 
+// IsSubset returns if a set is a subset
 func (s Set[K]) IsSubset(of SetOf[K]) bool {
 	subset := true
 	s.Each(func(key K) {
@@ -157,6 +179,7 @@ func (s Set[K]) IsSubset(of SetOf[K]) bool {
 	return subset
 }
 
+// IsSuperset returns if a set is a superset of the provided set. Equal sets are considered supersets of each other.
 func (s Set[K]) IsSuperset(of SetOf[K]) bool {
 	superset := true
 	of.Each(func(key K) {
@@ -167,6 +190,7 @@ func (s Set[K]) IsSuperset(of SetOf[K]) bool {
 	return superset
 }
 
+// Equal compares two sets
 func (s Set[K]) Equal(to SetOf[K]) bool {
 	if s.Size() != to.Size() {
 		return false
@@ -174,6 +198,7 @@ func (s Set[K]) Equal(to SetOf[K]) bool {
 	return s.Union(to).Size() == s.Size()
 }
 
+// IsProperSubset returns true if `to` is a subset of `s` but is not equal
 func (s Set[K]) IsProperSubset(to SetOf[K]) bool {
 	if s.Equal(to) {
 		return false
@@ -181,6 +206,7 @@ func (s Set[K]) IsProperSubset(to SetOf[K]) bool {
 	return s.IsSubset(to)
 }
 
+// IsProperSuperset returns true if `to` is a superset of `s` but is not equal
 func (s Set[K]) IsProperSuperset(to SetOf[K]) bool {
 	if s.Equal(to) {
 		return false

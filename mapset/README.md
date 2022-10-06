@@ -6,7 +6,7 @@
 import "github.com/zyedidia/generic/mapset"
 ```
 
-Package mapset provides an implementation of a set using the built\-in map\.
+Package mapset provides an implementation of a set using the built\-in map.
 
 <details><summary>Example</summary>
 <p>
@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/mapset"
 )
 
@@ -54,7 +55,7 @@ false
 
 ## type [Set](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L5-L7>)
 
-Set implements a hashset\, using the hashmap as the underlying storage\.
+Set implements a hashset, using the hashmap as the underlying storage.
 
 ```go
 type Set[K comparable] struct {
@@ -68,55 +69,55 @@ type Set[K comparable] struct {
 func New[K comparable]() Set[K]
 ```
 
-New returns an empty hashset\.
+New returns an empty hashset.
 
 ### func [Of](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L17>)
 
 ```go
-func Of[K comparable](vals ...K) Set[K]]
+func Of[K comparable](vals ...K) Set[K]
 ```
 
-Returns a new hashset initialized with the given values\.
+Of returns a new hashset initialized with the given 'vals'
 
-### func \(Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L38>)
+### func \(Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L47>)
 
 ```go
 func (s Set[K]) Each(fn func(key K))
 ```
 
-Each calls 'fn' on every item in the set in no particular order\.
+Each calls 'fn' on every item in the set in no particular order.
 
-### func \(Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L22>)
+### func \(Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L31>)
 
 ```go
 func (s Set[K]) Has(val K) bool
 ```
 
-Has returns true only if 'val' is in the set\.
+Has returns true only if 'val' is in the set.
 
-### func \(Set\[K\]\) [Put](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L17>)
+### func \(Set\[K\]\) [Put](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L26>)
 
 ```go
 func (s Set[K]) Put(val K)
 ```
 
-Put adds 'val' to the set\.
+Put adds 'val' to the set.
 
-### func \(Set\[K\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L28>)
+### func \(Set\[K\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L37>)
 
 ```go
 func (s Set[K]) Remove(val K)
 ```
 
-Remove removes 'val' from the set\.
+Remove removes 'val' from the set.
 
-### func \(Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L33>)
+### func \(Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L42>)
 
 ```go
 func (s Set[K]) Size() int
 ```
 
-Size returns the number of elements in the set\.
+Size returns the number of elements in the set.
 
 
 

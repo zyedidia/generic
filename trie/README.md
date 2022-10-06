@@ -6,7 +6,7 @@
 import "github.com/zyedidia/generic/trie"
 ```
 
-Package trie provides an implementation of a ternary search trie\.
+Package trie provides an implementation of a ternary search trie.
 
 <details><summary>Example</summary>
 <p>
@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/trie"
 )
 
@@ -58,7 +59,7 @@ false
 
 ## type [Trie](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L9-L12>)
 
-A Trie is a data structure that supports common prefix operations\.
+A Trie is a data structure that supports common prefix operations.
 
 ```go
 type Trie[V any] struct {
@@ -72,7 +73,7 @@ type Trie[V any] struct {
 func New[V any]() *Trie[V]
 ```
 
-New returns an empty trie\.
+New returns an empty trie.
 
 ### func \(\*Trie\[V\]\) [Contains](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L32>)
 
@@ -80,7 +81,7 @@ New returns an empty trie\.
 func (t *Trie[V]) Contains(key string) bool
 ```
 
-Contains returns whether this trie contains 'key'\.
+Contains returns whether this trie contains 'key'.
 
 ### func \(\*Trie\[V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L41>)
 
@@ -88,7 +89,7 @@ Contains returns whether this trie contains 'key'\.
 func (t *Trie[V]) Get(key string) (v V, ok bool)
 ```
 
-Get returns the value associated with 'key'\.
+Get returns the value associated with 'key'.
 
 ### func \(\*Trie\[V\]\) [Keys](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L136>)
 
@@ -96,7 +97,7 @@ Get returns the value associated with 'key'\.
 func (t *Trie[V]) Keys() (queue []string)
 ```
 
-Keys returns all keys in the trie\.
+Keys returns all keys in the trie.
 
 ### func \(\*Trie\[V\]\) [KeysWithPrefix](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L141>)
 
@@ -104,7 +105,7 @@ Keys returns all keys in the trie\.
 func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string)
 ```
 
-KeysWithPrefix returns all keys with prefix 'prefix'\.
+KeysWithPrefix returns all keys with prefix 'prefix'.
 
 ### func \(\*Trie\[V\]\) [LongestPrefix](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L111>)
 
@@ -112,7 +113,7 @@ KeysWithPrefix returns all keys with prefix 'prefix'\.
 func (t *Trie[V]) LongestPrefix(query string) string
 ```
 
-LongestPrefix returns the key that is the longest prefix of 'query'\.
+LongestPrefix returns the key that is the longest prefix of 'query'.
 
 ### func \(\*Trie\[V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L69>)
 
@@ -120,7 +121,7 @@ LongestPrefix returns the key that is the longest prefix of 'query'\.
 func (t *Trie[V]) Put(key string, val V)
 ```
 
-Put associates 'val' with 'key'\.
+Put associates 'val' with 'key'.
 
 ### func \(\*Trie\[V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L80>)
 
@@ -128,7 +129,7 @@ Put associates 'val' with 'key'\.
 func (t *Trie[V]) Remove(key string)
 ```
 
-Remove removes the value associated with 'key'\.
+Remove removes the value associated with 'key'.
 
 ### func \(\*Trie\[V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/trie/trie.go#L27>)
 
@@ -136,7 +137,7 @@ Remove removes the value associated with 'key'\.
 func (t *Trie[V]) Size() int
 ```
 
-Size returns the size of the trie\.
+Size returns the size of the trie.
 
 
 

@@ -6,7 +6,7 @@
 import "github.com/zyedidia/generic/stack"
 ```
 
-Package stack provides an implementation of a LIFO stack built using a resizing array\.
+Package stack provides an implementation of a LIFO stack built using a resizing array.
 
 <details><summary>Example</summary>
 <p>
@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/stack"
 )
 
@@ -56,7 +57,7 @@ foo
 
 ## type [Stack](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L6-L8>)
 
-Stack implements a LIFO stack with peeking\.
+Stack implements a LIFO stack with peeking.
 
 ```go
 type Stack[T any] struct {
@@ -70,7 +71,7 @@ type Stack[T any] struct {
 func New[T any]() *Stack[T]
 ```
 
-New returns an empty stack\.
+New returns an empty stack.
 
 ### func \(\*Stack\[T\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L48>)
 
@@ -78,7 +79,7 @@ New returns an empty stack\.
 func (s *Stack[T]) Copy() *Stack[T]
 ```
 
-Copy returns a copy of this stack\.
+Copy returns a copy of this stack.
 
 ### func \(\*Stack\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L35>)
 
@@ -86,7 +87,7 @@ Copy returns a copy of this stack\.
 func (s *Stack[T]) Peek() (t T)
 ```
 
-Peek returns the stack's top element but does not remove it\. If the stack is empty the zero value is returned\.
+Peek returns the stack's top element but does not remove it. If the stack is empty the zero value is returned.
 
 ### func \(\*Stack\[T\]\) [Pop](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L24>)
 
@@ -94,7 +95,7 @@ Peek returns the stack's top element but does not remove it\. If the stack is em
 func (s *Stack[T]) Pop() (t T)
 ```
 
-Pop removes the stack's top element and returns it\. If the stack is empty it returns the zero value\.
+Pop removes the stack's top element and returns it. If the stack is empty it returns the zero value.
 
 ### func \(\*Stack\[T\]\) [Push](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L18>)
 
@@ -102,7 +103,7 @@ Pop removes the stack's top element and returns it\. If the stack is empty it re
 func (s *Stack[T]) Push(value T)
 ```
 
-Push places 'value' at the top of the stack\.
+Push places 'value' at the top of the stack.
 
 ### func \(\*Stack\[T\]\) [Size](<https://github.com/zyedidia/generic/blob/master/stack/stack.go#L43>)
 
@@ -110,7 +111,7 @@ Push places 'value' at the top of the stack\.
 func (s *Stack[T]) Size() int
 ```
 
-Size returns the number of elements in the stack\.
+Size returns the number of elements in the stack.
 
 
 

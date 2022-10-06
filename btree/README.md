@@ -6,7 +6,7 @@
 import "github.com/zyedidia/generic/btree"
 ```
 
-Package btree provides an implementation of a B\-tree\. A B\-tree is a logarithmic search tree that maintains key\-value pairs in sorted order\. It is not binary because it stores more than 2 data entries per node\. The branching factor for this tree is 64\.
+Package btree provides an implementation of a B\-tree. A B\-tree is a logarithmic search tree that maintains key\-value pairs in sorted order. It is not binary because it stores more than 2 data entries per node. The branching factor for this tree is 64.
 
 <details><summary>Example</summary>
 <p>
@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/btree"
 )
@@ -58,7 +59,7 @@ func main() {
 
 ## type [Tree](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L18-L24>)
 
-Tree implements a B\-tree\.
+Tree implements a B\-tree.
 
 ```go
 type Tree[K, V any] struct {
@@ -72,47 +73,47 @@ type Tree[K, V any] struct {
 func New[K, V any](less g.LessFn[K]) *Tree[K, V]
 ```
 
-New returns an empty B\-tree\.
+New returns an empty B\-tree.
 
-### func \(\*Tree\[K\, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L172>)
+### func \(\*Tree\[K, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L172>)
 
 ```go
 func (t *Tree[K, V]) Each(fn func(key K, val V))
 ```
 
-Each calls 'fn' on every node in the tree in order\.
+Each calls 'fn' on every node in the tree in order.
 
-### func \(\*Tree\[K\, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L52>)
+### func \(\*Tree\[K, V\]\) [Get](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L52>)
 
 ```go
 func (t *Tree[K, V]) Get(key K) (V, bool)
 ```
 
-Get returns the value associated with 'key'\.
+Get returns the value associated with 'key'.
 
-### func \(\*Tree\[K\, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L79>)
+### func \(\*Tree\[K, V\]\) [Put](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L79>)
 
 ```go
 func (t *Tree[K, V]) Put(key K, val V)
 ```
 
-Put associates 'key' with 'val'\.
+Put associates 'key' with 'val'.
 
-### func \(\*Tree\[K\, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L102>)
+### func \(\*Tree\[K, V\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L102>)
 
 ```go
 func (t *Tree[K, V]) Remove(key K)
 ```
 
-Remove removes the value associated with 'key'\.
+Remove removes the value associated with 'key'.
 
-### func \(\*Tree\[K\, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L47>)
+### func \(\*Tree\[K, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/btree/btree.go#L47>)
 
 ```go
 func (t *Tree[K, V]) Size() int
 ```
 
-Size returns the number of elements in the tree\.
+Size returns the number of elements in the tree.
 
 
 

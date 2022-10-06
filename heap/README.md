@@ -6,7 +6,7 @@
 import "github.com/zyedidia/generic/heap"
 ```
 
-Package heap provides an implementation of a binary heap\. A binary heap \(binary min\-heap\) is a tree with the property that each node is the minimum\-valued node in its subtree\.
+Package heap provides an implementation of a binary heap. A binary heap \(binary min\-heap\) is a tree with the property that each node is the minimum\-valued node in its subtree.
 
 <details><summary>Example</summary>
 <p>
@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/heap"
 )
 
@@ -58,7 +59,7 @@ func main() {
 
 ## type [Heap](<https://github.com/zyedidia/generic/blob/master/heap/heap.go#L11-L14>)
 
-Heap implements a binary heap\.
+Heap implements a binary heap.
 
 ```go
 type Heap[T any] struct {
@@ -72,7 +73,7 @@ type Heap[T any] struct {
 func From[T any](less g.LessFn[T], t ...T) *Heap[T]
 ```
 
-From returns a new heap with the given less function and initial data\.
+From returns a new heap with the given less function and initial data.
 
 <details><summary>Example</summary>
 <p>
@@ -82,6 +83,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/heap"
 )
 
@@ -112,7 +114,7 @@ func main() {
 func FromSlice[T any](less g.LessFn[T], data []T) *Heap[T]
 ```
 
-FromSlice returns a new heap with the given less function and initial data\. The \`data\` is not copied and used as the inside array\.
+FromSlice returns a new heap with the given less function and initial data. The \`data\` is not copied and used as the inside array.
 
 <details><summary>Example</summary>
 <p>
@@ -122,6 +124,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zyedidia/generic/heap"
 )
 
@@ -152,7 +155,7 @@ func main() {
 func New[T any](less g.LessFn[T]) *Heap[T]
 ```
 
-New returns a new heap with the given less function\.
+New returns a new heap with the given less function.
 
 ### func \(\*Heap\[T\]\) [Peek](<https://github.com/zyedidia/generic/blob/master/heap/heap.go#L68>)
 
@@ -160,7 +163,7 @@ New returns a new heap with the given less function\.
 func (h *Heap[T]) Peek() (T, bool)
 ```
 
-Peek returns the minimum element from the heap without removing it\. if the heap is empty\, it returns zero value and false\.
+Peek returns the minimum element from the heap without removing it. if the heap is empty, it returns zero value and false.
 
 ### func \(\*Heap\[T\]\) [Pop](<https://github.com/zyedidia/generic/blob/master/heap/heap.go#L51>)
 
@@ -168,7 +171,43 @@ Peek returns the minimum element from the heap without removing it\. if the heap
 func (h *Heap[T]) Pop() (T, bool)
 ```
 
-Pop removes and returns the minimum element from the heap\. If the heap is empty\, it returns zero value and false\.
+Pop removes and returns the minimum element from the heap. If the heap is empty, it returns zero value and false.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/zyedidia/generic/heap"
+)
+
+func main() {
+	heap := heap.New(func(a, b int) bool { return a < b })
+
+	heap.Push(5)
+
+	v, ok := heap.Pop()
+	fmt.Println(v, ok)
+
+	// pop on empty
+	v, ok = heap.Pop()
+	fmt.Println(v, ok)
+}
+```
+
+#### Output
+
+```
+5 true
+0 false
+```
+
+</p>
+</details>
 
 ### func \(\*Heap\[T\]\) [Push](<https://github.com/zyedidia/generic/blob/master/heap/heap.go#L44>)
 
@@ -176,7 +215,7 @@ Pop removes and returns the minimum element from the heap\. If the heap is empty
 func (h *Heap[T]) Push(x T)
 ```
 
-Push pushes the given element onto the heap\.
+Push pushes the given element onto the heap.
 
 ### func \(\*Heap\[T\]\) [Size](<https://github.com/zyedidia/generic/blob/master/heap/heap.go#L78>)
 
@@ -184,7 +223,7 @@ Push pushes the given element onto the heap\.
 func (h *Heap[T]) Size() int
 ```
 
-Size returns the number of elements in the heap\.
+Size returns the number of elements in the heap.
 
 
 

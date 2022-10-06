@@ -40,7 +40,7 @@ import "github.com/zyedidia/generic"
 func Clamp[T constraints.Ordered](x, lo, hi T) T
 ```
 
-Clamp returns x constrained within \[lo:hi\] range\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+Clamp returns x constrained within \[lo:hi\] range. If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
 
 <details><summary>Example</summary>
 <p>
@@ -50,8 +50,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"time"
+
+	"github.com/zyedidia/generic"
 )
 
 func main() {
@@ -93,7 +94,7 @@ func main() {
 func ClampFunc[T any](x, lo, hi T, less LessFn[T]) T
 ```
 
-ClampFunc returns x constrained within \[lo:hi\] range using the less func\. If x compares less than lo\, returns lo; otherwise if hi compares less than x\, returns hi; otherwise returns v\.
+ClampFunc returns x constrained within \[lo:hi\] range using the less func. If x compares less than lo, returns lo; otherwise if hi compares less than x, returns hi; otherwise returns v.
 
 <details><summary>Example</summary>
 <p>
@@ -103,8 +104,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"math"
+
+	"github.com/zyedidia/generic"
 )
 
 func lessMagnitude(a, b float64) bool {
@@ -144,7 +146,7 @@ func main() {
 func Compare[T any](a, b T, less LessFn[T]) int
 ```
 
-Compare uses a less function to determine the ordering of 'a' and 'b'\. It returns:
+Compare uses a less function to determine the ordering of 'a' and 'b'. It returns:
 
 \* \-1 if a \< b
 
@@ -158,7 +160,7 @@ Compare uses a less function to determine the ordering of 'a' and 'b'\. It retur
 func Equals[T comparable](a, b T) bool
 ```
 
-Equals wraps the '==' operator for comparable types\.
+Equals wraps the '==' operator for comparable types.
 
 ## func [HashBytes](<https://github.com/zyedidia/generic/blob/master/generic.go#L121>)
 
@@ -238,7 +240,7 @@ func HashUint8(u uint8) uint64
 func Less[T constraints.Ordered](a, b T) bool
 ```
 
-Less wraps the '\<' operator for ordered types\.
+Less wraps the '\<' operator for ordered types.
 
 ## func [Max](<https://github.com/zyedidia/generic/blob/master/generic.go#L45>)
 
@@ -246,7 +248,7 @@ Less wraps the '\<' operator for ordered types\.
 func Max[T constraints.Ordered](a, b T) T
 ```
 
-Max returns the max of a and b\.
+Max returns the max of a and b.
 
 <details><summary>Example</summary>
 <p>
@@ -256,8 +258,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"time"
+
+	"github.com/zyedidia/generic"
 )
 
 func main() {
@@ -282,7 +285,7 @@ func main() {
 func MaxFunc[T any](a, b T, less LessFn[T]) T
 ```
 
-MaxFunc returns the max of a and b using the less func\.
+MaxFunc returns the max of a and b using the less func.
 
 <details><summary>Example</summary>
 <p>
@@ -292,8 +295,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"math"
+
+	"github.com/zyedidia/generic"
 )
 
 func lessMagnitude(a, b float64) bool {
@@ -320,7 +324,7 @@ func main() {
 func Min[T constraints.Ordered](a, b T) T
 ```
 
-Min returns the min of a and b\.
+Min returns the min of a and b.
 
 <details><summary>Example</summary>
 <p>
@@ -330,8 +334,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"time"
+
+	"github.com/zyedidia/generic"
 )
 
 func main() {
@@ -356,7 +361,7 @@ func main() {
 func MinFunc[T any](a, b T, less LessFn[T]) T
 ```
 
-MinFunc returns the min of a and b using the less func\.
+MinFunc returns the min of a and b using the less func.
 
 <details><summary>Example</summary>
 <p>
@@ -366,8 +371,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/generic"
 	"math"
+
+	"github.com/zyedidia/generic"
 )
 
 func lessMagnitude(a, b float64) bool {
@@ -390,7 +396,7 @@ func main() {
 
 ## type [EqualsFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L10>)
 
-EqualsFn is a function that returns whether 'a' and 'b' are equal\.
+EqualsFn is a function that returns whether 'a' and 'b' are equal.
 
 ```go
 type EqualsFn[T any] func(a, b T) bool
@@ -398,7 +404,7 @@ type EqualsFn[T any] func(a, b T) bool
 
 ## type [HashFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L16>)
 
-HashFn is a function that returns the hash of 't'\.
+HashFn is a function that returns the hash of 't'.
 
 ```go
 type HashFn[T any] func(t T) uint64
@@ -406,7 +412,7 @@ type HashFn[T any] func(t T) uint64
 
 ## type [LessFn](<https://github.com/zyedidia/generic/blob/master/generic.go#L13>)
 
-LessFn is a function that returns whether 'a' is less than 'b'\.
+LessFn is a function that returns whether 'a' is less than 'b'.
 
 ```go
 type LessFn[T any] func(a, b T) bool

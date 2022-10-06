@@ -6,9 +6,9 @@
 import "github.com/zyedidia/generic/multimap"
 ```
 
-Package multimap provides an associative container that permits multiple entries with the same key\.
+Package multimap provides an associative container that permits multiple entries with the same key.
 
-There are four implementations of the MultiMap data structure\, identified by separate New\* functions\. They differ in the following ways: \- whether key type and value type must be comparable\. \- whether duplicate entries \(same key and same value\) are permitted\. \- whether keys and values are sorted or unsorted in Get\, Each\, and EachAssociation methods\.
+There are four implementations of the MultiMap data structure, identified by separate New\* functions. They differ in the following ways: \- whether key type and value type must be comparable. \- whether duplicate entries \(same key and same value\) are permitted. \- whether keys and values are sorted or unsorted in Get, Each, and EachAssociation methods.
 
 ## Index
 
@@ -21,7 +21,7 @@ There are four implementations of the MultiMap data structure\, identified by se
 
 ## type [MultiMap](<https://github.com/zyedidia/generic/blob/master/multimap/multimap.go#L11-L40>)
 
-MultiMap is an associative container that contains a list of key\-value pairs\, while permitting multiple entries with the same key\.
+MultiMap is an associative container that contains a list of key\-value pairs, while permitting multiple entries with the same key.
 
 ```go
 type MultiMap[K, V any] interface {
@@ -62,7 +62,7 @@ type MultiMap[K, V any] interface {
 func NewAvlSet[K, V any](keyLess g.LessFn[K], valueLess g.LessFn[V]) MultiMap[K, V]
 ```
 
-NewAvlSet creates a MultiMap using AVL tree and AVL set\. \- Duplicate entries are not permitted\. \- Both keys and values are sorted\.
+NewAvlSet creates a MultiMap using AVL tree and AVL set. \- Duplicate entries are not permitted. \- Both keys and values are sorted.
 
 ### func [NewAvlSlice](<https://github.com/zyedidia/generic/blob/master/multimap/avl.go#L95>)
 
@@ -70,7 +70,7 @@ NewAvlSet creates a MultiMap using AVL tree and AVL set\. \- Duplicate entries a
 func NewAvlSlice[K any, V comparable](keyLess g.LessFn[K]) MultiMap[K, V]
 ```
 
-NewAvlSlice creates a MultiMap using AVL tree and builtin slice\. \- Value type must be comparable\. \- Duplicate entries are permitted\. \- Keys are sorted\, but values are unsorted\.
+NewAvlSlice creates a MultiMap using AVL tree and builtin slice. \- Value type must be comparable. \- Duplicate entries are permitted. \- Keys are sorted, but values are unsorted.
 
 ### func [NewMapSet](<https://github.com/zyedidia/generic/blob/master/multimap/map.go#L108>)
 
@@ -78,7 +78,7 @@ NewAvlSlice creates a MultiMap using AVL tree and builtin slice\. \- Value type 
 func NewMapSet[K comparable, V any](valueLess g.LessFn[V]) MultiMap[K, V]
 ```
 
-NewMapSet creates a MultiMap using builtin map and AVL set\. \- Key type must be comparable\. \- Duplicate entries are not permitted\. \- Values are sorted\, but keys are unsorted\.
+NewMapSet creates a MultiMap using builtin map and AVL set. \- Key type must be comparable. \- Duplicate entries are not permitted. \- Values are sorted, but keys are unsorted.
 
 ### func [NewMapSlice](<https://github.com/zyedidia/generic/blob/master/multimap/map.go#L94>)
 
@@ -86,7 +86,7 @@ NewMapSet creates a MultiMap using builtin map and AVL set\. \- Key type must be
 func NewMapSlice[K, V comparable]() MultiMap[K, V]
 ```
 
-NewMapSlice creates a MultiMap using builtin map and builtin slice\. \- Both key type and value type must be comparable\. \- Duplicate entries are permitted\. \- Both keys and values are unsorted\.
+NewMapSlice creates a MultiMap using builtin map and builtin slice. \- Both key type and value type must be comparable. \- Duplicate entries are permitted. \- Both keys and values are unsorted.
 
 
 

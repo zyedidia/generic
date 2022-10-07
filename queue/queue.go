@@ -59,7 +59,7 @@ func (q *Queue[T]) TryDequeue() (T, bool) {
 // DequeueAll removes and returns all the items in the queue.
 func (q *Queue[T]) DequeueAll() []T {
 	slice := make([]T, q.length)
-	for i := 0; i < q.length; i++ {
+	for i := 0; i < len(slice); i++ {
 		slice[i] = q.Dequeue()
 	}
 	return slice

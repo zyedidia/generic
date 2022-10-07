@@ -20,6 +20,16 @@ func New[T any]() *Queue[T] {
 	}
 }
 
+// Of returns a First In First Out (FIFO) queue that has been populated with
+// values from an existing slice.
+func Of[S ~[]E, E any](slice S) *Queue[E] {
+	queue := New[E]()
+	for _, value := range slice {
+		queue.Enqueue(value)
+	}
+	return queue
+}
+
 // Len returns the number of items currently in the queue.
 func (q *Queue[T]) Len() int {
 	return q.length
@@ -106,6 +116,11 @@ func (q *Queue[T]) Empty() bool {
 func (q *Queue[T]) Clear() {
 	q.length = 0
 	q.list = list.New[T]()
+}
+
+// Copy returns a shallow copy of this queue.
+func (q *Queue[T]) Copy() *Queue[T] {
+	return Of(q.PeekAll())
 }
 
 // Each calls 'fn' on every item in the queue, starting with the least

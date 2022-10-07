@@ -7,6 +7,7 @@ This package implements some generic data structures.
 
 * [`array2d`](./array2d): a 2-dimensional array.
 * [`avl`](./avl): an AVL tree.
+* [`bimap`](./bimap): a bi-directional map; a map that allows lookups on both keys and values.
 * [`btree`](./btree): a B-tree.
 * [`cache`](./cache): a wrapper around `map[K]V` that uses a maximum size and evicts
   elements using LRU when full.

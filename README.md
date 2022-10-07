@@ -5,6 +5,7 @@
 
 This package implements some generic data structures.
 
+* [`array2d`](./array2d): a 2-dimensional array.
 * [`avl`](./avl): an AVL tree.
 * [`btree`](./btree): a B-tree.
 * [`cache`](./cache): a wrapper around `map[K]V` that uses a maximum size and evicts

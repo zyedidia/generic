@@ -13,17 +13,17 @@ This package implements some generic data structures.
 * [`hashmap`](./hashmap): a hashmap with linear probing. The main feature is that
   the hashmap can be efficiently copied, using copy-on-write under the hood.
 * [`hashset`](./hashset): a hashset that uses the hashmap as the underlying storage.
-* [`mapset`](./mapset): a set that uses Go's built-in map as the underlying storage.
-* [`multimap`](./multimap): an associative container that permits multiple entries with the same key.
+* [`heap`](./heap): a binary heap.
 * [`interval`](./interval): an interval tree, implemented as an augmented AVL tree.
 * [`list`](./list): a doubly-linked list.
+* [`mapset`](./mapset): a set that uses Go's built-in map as the underlying storage.
+* [`multimap`](./multimap): an associative container that permits multiple entries with the same key.
+* [`queue`](./queue): a First In First Out (FIFO) queue.
 * [`rope`](./rope): a generic rope, which is similar to an array but supports efficient
   insertion and deletion from anywhere in the array. Ropes are typically used
   for arrays of bytes, but this rope is generic.
 * [`stack`](./stack): a LIFO stack.
 * [`trie`](./trie): a ternary search trie.
-* [`queue`](./queue): a First In First Out (FIFO) queue.
-* [`heap`](./heap): a binary heap.
 
 See each subpackage for documentation and examples. The top-level `generic`
 package provides some useful types and constraints. See [DOC.md](DOC.md) for

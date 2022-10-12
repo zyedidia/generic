@@ -80,9 +80,17 @@ func Example() {
 	m.Remove("foo")
 
 	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 
+	m.Clear()
+
+	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 	// Output:
 	// 42 true
+	// 0 false
+	// 0 false
+	// 13 true
 	// 0 false
 	// 0 false
 }

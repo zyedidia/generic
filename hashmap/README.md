@@ -32,7 +32,12 @@ func main() {
 	m.Remove("foo")
 
 	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 
+	m.Clear()
+
+	fmt.Println(m.Get("foo"))
+	fmt.Println(m.Get("bar"))
 }
 ```
 
@@ -40,6 +45,9 @@ func main() {
 
 ```
 42 true
+0 false
+0 false
+13 true
 0 false
 0 false
 ```
@@ -51,6 +59,7 @@ func main() {
 
 - [type Map](<#type-map>)
   - [func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map[K, V]](<#func-new>)
+  - [func (m *Map[K, V]) Clear()](<#func-mapk-v-clear>)
   - [func (m *Map[K, V]) Copy() *Map[K, V]](<#func-mapk-v-copy>)
   - [func (m *Map[K, V]) Each(fn func(key K, val V))](<#func-mapk-v-each>)
   - [func (m *Map[K, V]) Get(key K) (V, bool)](<#func-mapk-v-get>)
@@ -77,7 +86,15 @@ func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map
 
 New constructs a new map with the given capacity.
 
-### func \(\*Map\[K, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L181>)
+### func \(\*Map\[K, V\]\) [Clear](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L174>)
+
+```go
+func (m *Map[K, V]) Clear()
+```
+
+Clear removes all key\-value pairs from the map.
+
+### func \(\*Map\[K, V\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L190>)
 
 ```go
 func (m *Map[K, V]) Copy() *Map[K, V]
@@ -85,7 +102,7 @@ func (m *Map[K, V]) Copy() *Map[K, V]
 
 Copy returns a copy of this map. The copy will not allocate any memory until the first write, so any number of read\-only copies can be made without any additional allocations.
 
-### func \(\*Map\[K, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L194>)
+### func \(\*Map\[K, V\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L203>)
 
 ```go
 func (m *Map[K, V]) Each(fn func(key K, val V))
@@ -117,7 +134,7 @@ func (m *Map[K, V]) Remove(key K)
 
 Remove removes the specified key\-value pair from the map.
 
-### func \(\*Map\[K, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L174>)
+### func \(\*Map\[K, V\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashmap/map.go#L183>)
 
 ```go
 func (m *Map[K, V]) Size() int

@@ -29,6 +29,16 @@ func main() {
 
 	fmt.Println(set.Has("foo"))
 	fmt.Println(set.Has("quux"))
+
+	set.Remove("foo")
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
+
+	set.Clear()
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
 }
 ```
 
@@ -36,6 +46,10 @@ func main() {
 
 ```
 true
+false
+false
+true
+false
 false
 ```
 
@@ -47,6 +61,7 @@ false
 - [type Set](<#type-set>)
   - [func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]](<#func-new>)
   - [func Of[K comparable](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], vals ...K) *Set[K]](<#func-of>)
+  - [func (s *Set[K]) Clear()](<#func-setk-clear>)
   - [func (s *Set[K]) Copy() *Set[K]](<#func-setk-copy>)
   - [func (s *Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s *Set[K]) Has(val K) bool](<#func-setk-has>)
@@ -81,7 +96,15 @@ func Of[K comparable](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], v
 
 Of returns a new hashset initialized with the given 'vals'
 
-### func \(\*Set\[K\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L59>)
+### func \(\*Set\[K\]\) [Clear](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L47>)
+
+```go
+func (s *Set[K]) Clear()
+```
+
+Clear removes all elements from the set.
+
+### func \(\*Set\[K\]\) [Copy](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L64>)
 
 ```go
 func (s *Set[K]) Copy() *Set[K]
@@ -89,7 +112,7 @@ func (s *Set[K]) Copy() *Set[K]
 
 Copy returns a copy of this set.
 
-### func \(\*Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L52>)
+### func \(\*Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L57>)
 
 ```go
 func (s *Set[K]) Each(fn func(key K))
@@ -121,7 +144,7 @@ func (s *Set[K]) Remove(val K)
 
 Remove removes 'val' from the set.
 
-### func \(\*Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L47>)
+### func \(\*Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/hashset/set.go#L52>)
 
 ```go
 func (s *Set[K]) Size() int

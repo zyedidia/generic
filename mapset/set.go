@@ -1,6 +1,8 @@
 // Package mapset provides an implementation of a set using the built-in map.
 package mapset
 
+import "golang.org/x/exp/maps"
+
 // Set implements a hashset, using the hashmap as the underlying storage.
 type Set[K comparable] struct {
 	m map[K]struct{}
@@ -36,6 +38,11 @@ func (s Set[K]) Has(val K) bool {
 // Remove removes 'val' from the set.
 func (s Set[K]) Remove(val K) {
 	delete(s.m, val)
+}
+
+// Clear removes all elements from the set.
+func (s Set[K]) Clear() {
+	maps.Clear(s.m)
 }
 
 // Size returns the number of elements in the set.

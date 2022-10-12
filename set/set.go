@@ -36,6 +36,7 @@ type SetOf[K comparable] interface {
 	Put(val K)
 	Has(val K) bool
 	Remove(val K)
+	Clear()
 	Size() int
 	Each(fn func(key K))
 }

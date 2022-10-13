@@ -75,9 +75,21 @@ func Example() {
 	set.Put("bar")
 	set.Put("baz")
 
-	fmt.Println(set.Has("foo"))
-	fmt.Println(set.Has("quux"))
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("quux", set.Has("quux"))
+
+	set.Remove("foo")
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
+
+	set.Clear()
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
 	// Output:
-	// true
-	// false
+	// foo true
+	// quux false
+	// foo false
+	// bar true
+	// foo false
+	// bar false
 }

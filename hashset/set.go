@@ -43,6 +43,11 @@ func (s *Set[K]) Remove(val K) {
 	s.m.Remove(val)
 }
 
+// Clear removes all elements from the set.
+func (s *Set[K]) Clear() {
+	s.m.Clear()
+}
+
 // Size returns the number of elements in the set.
 func (s *Set[K]) Size() int {
 	return s.m.Size()

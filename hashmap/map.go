@@ -170,6 +170,15 @@ func (m *Map[K, V]) Remove(key K) {
 	}
 }
 
+// Clear removes all key-value pairs from the map.
+func (m *Map[K, V]) Clear() {
+	for idx, entry := range m.entries {
+		if entry.filled {
+			m.remove(uint64(idx))
+		}
+	}
+}
+
 // Size returns the number of items in the map.
 func (m *Map[K, V]) Size() int {
 	return int(m.length)

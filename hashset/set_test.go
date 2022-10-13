@@ -78,7 +78,21 @@ func Example() {
 
 	fmt.Println(set.Has("foo"))
 	fmt.Println(set.Has("quux"))
+
+	set.Remove("foo")
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
+
+	set.Clear()
+
+	fmt.Println(set.Has("foo"))
+	fmt.Println(set.Has("bar"))
 	// Output:
 	// true
+	// false
+	// false
+	// true
+	// false
 	// false
 }

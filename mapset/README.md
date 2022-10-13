@@ -26,16 +26,28 @@ func main() {
 	set.Put("bar")
 	set.Put("baz")
 
-	fmt.Println(set.Has("foo"))
-	fmt.Println(set.Has("quux"))
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("quux", set.Has("quux"))
+
+	set.Remove("foo")
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
+
+	set.Clear()
+	fmt.Println("foo", set.Has("foo"))
+	fmt.Println("bar", set.Has("bar"))
 }
 ```
 
 #### Output
 
 ```
-true
-false
+foo true
+quux false
+foo false
+bar true
+foo false
+bar false
 ```
 
 </p>
@@ -46,6 +58,7 @@ false
 - [type Set](<#type-set>)
   - [func New[K comparable]() Set[K]](<#func-new>)
   - [func Of[K comparable](vals ...K) Set[K]](<#func-of>)
+  - [func (s Set[K]) Clear()](<#func-setk-clear>)
   - [func (s Set[K]) Each(fn func(key K))](<#func-setk-each>)
   - [func (s Set[K]) Has(val K) bool](<#func-setk-has>)
   - [func (s Set[K]) Put(val K)](<#func-setk-put>)
@@ -53,7 +66,7 @@ false
   - [func (s Set[K]) Size() int](<#func-setk-size>)
 
 
-## type [Set](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L5-L7>)
+## type [Set](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L7-L9>)
 
 Set implements a hashset, using the hashmap as the underlying storage.
 
@@ -63,7 +76,7 @@ type Set[K comparable] struct {
 }
 ```
 
-### func [New](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L10>)
+### func [New](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L12>)
 
 ```go
 func New[K comparable]() Set[K]
@@ -71,7 +84,7 @@ func New[K comparable]() Set[K]
 
 New returns an empty hashset.
 
-### func [Of](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L17>)
+### func [Of](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L19>)
 
 ```go
 func Of[K comparable](vals ...K) Set[K]
@@ -79,7 +92,15 @@ func Of[K comparable](vals ...K) Set[K]
 
 Of returns a new hashset initialized with the given 'vals'
 
-### func \(Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L47>)
+### func \(Set\[K\]\) [Clear](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L44>)
+
+```go
+func (s Set[K]) Clear()
+```
+
+Clear removes all elements from the set.
+
+### func \(Set\[K\]\) [Each](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L54>)
 
 ```go
 func (s Set[K]) Each(fn func(key K))
@@ -87,7 +108,7 @@ func (s Set[K]) Each(fn func(key K))
 
 Each calls 'fn' on every item in the set in no particular order.
 
-### func \(Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L31>)
+### func \(Set\[K\]\) [Has](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L33>)
 
 ```go
 func (s Set[K]) Has(val K) bool
@@ -95,7 +116,7 @@ func (s Set[K]) Has(val K) bool
 
 Has returns true only if 'val' is in the set.
 
-### func \(Set\[K\]\) [Put](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L26>)
+### func \(Set\[K\]\) [Put](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L28>)
 
 ```go
 func (s Set[K]) Put(val K)
@@ -103,7 +124,7 @@ func (s Set[K]) Put(val K)
 
 Put adds 'val' to the set.
 
-### func \(Set\[K\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L37>)
+### func \(Set\[K\]\) [Remove](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L39>)
 
 ```go
 func (s Set[K]) Remove(val K)
@@ -111,7 +132,7 @@ func (s Set[K]) Remove(val K)
 
 Remove removes 'val' from the set.
 
-### func \(Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L42>)
+### func \(Set\[K\]\) [Size](<https://github.com/zyedidia/generic/blob/master/mapset/set.go#L49>)
 
 ```go
 func (s Set[K]) Size() int

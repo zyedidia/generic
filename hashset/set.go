@@ -19,7 +19,7 @@ func New[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Set[K]
 }
 
 // Of returns a new hashset initialized with the given 'vals'
-func Of[K comparable](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], vals ...K) *Set[K] {
+func Of[K any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K], vals ...K) *Set[K] {
 	s := New[K](capacity, equals, hash)
 	for _, val := range vals {
 		s.Put(val)

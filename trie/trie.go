@@ -134,7 +134,7 @@ func (t *Trie[V]) LongestPrefix(query string) string {
 
 // Keys returns all keys in the trie.
 func (t *Trie[V]) Keys() (queue []string) {
-	return t.collect(t.root, "", queue)
+	return t.collect(t.root, nil, queue)
 }
 
 // KeysWithPrefix returns all keys with prefix 'prefix'.
@@ -149,17 +149,17 @@ func (t *Trie[V]) KeysWithPrefix(prefix string) (queue []string) {
 	if x.valid {
 		queue = []string{prefix}
 	}
-	return t.collect(x.mid, prefix, queue)
+	return t.collect(x.mid, []byte(prefix), queue)
 }
 
-func (t *Trie[V]) collect(x *node[V], prefix string, queue []string) []string {
+func (t *Trie[V]) collect(x *node[V], prefix []byte, queue []string) []string {
 	if x == nil {
 		return queue
 	}
 	queue = t.collect(x.left, prefix, queue)
 	if x.valid {
-		queue = append(queue, prefix+string(x.c))
+		queue = append(queue, string(append(prefix, x.c)))
 	}
-	queue = t.collect(x.mid, prefix+string(x.c), queue)
+	queue = t.collect(x.mid, append(prefix, x.c), queue)
 	return t.collect(x.right, prefix, queue)
 }

@@ -19,7 +19,49 @@ type node[V any] struct {
 }
 
 func (n *node[V]) isUnused() bool {
-	return !n.valid && n.left == nil && n.mid == nil && n.right == nil
+	return !n.valid && n.mid == nil
+}
+
+func (n *node[V]) delete() *node[V] {
+	if n == nil {
+		return nil
+	}
+	if n.right == nil {
+		return n.left
+	}
+	if n.left == nil {
+		return n.right
+	}
+
+	deleted := n
+	n = deleted.right.minChild()
+	n.right = deleted.right.deleteMinChild()
+	n.left = deleted.left
+	return n
+}
+
+func (n *node[V]) minChild() *node[V] {
+	if n == nil {
+		return nil
+	}
+
+	for n.left != nil {
+		n = n.left
+	}
+	return n
+}
+
+func (n *node[V]) deleteMinChild() *node[V] {
+	if n == nil {
+		return nil
+	}
+
+	if n.left == nil { // n is the min node
+		return n.right
+	}
+
+	n.left = n.left.deleteMinChild()
+	return n
 }
 
 // New returns an empty trie.
@@ -130,8 +172,9 @@ func (t *Trie[V]) remove(x *node[V], key string, d int) *node[V] {
 	}
 
 	if x.isUnused() {
-		return nil
+		return x.delete()
 	}
+
 	return x
 }
 

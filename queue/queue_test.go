@@ -57,11 +57,39 @@ func TestQueuePeek(t *testing.T) {
 	})
 }
 
+func TestQueueTryPeek(t *testing.T) {
+	t.Run("panics on empty queue", func(t *testing.T) {
+		value, got := emptyQueue().TryPeek()
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v; unexpected value: %v", got, want, value)
+		}
+	})
+
+	t.Run("non-empty queue", func(t *testing.T) {
+		gotValue, gotOk := nonEmptyQueue().TryPeek()
+		wantValue := 1
+		wantOk := true
+
+		if gotOk != gotOk {
+			t.Errorf("got ok %v, want ok %v", gotOk, wantOk)
+		}
+		if gotValue != wantValue {
+			t.Errorf("got value %v, want value %v", gotValue, wantValue)
+		}
+	})
+}
+
 func TestQueueEnqueue(t *testing.T) {
 	t.Run("empty queue", func(t *testing.T) {
 		q := emptyQueue()
 
 		q.Enqueue(1)
+
+		if q.Len() != 1 {
+			t.Errorf("got len %d, want len 1", q.Len())
+		}
 
 		if q.list.Front == nil {
 			t.Error("front is nil")
@@ -84,6 +112,10 @@ func TestQueueEnqueue(t *testing.T) {
 		q := nonEmptyQueue()
 
 		q.Enqueue(3)
+
+		if q.Len() != 3 {
+			t.Errorf("got len %d, got len 3", q.Len())
+		}
 
 		if q.list.Front.Value != 1 {
 			t.Errorf("got %v, want %v for front value", q.list.Front.Value, 1)
@@ -124,6 +156,10 @@ func TestQueueDequeue(t *testing.T) {
 			t.Error("front of queue is still 1 after dequeue")
 		}
 
+		if q.Len() != 1 {
+			t.Errorf("got len %d after dequeue, got 1", q.Len())
+		}
+
 		if q.Empty() {
 			t.Error("queue is empty")
 		}
@@ -137,6 +173,67 @@ func TestQueueDequeue(t *testing.T) {
 
 		if !q.Empty() {
 			t.Error("queue is not empty")
+		}
+
+		if q.Len() != 0 {
+			t.Errorf("got len %d after empty, want 0", q.Len())
+		}
+	})
+}
+
+func TestQueueTryDequeue(t *testing.T) {
+	t.Run("false on empty queue", func(t *testing.T) {
+		value, got := emptyQueue().TryDequeue()
+		want := false
+
+		if got != want {
+			t.Errorf("got %v, want %v; unexpected value: %v", got, want, value)
+		}
+	})
+
+	t.Run("non-empty queue", func(t *testing.T) {
+		q := nonEmptyQueue()
+
+		// Non-empty after dequeue
+		gotValue, gotOk := q.TryDequeue()
+
+		if !gotOk {
+			t.Errorf("got ok false, want ok true")
+		} else {
+			if gotValue != 1 {
+				t.Errorf("got %v, want %v", gotValue, 1)
+			}
+
+			if q.list.Front.Value == 1 {
+				t.Error("front of queue is still 1 after dequeue")
+			}
+
+			if q.Len() != 1 {
+				t.Errorf("got len %d after dequeue, got 1", q.Len())
+			}
+
+			if q.Empty() {
+				t.Error("queue is empty")
+			}
+		}
+
+		// Empty after dequeue
+		gotValue, gotOk = q.TryDequeue()
+
+		if !gotOk {
+			t.Errorf("got ok false, want ok true")
+		} else {
+			if gotValue != 2 {
+				t.Errorf("got %v, want %v", gotValue, 2)
+			}
+
+			if !q.Empty() {
+				t.Error("queue is not empty")
+			}
+
+			if q.Len() != 0 {
+				t.Errorf("got len %d after empty, want 0", q.Len())
+			}
 		}
 	})
 }
@@ -153,12 +250,104 @@ func TestQueueEach(t *testing.T) {
 	})
 }
 
-func Example_Enqueue() {
+func TestQueueClear(t *testing.T) {
+	cases := []struct {
+		name  string
+		queue *Queue[int]
+	}{
+		{
+			name:  "empty queue",
+			queue: emptyQueue(),
+		},
+		{
+			name:  "non-empty queue",
+			queue: nonEmptyQueue(),
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			c.queue.Clear()
+			length := c.queue.Len()
+			empty := c.queue.Empty()
+
+			if length != 0 {
+				t.Errorf("got len %v, want len %v", length, 0)
+			}
+			if empty != true {
+				t.Errorf("got empty %v, want empty %v", empty, true)
+			}
+		})
+	}
+}
+
+func TestQueueDequeueAll(t *testing.T) {
+	cases := []struct {
+		name  string
+		queue *Queue[int]
+		want  []int
+	}{
+		{
+			name:  "empty queue",
+			queue: emptyQueue(),
+			want:  []int{},
+		},
+		{
+			name:  "non-empty queue",
+			queue: nonEmptyQueue(),
+			want:  []int{1, 2},
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			got := c.queue.DequeueAll()
+			lenAfter := c.queue.Len()
+			assertSlices(t, got, c.want)
+			if lenAfter != 0 {
+				t.Errorf("got len after peek %d, want 0", lenAfter)
+			}
+		})
+	}
+}
+
+func TestQueuePeekAll(t *testing.T) {
+	cases := []struct {
+		name  string
+		queue *Queue[int]
+		want  []int
+	}{
+		{
+			name:  "empty queue",
+			queue: emptyQueue(),
+			want:  []int{},
+		},
+		{
+			name:  "non-empty queue",
+			queue: nonEmptyQueue(),
+			want:  []int{1, 2},
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			lenBefore := c.queue.Len()
+			got := c.queue.PeekAll()
+			lenAfter := c.queue.Len()
+			assertSlices(t, got, c.want)
+			if lenBefore != lenAfter {
+				t.Errorf("got len after peek %d, want %d", lenAfter, lenBefore)
+			}
+		})
+	}
+}
+
+func ExampleQueue_Enqueue() {
 	q := New[int]()
 	q.Enqueue(1)
 }
 
-func Example_Peek() {
+func ExampleQueue_Peek() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -166,7 +355,7 @@ func Example_Peek() {
 	// Output: 1
 }
 
-func Example_Dequeue() {
+func ExampleQueue_Dequeue() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -187,14 +376,14 @@ func Example() {
 	// 2
 }
 
-func Example_Empty_empty() {
+func ExampleQueue_Empty_empty() {
 	q := New[int]()
 
 	fmt.Println(q.Empty())
 	// Output: true
 }
 
-func Example_Empty_nonempty() {
+func ExampleQueue_Empty_nonempty() {
 	q := New[int]()
 	q.Enqueue(1)
 
@@ -211,5 +400,20 @@ func nonEmptyQueue() *Queue[int] {
 	q.list.Front = &list.Node[int]{Value: 1}
 	q.list.Front.Next = &list.Node[int]{Value: 2, Prev: q.list.Front}
 	q.list.Back = q.list.Front.Next
+	q.length = 2
 	return q
+}
+
+func assertSlices[T comparable](t *testing.T, got []T, want []T) {
+	t.Helper()
+	if len(got) != len(want) {
+		t.Errorf("got %v, want %v", got, want)
+		return
+	}
+	for i, gotValue := range got {
+		if gotValue != want[i] {
+			t.Errorf("got %v, want %v", got, want)
+			return
+		}
+	}
 }

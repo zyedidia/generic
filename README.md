@@ -23,6 +23,8 @@ This package implements some generic data structures.
 * [`rope`](./rope): a generic rope, which is similar to an array but supports efficient
   insertion and deletion from anywhere in the array. Ropes are typically used
   for arrays of bytes, but this rope is generic.
+* [`prope`](./prope): a persistent version of the rope, which allows for keeping different
+  versions of the rope with only a little extra time or memory.
 * [`stack`](./stack): a LIFO stack.
 * [`trie`](./trie): a ternary search trie.
 

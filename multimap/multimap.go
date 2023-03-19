@@ -2,9 +2,9 @@
 //
 // There are four implementations of the MultiMap data structure, identified by separate New* functions.
 // They differ in the following ways:
-//  - whether key type and value type must be comparable.
-//  - whether duplicate entries (same key and same value) are permitted.
-//  - whether keys and values are sorted or unsorted in Get, Each, and EachAssociation methods.
+//   - whether key type and value type must be comparable.
+//   - whether duplicate entries (same key and same value) are permitted.
+//   - whether keys and values are sorted or unsorted in Get, Each, and EachAssociation methods.
 package multimap
 
 // MultiMap is an associative container that contains a list of key-value pairs, while permitting multiple entries with the same key.

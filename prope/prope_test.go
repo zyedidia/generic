@@ -19,7 +19,6 @@ func check(p *prope.Node[byte], r *rope.Node[byte], t *testing.T) {
 	if r.Len() != p.Len() {
 		t.Errorf("incorrect length: %d %d", r.Len(), p.Len())
 	}
-	return
 }
 
 const datasz = 5000

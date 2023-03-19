@@ -88,9 +88,9 @@ func (m *mapMultiMap[K, V, C]) EachAssociation(fn func(key K, values []V)) {
 }
 
 // NewMapSlice creates a MultiMap using builtin map and builtin slice.
-//  - Both key type and value type must be comparable.
-//  - Duplicate entries are permitted.
-//  - Both keys and values are unsorted.
+//   - Both key type and value type must be comparable.
+//   - Duplicate entries are permitted.
+//   - Both keys and values are unsorted.
 func NewMapSlice[K, V comparable]() MultiMap[K, V] {
 	m := &mapMultiMap[K, V, *valuesSlice[V]]{
 		makeValues: func() *valuesSlice[V] {
@@ -102,9 +102,9 @@ func NewMapSlice[K, V comparable]() MultiMap[K, V] {
 }
 
 // NewMapSet creates a MultiMap using builtin map and AVL set.
-//  - Key type must be comparable.
-//  - Duplicate entries are not permitted.
-//  - Values are sorted, but keys are unsorted.
+//   - Key type must be comparable.
+//   - Duplicate entries are not permitted.
+//   - Values are sorted, but keys are unsorted.
 func NewMapSet[K comparable, V any](valueLess g.LessFn[V]) MultiMap[K, V] {
 	m := &mapMultiMap[K, V, valuesSet[V]]{
 		makeValues: func() valuesSet[V] {

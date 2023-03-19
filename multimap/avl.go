@@ -89,9 +89,9 @@ func (m *avlMultiMap[K, V, C]) EachAssociation(fn func(key K, values []V)) {
 }
 
 // NewAvlSlice creates a MultiMap using AVL tree and builtin slice.
-//  - Value type must be comparable.
-//  - Duplicate entries are permitted.
-//  - Keys are sorted, but values are unsorted.
+//   - Value type must be comparable.
+//   - Duplicate entries are permitted.
+//   - Keys are sorted, but values are unsorted.
 func NewAvlSlice[K any, V comparable](keyLess g.LessFn[K]) MultiMap[K, V] {
 	m := &avlMultiMap[K, V, *valuesSlice[V]]{
 		keyLess: keyLess,
@@ -104,8 +104,8 @@ func NewAvlSlice[K any, V comparable](keyLess g.LessFn[K]) MultiMap[K, V] {
 }
 
 // NewAvlSet creates a MultiMap using AVL tree and AVL set.
-//  - Duplicate entries are not permitted.
-//  - Both keys and values are sorted.
+//   - Duplicate entries are not permitted.
+//   - Both keys and values are sorted.
 func NewAvlSet[K, V any](keyLess g.LessFn[K], valueLess g.LessFn[V]) MultiMap[K, V] {
 	m := &avlMultiMap[K, V, valuesSet[V]]{
 		keyLess: keyLess,

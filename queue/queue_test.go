@@ -72,7 +72,7 @@ func TestQueueTryPeek(t *testing.T) {
 		wantValue := 1
 		wantOk := true
 
-		if gotOk != gotOk {
+		if wantOk != gotOk {
 			t.Errorf("got ok %v, want ok %v", gotOk, wantOk)
 		}
 		if gotValue != wantValue {

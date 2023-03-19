@@ -52,7 +52,7 @@ func (s Set[K]) Size() int {
 
 // Each calls 'fn' on every item in the set in no particular order.
 func (s Set[K]) Each(fn func(key K)) {
-	for k, _ := range s.m {
+	for k := range s.m {
 		fn(k)
 	}
 }

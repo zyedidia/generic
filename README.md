@@ -1,5 +1,6 @@
 # Generic Data Structures
 
+![Test Workflow](https://github.com/zyedidia/generic/actions/workflows/test.yaml/badge.svg)
 [![Go Reference](https://pkg.go.dev/badge/github.com/zyedidia/generic.svg)](https://pkg.go.dev/github.com/zyedidia/generic)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/zyedidia/generic/blob/master/LICENSE)
 

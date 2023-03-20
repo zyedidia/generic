@@ -88,3 +88,21 @@ func (n *Node[V]) EachReverse(fn func(val V)) {
 		node = node.Prev
 	}
 }
+
+// EachNode calls 'fn' on every node from this node onward in the list.
+func (n *Node[V]) EachNode(fn func(n *Node[V])) {
+	node := n
+	for node != nil {
+		fn(node)
+		node = node.Next
+	}
+}
+
+// EachReverseNode calls 'fn' on every node from this node backward in the list.
+func (n *Node[V]) EachReverseNode(fn func(n *Node[V])) {
+	node := n
+	for node != nil {
+		fn(node)
+		node = node.Prev
+	}
+}

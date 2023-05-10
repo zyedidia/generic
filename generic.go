@@ -1,9 +1,26 @@
 package generic
 
 import (
+	"fmt"
+	"reflect"
+	"unsafe"
+
 	"golang.org/x/exp/constraints"
 
 	"github.com/segmentio/fasthash/fnv1a"
+)
+
+var (
+	tab64 = []int{
+		63, 0, 58, 1, 59, 47, 53, 2,
+		60, 39, 48, 27, 54, 33, 42, 3,
+		61, 51, 37, 40, 49, 18, 28, 20,
+		55, 30, 34, 11, 43, 14, 22, 4,
+		62, 57, 46, 52, 38, 26, 32, 41,
+		50, 36, 17, 19, 29, 10, 13, 21,
+		56, 45, 25, 31, 35, 16, 9, 12,
+		44, 24, 15, 8, 23, 7, 6, 5,
+	}
 )
 
 // EqualsFn is a function that returns whether 'a' and 'b' are equal.
@@ -39,6 +56,44 @@ func Compare[T any](a, b T, less LessFn[T]) int {
 		return 1
 	}
 	return 0
+}
+
+// NextPowerOf2 is a fast calculation implementation of 2^x.
+// see: https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
+// go:inline
+func NextPowerOf2(i uint64) uint64 {
+	i--
+	i |= i >> 1
+	i |= i >> 2
+	i |= i >> 4
+	i |= i >> 8
+	i |= i >> 16
+	i |= i >> 32
+	i++
+	return i
+}
+
+// Log2 is fast calculation implementation of log2(x)
+// see: https://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
+// go:inline
+func Log2(value uint64) uint64 {
+	value |= value >> 1
+	value |= value >> 2
+	value |= value >> 4
+	value |= value >> 8
+	value |= value >> 16
+	value |= value >> 32
+
+	index := ((value - (value >> 1)) * 0x07EDD5E59A4E28C2) >> 58
+	return uint64(tab64[index])
+}
+
+// Swap exchange the values of the two given pointers.
+// go:inline
+func Swap[T any](a, b *T) {
+	tmp := *a
+	*a = *b
+	*b = tmp
 }
 
 // Max returns the max of a and b.
@@ -106,6 +161,12 @@ func HashInt32(i int32) uint64 {
 func HashInt16(i int16) uint64 {
 	return hash(uint64(i))
 }
+func HashFloat32(i float32) uint64 {
+	return hash(uint64(i))
+}
+func HashFloat64(i float64) uint64 {
+	return hash(uint64(i))
+}
 func HashInt8(i int8) uint64 {
 	return hash(uint64(i))
 }
@@ -129,4 +190,53 @@ func hash(u uint64) uint64 {
 	u *= 0xc4ceb9fe1a85ec53
 	u ^= u >> 33
 	return u
+}
+
+// GetHasher returns a default hasher function for different Key types.
+func GetHasher[Key any]() HashFn[Key] {
+	var key Key
+	kind := reflect.ValueOf(&key).Elem().Type().Kind()
+
+	var (
+		hashByte  = HashInt8
+		hashWord  = HashUint16
+		hashDword = HashUint32
+		hashQword = HashUint64
+		hashF32   = HashFloat32
+		hashF64   = HashFloat64
+		hashStr   = HashString
+	)
+
+	switch kind {
+	case reflect.Int, reflect.Uint, reflect.Uintptr:
+		switch unsafe.Sizeof(key) {
+		case 2:
+			return *(*func(Key) uint64)(unsafe.Pointer(&hashWord))
+		case 4:
+			return *(*func(Key) uint64)(unsafe.Pointer(&hashDword))
+		case 8:
+			return *(*func(Key) uint64)(unsafe.Pointer(&hashQword))
+
+		default:
+			panic(fmt.Errorf("unsupported integer byte size"))
+		}
+
+	case reflect.Int8, reflect.Uint8:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashByte))
+	case reflect.Int16, reflect.Uint16:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashWord))
+	case reflect.Int32, reflect.Uint32:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashDword))
+	case reflect.Int64, reflect.Uint64:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashQword))
+	case reflect.Float32:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashF32))
+	case reflect.Float64:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashF64))
+	case reflect.String:
+		return *(*func(Key) uint64)(unsafe.Pointer(&hashStr))
+
+	default:
+		panic(fmt.Errorf("unsupported key type %T of kind %v", key, kind))
+	}
 }

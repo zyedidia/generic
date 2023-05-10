@@ -24,6 +24,48 @@ func ExampleMin() {
 	// 2000
 }
 
+func ExampleLog2() {
+	fmt.Println(generic.Log2(1))
+	fmt.Println(generic.Log2(2))
+	fmt.Println(generic.Log2(3))
+	fmt.Println(generic.Log2(4))
+	fmt.Println(generic.Log2(7))
+	fmt.Println(generic.Log2(8))
+	fmt.Println(generic.Log2(63))
+	fmt.Println(generic.Log2(64))
+	// Output:
+	// 0
+	// 1
+	// 1
+	// 2
+	// 2
+	// 3
+	// 5
+	// 6
+}
+
+func ExampleNextPowerOf2() {
+	fmt.Println(generic.NextPowerOf2(1))
+	fmt.Println(generic.NextPowerOf2(2))
+	fmt.Println(generic.NextPowerOf2(3))
+	fmt.Println(generic.NextPowerOf2(4))
+	fmt.Println(generic.NextPowerOf2(7))
+	fmt.Println(generic.NextPowerOf2(8))
+	fmt.Println(generic.NextPowerOf2(63))
+	fmt.Println(generic.NextPowerOf2(64))
+	fmt.Println(generic.NextPowerOf2(65))
+	// Output:
+	// 1
+	// 2
+	// 4
+	// 4
+	// 8
+	// 8
+	// 64
+	// 64
+	// 128
+}
+
 func ExampleClamp() {
 	fmt.Println(generic.Clamp(500, 400, 600))
 	fmt.Println(generic.Clamp(200, 400, 600))

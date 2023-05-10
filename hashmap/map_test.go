@@ -9,45 +9,105 @@ import (
 	"github.com/zyedidia/generic/hashmap"
 )
 
-func checkeq[K any, V comparable](cm *hashmap.Map[K, V], get func(k K) (V, bool), t *testing.T) {
+func checkeq[K comparable, V comparable](cm *hashmap.HashMap[K, V], get func(k K) (V, bool), t *testing.T) {
 	cm.Each(func(key K, val V) {
 		if ov, ok := get(key); !ok {
 			t.Fatalf("key %v should exist", key)
 		} else if val != ov {
 			t.Fatalf("value mismatch: %v != %v", val, ov)
 		}
+		v, found := cm.Get(key)
+		if !found {
+			t.Fatalf("double check failed for key %v", key)
+		}
+		if v != val {
+			t.Fatalf("double check failed for value %v", v)
+		}
 	})
 }
 
 func TestCrossCheck(t *testing.T) {
-	stdm := make(map[uint64]uint32)
 	cowm := hashmap.New[uint64, uint32](uint64(rand.Intn(1024)), g.Equals[uint64], g.HashUint64)
+	robin := hashmap.NewRobinMap[uint64, uint32]()
 
-	const nops = 1000
+	maps := []hashmap.HashMap[uint64, uint32]{
+		{
+			Get:    cowm.Get,
+			Put:    cowm.Put,
+			Remove: cowm.Remove,
+			Size:   cowm.Size,
+			Each:   cowm.Each,
+		},
+		{
+			Get:    robin.Get,
+			Put:    robin.Put,
+			Remove: robin.Remove,
+			Size:   robin.Size,
+			Each:   robin.Each,
+		},
+	}
 
-	for i := 0; i < nops; i++ {
-		key := uint64(rand.Intn(100))
-		val := rand.Uint32()
-		op := rand.Intn(2)
+	const nops = 10000
 
-		switch op {
-		case 0:
-			stdm[key] = val
-			cowm.Put(key, val)
-		case 1:
-			var del uint64
-			for k := range stdm {
-				del = k
-				break
+	for _, m := range maps {
+		stdm := make(map[uint64]uint32)
+		for i := 0; i < nops; i++ {
+			key := uint64(rand.Intn(1000))
+			val := rand.Uint32()
+			op := rand.Intn(4)
+
+			switch op {
+			case 0:
+				v1, ok1 := m.Get(key)
+				v2, ok2 := stdm[key]
+				if ok1 != ok2 || v1 != v2 {
+					t.Fatalf("lookup failed")
+				}
+			case 1:
+				// prioritize insert operation
+				fallthrough
+			case 2:
+				stdm[key] = val
+				m.Put(key, val)
+
+				v, found := m.Get(key)
+				if !found {
+					t.Fatalf("lookup failed after insert for key %d", key)
+				}
+				if v != val {
+					t.Fatalf("value are not equal %d != %d", v, val)
+				}
+			case 3:
+				var del uint64
+				if len(stdm) == 0 {
+					break
+				}
+				for k := range stdm {
+					del = k
+					break
+				}
+				delete(stdm, del)
+
+				_, found := m.Get(del)
+				if !found {
+					t.Fatalf("lookup failed for key %d", key)
+				}
+				m.Remove(del)
+				_, found = m.Get(del)
+				if found {
+					t.Fatalf("key %d was not removed", key)
+				}
 			}
-			delete(stdm, del)
-			cowm.Remove(del)
-		}
 
-		checkeq(cowm, func(k uint64) (uint32, bool) {
-			v, ok := stdm[k]
-			return v, ok
-		}, t)
+			if len(stdm) != m.Size() {
+				t.Fatalf("len of maps are not equal %d != %d", len(stdm), m.Size())
+			}
+
+			checkeq(&m, func(k uint64) (uint32, bool) {
+				v, ok := stdm[k]
+				return v, ok
+			}, t)
+		}
 	}
 }
 
@@ -60,7 +120,8 @@ func TestCopy(t *testing.T) {
 
 	cpy := orig.Copy()
 
-	checkeq(cpy, orig.Get, t)
+	c := hashmap.HashMap[uint64, uint32]{Get: cpy.Get, Each: cpy.Each}
+	checkeq(&c, orig.Get, t)
 
 	cpy.Put(0, 42)
 

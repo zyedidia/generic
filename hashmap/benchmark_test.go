@@ -65,6 +65,9 @@ func createMapUint64(n int, mapName string) hashmap.HashMap[uint64, uint64] {
 					callback(k, v)
 				}
 			},
+			Load: func() float64 {
+				return -1.0 //unknown
+			},
 		}
 	case "robin":
 		m := hashmap.NewRobinMapWithHasher[uint64, uint64](g.HashUint64)
@@ -77,6 +80,7 @@ func createMapUint64(n int, mapName string) hashmap.HashMap[uint64, uint64] {
 			Clear:   m.Clear,
 			Size:    m.Size,
 			Each:    m.Each,
+			Load:    m.Load,
 		}
 	case "linear":
 		m := hashmap.New[uint64, uint64](uint64(n), g.Equals[uint64], g.HashUint64)
@@ -89,6 +93,7 @@ func createMapUint64(n int, mapName string) hashmap.HashMap[uint64, uint64] {
 			Clear:   m.Clear,
 			Size:    m.Size,
 			Each:    m.Each,
+			Load:    m.Load,
 		}
 	default:
 		panic(fmt.Sprintln("unknown map:", mapName))
@@ -131,9 +136,10 @@ func genDifferentRandUInt64Array(in []uint64) []uint64 {
 	return out
 }
 
-func report(b *testing.B, n int) {
+func report(b *testing.B, n int, load float64) {
 	b.ReportAllocs()
 	b.ReportMetric(float64(n), "N-runs")
+	b.ReportMetric(load, "Load")
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
 	b.ReportMetric(float64(mem.Alloc), "Bytes")
@@ -145,6 +151,7 @@ func BenchmarkRandomShuffleInsertsU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -157,8 +164,9 @@ func BenchmarkRandomShuffleInsertsU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -170,6 +178,7 @@ func BenchmarkRandomFullInsertsInsertsU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -182,8 +191,9 @@ func BenchmarkRandomFullInsertsInsertsU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -196,6 +206,7 @@ func BenchmarkRandomFullInsertsWithReserveInsertsU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -208,8 +219,9 @@ func BenchmarkRandomFullInsertsWithReserveInsertsU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -221,6 +233,7 @@ func BenchmarkRandomFullDeletesU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -237,8 +250,9 @@ func BenchmarkRandomFullDeletesU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -250,6 +264,7 @@ func BenchmarkRandomShuffleReadsU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -269,8 +284,9 @@ func BenchmarkRandomShuffleReadsU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -282,6 +298,7 @@ func BenchmarkFullReadsU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -301,8 +318,9 @@ func BenchmarkFullReadsU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -315,6 +333,7 @@ func BenchmarkFullReadsMissesU64(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -336,8 +355,9 @@ func BenchmarkFullReadsMissesU64(b *testing.B) {
 					}
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -350,6 +370,7 @@ func BenchmarkRandomFullReadsAfterDeletingHalf(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -379,8 +400,10 @@ func BenchmarkRandomFullReadsAfterDeletingHalf(b *testing.B) {
 					if ac != numRemoved {
 						b.Fatal("unexpected lookup accumulation:", ac)
 					}
+
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}
@@ -392,6 +415,7 @@ func BenchmarkRandomFullIteration(b *testing.B) {
 	for _, mapName := range getMapNames() {
 		for _, r := range getRanges() {
 			b.Run(fmt.Sprintf("%s-%d", mapName, r), func(b *testing.B) {
+				load := -1.0
 				for i := 0; i < b.N; i++ {
 					b.StopTimer()
 
@@ -405,8 +429,9 @@ func BenchmarkRandomFullIteration(b *testing.B) {
 					m.Each(handleElem)
 					b.StopTimer()
 
+					load = m.Load()
 				}
-				report(b, r)
+				report(b, r, load)
 			})
 		}
 	}

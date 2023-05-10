@@ -1,9 +1,3 @@
-// Package hashmap provides an implementation of a hashmap. The map uses linear
-// probing and automatically resizes. The map can also be efficiently copied,
-// and will perform copies lazily, using copy-on-write. However, the
-// copy-on-write will copy the entire map after the first write. One can imagine
-// a more efficient implementation that would split the map into chunks and use
-// copy-on-write selectively for each chunk.
 package hashmap
 
 import (
@@ -16,7 +10,12 @@ type entry[K, V any] struct {
 	value  V
 }
 
-// A Map is a hashmap that supports copying via copy-on-write.
+// A Map is a hashmap that supports copying via copy-on-write and uses linear
+// probing and automatically resizes. The map can also be efficiently copied,
+// and will perform copies lazily, using copy-on-write. However, the
+// copy-on-write will copy the entire map after the first write. One can imagine
+// a more efficient implementation that would split the map into chunks and use
+// copy-on-write selectively for each chunk.
 type Map[K, V any] struct {
 	entries  []entry[K, V]
 	capacity uint64
@@ -73,6 +72,20 @@ func (m *Map[K, V]) Get(key K) (V, bool) {
 
 	var v V
 	return v, false
+}
+
+// Reserve sets the number of entires in the container to the most appropriate to contain at least n elements.
+// If n is lower than that, the function may have no effect.
+func (m *Map[K, V]) Reserve(n uintptr) {
+	newCap := g.NextPowerOf2(uint64(2 * n))
+	if m.capacity < newCap {
+		m.resize(newCap)
+	}
+}
+
+// Load return the current load of the hash map.
+func (m *Map[K, V]) Load() float64 {
+	return float64(m.length) / float64(m.capacity)
 }
 
 func (m *Map[K, V]) resize(newcap uint64) {

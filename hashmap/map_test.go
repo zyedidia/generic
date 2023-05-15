@@ -28,7 +28,7 @@ func checkeq[K comparable, V comparable](cm *hashmap.HashMap[K, V], get func(k K
 
 func TestCrossCheck(t *testing.T) {
 	cowm := hashmap.New[uint64, uint32](uint64(rand.Intn(1024)), g.Equals[uint64], g.HashUint64)
-	robin := hashmap.NewRobinMap[uint64, uint32]()
+	robin := hashmap.NewRobinMapWithHasher[uint64, uint32](g.HashUint64)
 
 	maps := []hashmap.HashMap[uint64, uint32]{
 		{

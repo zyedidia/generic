@@ -1,10 +1,6 @@
 package generic
 
 import (
-	"fmt"
-	"reflect"
-	"unsafe"
-
 	"golang.org/x/exp/constraints"
 
 	"github.com/segmentio/fasthash/fnv1a"
@@ -60,7 +56,6 @@ func Compare[T any](a, b T, less LessFn[T]) int {
 
 // NextPowerOf2 is a fast calculation implementation of 2^x.
 // see: https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
-// go:inline
 func NextPowerOf2(i uint64) uint64 {
 	i--
 	i |= i >> 1
@@ -75,7 +70,6 @@ func NextPowerOf2(i uint64) uint64 {
 
 // Log2 is fast calculation implementation of log2(x)
 // see: https://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
-// go:inline
 func Log2(value uint64) uint64 {
 	value |= value >> 1
 	value |= value >> 2
@@ -89,7 +83,6 @@ func Log2(value uint64) uint64 {
 }
 
 // Swap exchange the values of the two given pointers.
-// go:inline
 func Swap[T any](a, b *T) {
 	tmp := *a
 	*a = *b
@@ -190,53 +183,4 @@ func hash(u uint64) uint64 {
 	u *= 0xc4ceb9fe1a85ec53
 	u ^= u >> 33
 	return u
-}
-
-// GetHasher returns a default hasher function for different Key types.
-func GetHasher[Key any]() HashFn[Key] {
-	var key Key
-	kind := reflect.ValueOf(&key).Elem().Type().Kind()
-
-	var (
-		hashByte  = HashInt8
-		hashWord  = HashUint16
-		hashDword = HashUint32
-		hashQword = HashUint64
-		hashF32   = HashFloat32
-		hashF64   = HashFloat64
-		hashStr   = HashString
-	)
-
-	switch kind {
-	case reflect.Int, reflect.Uint, reflect.Uintptr:
-		switch unsafe.Sizeof(key) {
-		case 2:
-			return *(*func(Key) uint64)(unsafe.Pointer(&hashWord))
-		case 4:
-			return *(*func(Key) uint64)(unsafe.Pointer(&hashDword))
-		case 8:
-			return *(*func(Key) uint64)(unsafe.Pointer(&hashQword))
-
-		default:
-			panic(fmt.Errorf("unsupported integer byte size"))
-		}
-
-	case reflect.Int8, reflect.Uint8:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashByte))
-	case reflect.Int16, reflect.Uint16:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashWord))
-	case reflect.Int32, reflect.Uint32:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashDword))
-	case reflect.Int64, reflect.Uint64:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashQword))
-	case reflect.Float32:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashF32))
-	case reflect.Float64:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashF64))
-	case reflect.String:
-		return *(*func(Key) uint64)(unsafe.Pointer(&hashStr))
-
-	default:
-		panic(fmt.Errorf("unsupported key type %T of kind %v", key, kind))
-	}
 }

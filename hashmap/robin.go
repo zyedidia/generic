@@ -46,14 +46,9 @@ func newBucketArray[K comparable, V any](capacity uintptr) []bucket[K, V] {
 	return buckets
 }
 
-// NewRobinMap constructs a new map with default settings.
-func NewRobinMap[K comparable, V any]() *RobinMap[K, V] {
-	hasher := g.GetHasher[K]()
-	return NewRobinMapWithHasher[K, V](hasher)
-}
-
 // NewRobinMapWithHasher constructs a new map with the given hasher function.
 func NewRobinMapWithHasher[K comparable, V any](hasher g.HashFn[K]) *RobinMap[K, V] {
+
 	capacity := uintptr(4)
 	log2Index := uintptr(2)
 

@@ -26,6 +26,10 @@ for line in sys.stdin:
     time_ms = int(lineRaw[2].strip().split(' ')[0]) / (1000 * 1000)
     load = 'load=' + lineRaw[4].strip().split(' ')[0]
     mapping[benchName][mapName].append((n,time_ms,load))
+    if "BenchmarkRandomFullInsertsInsertsU64" in benchName:
+        memory_bytes = int(lineRaw[3].strip().split(' ')[0]) / (1024 * 1024)
+        mapping["MemoryConsumption"][mapName].append((n,memory_bytes,load))
+
 
 #
 # print html document
@@ -48,6 +52,9 @@ for benchmark in sorted(mapping):
     b = mapping[benchmark]
     print("<div id='"+benchmark+"'><script>")
     names = []
+    y_naming = "time (ms)"
+    if benchmark == "MemoryConsumption":
+        y_naming = "memory (MB)"
     for mapName in b:
         points = b[mapName]
         x_values = map(lambda x: x[0], points)
@@ -63,7 +70,7 @@ for benchmark in sorted(mapping):
         print('''   mode: 'lines+markers', type: 'scatter'
 };''')
     print("var data_" + benchmark, "=", '[%s]' % ', '.join(map(str, names)), ";")
-    print("var layout_" + benchmark + " = {title:'" + benchmark + "', xaxis: {title: 'number of entries in hash table'},yaxis: {title: 'time (ms)'}};");
+    print("var layout_" + benchmark + " = {title:'" + benchmark + "', xaxis: {title: 'number of entries in hash table'},yaxis: {title: '" + y_naming + "'}};");
     print("Plotly.newPlot('" + benchmark + "', data_"+ benchmark + ", layout_" + benchmark + ");"),
     print("</script></div><hr>")
 

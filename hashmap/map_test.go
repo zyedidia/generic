@@ -155,3 +155,21 @@ func Example() {
 	// 0 false
 	// 0 false
 }
+
+func TestComplexKeyType(t *testing.T) {
+	type dummy struct {
+		a int8
+		b uint32
+		c string
+		d uint64
+		e int
+	}
+	hasher := func(d dummy) uint64 {
+		return 0
+	}
+	m := hashmap.NewRobinMapWithHasher[dummy, uint32](hasher)
+	m.Put(dummy{a: 0, b: 0, c: "", d: 0, e: 0}, 0)
+	if m.Size() != 1 {
+		t.Fatal("could not insert elem")
+	}
+}

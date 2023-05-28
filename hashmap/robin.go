@@ -10,13 +10,13 @@ const (
 )
 
 type bucket[K comparable, V any] struct {
+	key K
 	// psl is the probe sequence length (PSL), which is the distance value from
 	// the optimum insertion. -1 or `emptyBucket` signals a free slot.
 	// inspired from:
 	//  - https://programming.guide/robin-hood-hashing.html
 	//  - https://cs.uwaterloo.ca/research/tr/1986/CS-86-14.pdf
 	psl   int8
-	key   K
 	value V
 }
 
@@ -112,8 +112,8 @@ func (m *RobinMap[K, V]) grow() {
 
 // go:inline
 func (m *RobinMap[K, V]) resize(n uintptr) {
-	// save 2 * log2(n) extra space, if hash functions delivers bad distribution
-	log2Index := 2 * uintptr(g.Log2(uint64(n)))
+	// extra space, that is at the same time the worse case lookup time
+	log2Index := (3 * uintptr(g.Log2(uint64(n)))) / 2
 	newm := RobinMap[K, V]{
 		indexMask: n - 1,
 		log2Index: int8(log2Index),
@@ -156,9 +156,7 @@ func (m *RobinMap[K, V]) Put(key K, val V) {
 // where the expected length of the longest PSL is O(log(n))
 func (m *RobinMap[K, V]) robinHoodEmplace(e bucket[K, V], idx uintptr) {
 
-	capacity := m.indexMask + 1
-	if m.length >= capacity/2 {
-		// grow the hashmap if load factor becomes higher than 0.5
+	if m.length >= m.indexMask {
 		m.grow()
 		m.Put(e.key, e.value)
 		return

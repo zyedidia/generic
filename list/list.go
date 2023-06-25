@@ -57,6 +57,32 @@ func (l *List[V]) PushFrontNode(n *Node[V]) {
 	l.Front = n
 }
 
+// InsertAfter adds 'next' into the list after 'n'. Returns the added node.
+func (l *List[V]) InsertAfter(n *Node[V], next *Node[V]) *Node[V] {
+	next.Next = n.Next
+	next.Prev = n
+	if n.Next != nil {
+		n.Next.Prev = next
+	} else {
+		l.Back = next
+	}
+	n.Next = next
+	return next
+}
+
+// InsertBefore adds 'prev' into the list before 'n'. Returns the added node.
+func (l *List[V]) InsertBefore(n *Node[V], prev *Node[V]) *Node[V] {
+	prev.Next = n
+	prev.Prev = n.Prev
+	if n.Prev != nil {
+		n.Prev.Next = prev
+	} else {
+		l.Front = prev
+	}
+	n.Prev = prev
+	return prev
+}
+
 // Remove removes the node 'n' from the list.
 func (l *List[V]) Remove(n *Node[V]) {
 	if n.Next != nil {

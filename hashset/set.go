@@ -4,6 +4,7 @@ package hashset
 import (
 	g "github.com/zyedidia/generic"
 	"github.com/zyedidia/generic/hashmap"
+	"math/rand"
 )
 
 // Set implements a hashset, using the hashmap as the underlying storage.
@@ -69,4 +70,8 @@ func (s *Set[K]) Copy() *Set[K] {
 
 func (s *Set[K]) Values() []K {
 	return s.m.Keys()
+}
+
+func (s *Set[K]) Random() K {
+	return s.Values()[rand.Intn(s.Size())]
 }

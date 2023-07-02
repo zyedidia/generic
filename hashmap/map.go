@@ -227,10 +227,24 @@ func (m *Map[K, V]) Each(fn func(key K, val V)) {
 
 // Keys returns the key of the hashmap
 func (m *Map[K, V]) Keys() []K {
-	return m.keys
+	keys := make([]K, len(m.keys))
+
+	for idx := range m.keys {
+		if m.filled[idx] {
+			keys = append(keys, m.keys[idx])
+		}
+	}
+	return keys[:m.Size()]
 }
 
 // Values returns the values of the hashmap
 func (m *Map[K, V]) Values() []V {
-	return m.values
+	values := make([]V, len(m.keys))
+
+	for idx := range m.keys {
+		if m.filled[idx] {
+			values = append(values, m.values[idx])
+		}
+	}
+	return values[:m.Size()]
 }

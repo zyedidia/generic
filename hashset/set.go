@@ -66,3 +66,7 @@ func (s *Set[K]) Copy() *Set[K] {
 		m: s.m.Copy(),
 	}
 }
+
+func (s *Set[K]) Values() []K {
+	return s.m.Keys()
+}

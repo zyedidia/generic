@@ -10,15 +10,11 @@ import (
 	g "github.com/zyedidia/generic"
 )
 
-type entry[K, V any] struct {
-	key    K
-	filled bool
-	value  V
-}
-
 // A Map is a hashmap that supports copying via copy-on-write.
 type Map[K, V any] struct {
-	entries  []entry[K, V]
+	keys     []K
+	values   []V
+	filled   []bool
 	capacity uint64
 	length   uint64
 	readonly bool
@@ -46,7 +42,9 @@ func New[K, V any](capacity uint64, equals g.EqualsFn[K], hash g.HashFn[K]) *Map
 	}
 	capacity = pow2ceil(capacity)
 	return &Map[K, V]{
-		entries:  make([]entry[K, V], capacity),
+		keys:     make([]K, capacity),
+		values:   make([]V, capacity),
+		filled:   make([]bool, capacity),
 		capacity: capacity,
 		ops: ops[K]{
 			equals: equals,
@@ -61,9 +59,9 @@ func (m *Map[K, V]) Get(key K) (V, bool) {
 	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
-	for m.entries[idx].filled {
-		if m.ops.equals(m.entries[idx].key, key) {
-			return m.entries[idx].value, true
+	for m.filled[idx] {
+		if m.ops.equals(m.keys[idx], key) {
+			return m.values[idx], true
 		}
 		idx++
 		if idx >= m.capacity {
@@ -79,17 +77,22 @@ func (m *Map[K, V]) resize(newcap uint64) {
 	newm := Map[K, V]{
 		capacity: newcap,
 		length:   m.length,
-		entries:  make([]entry[K, V], newcap),
+		keys:     make([]K, newcap),
+		values:   make([]V, newcap),
+		filled:   make([]bool, newcap),
 		ops:      m.ops,
 	}
 
-	for _, ent := range m.entries {
-		if ent.filled {
-			newm.Put(ent.key, ent.value)
+	for i := range m.keys {
+		if m.filled[i] {
+			newm.Put(m.keys[i], m.values[i])
 		}
 	}
+
 	m.capacity = newm.capacity
-	m.entries = newm.entries
+	m.keys = newm.keys
+	m.values = newm.values
+	m.filled = newm.filled
 }
 
 // Put maps the given key to the given value. If the key already exists its
@@ -98,18 +101,24 @@ func (m *Map[K, V]) Put(key K, val V) {
 	if m.length >= m.capacity/2 {
 		m.resize(m.capacity * 2)
 	} else if m.readonly {
-		entries := make([]entry[K, V], len(m.entries), cap(m.entries))
-		copy(entries, m.entries)
-		m.entries = entries
+		keys := make([]K, len(m.keys), cap(m.keys))
+		values := make([]V, len(m.values), cap(m.values))
+		filled := make([]bool, len(m.filled), cap(m.filled))
+		copy(keys, m.keys)
+		copy(values, m.values)
+		copy(filled, m.filled)
+		m.keys = keys
+		m.values = values
+		m.filled = filled
 		m.readonly = false
 	}
 
 	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
-	for m.entries[idx].filled {
-		if m.ops.equals(m.entries[idx].key, key) {
-			m.entries[idx].value = val
+	for m.filled[idx] {
+		if m.ops.equals(m.keys[idx], key) {
+			m.values[idx] = val
 			return
 		}
 		idx++
@@ -118,18 +127,18 @@ func (m *Map[K, V]) Put(key K, val V) {
 		}
 	}
 
-	m.entries[idx].key = key
-	m.entries[idx].value = val
-	m.entries[idx].filled = true
+	m.keys[idx] = key
+	m.values[idx] = val
+	m.filled[idx] = true
 	m.length++
 }
 
 func (m *Map[K, V]) remove(idx uint64) {
 	var k K
 	var v V
-	m.entries[idx].filled = false
-	m.entries[idx].key = k
-	m.entries[idx].value = v
+	m.filled[idx] = false
+	m.keys[idx] = k
+	m.values[idx] = v
 	m.length--
 }
 
@@ -138,27 +147,33 @@ func (m *Map[K, V]) Remove(key K) {
 	hash := m.ops.hash(key)
 	idx := hash & (m.capacity - 1)
 
-	for m.entries[idx].filled && !m.ops.equals(m.entries[idx].key, key) {
+	for m.filled[idx] && !m.ops.equals(m.keys[idx], key) {
 		idx = (idx + 1) & (m.capacity - 1)
 	}
 
-	if !m.entries[idx].filled {
+	if !m.filled[idx] {
 		return
 	}
 
 	if m.readonly {
-		entries := make([]entry[K, V], len(m.entries), cap(m.entries))
-		copy(entries, m.entries)
-		m.entries = entries
+		keys := make([]K, len(m.keys), cap(m.keys))
+		values := make([]V, len(m.values), cap(m.values))
+		filled := make([]bool, len(m.filled), cap(m.filled))
+		copy(keys, m.keys)
+		copy(values, m.values)
+		copy(filled, m.filled)
+		m.keys = keys
+		m.values = values
+		m.filled = filled
 		m.readonly = false
 	}
 
 	m.remove(idx)
 
 	idx = (idx + 1) & (m.capacity - 1)
-	for m.entries[idx].filled {
-		krehash := m.entries[idx].key
-		vrehash := m.entries[idx].value
+	for m.filled[idx] {
+		krehash := m.keys[idx]
+		vrehash := m.values[idx]
 		m.remove(idx)
 		m.Put(krehash, vrehash)
 		idx = (idx + 1) & (m.capacity - 1)
@@ -172,8 +187,8 @@ func (m *Map[K, V]) Remove(key K) {
 
 // Clear removes all key-value pairs from the map.
 func (m *Map[K, V]) Clear() {
-	for idx, entry := range m.entries {
-		if entry.filled {
+	for idx := range m.keys {
+		if m.filled[idx] {
 			m.remove(uint64(idx))
 		}
 	}
@@ -190,7 +205,9 @@ func (m *Map[K, V]) Size() int {
 func (m *Map[K, V]) Copy() *Map[K, V] {
 	m.readonly = true
 	return &Map[K, V]{
-		entries:  m.entries,
+		keys:     m.keys,
+		values:   m.values,
+		filled:   m.filled,
 		capacity: m.capacity,
 		length:   m.length,
 		readonly: true,
@@ -201,9 +218,19 @@ func (m *Map[K, V]) Copy() *Map[K, V] {
 // Each calls 'fn' on every key-value pair in the hashmap in no particular
 // order.
 func (m *Map[K, V]) Each(fn func(key K, val V)) {
-	for _, ent := range m.entries {
-		if ent.filled {
-			fn(ent.key, ent.value)
+	for idx := range m.keys {
+		if m.filled[idx] {
+			fn(m.keys[idx], m.values[idx])
 		}
 	}
+}
+
+// Keys returns the key of the hashmap
+func (m *Map[K, V]) Keys() []K {
+	return m.keys
+}
+
+// Values returns the values of the hashmap
+func (m *Map[K, V]) Values() []V {
+	return m.values
 }

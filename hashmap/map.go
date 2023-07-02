@@ -8,6 +8,7 @@ package hashmap
 
 import (
 	g "github.com/zyedidia/generic"
+	"math/rand"
 )
 
 // A Map is a hashmap that supports copying via copy-on-write.
@@ -247,4 +248,9 @@ func (m *Map[K, V]) Values() []V {
 		}
 	}
 	return values[:m.Size()]
+}
+
+func (m *Map[K, V]) Random() (K, V) {
+	randomIndex := rand.Intn(m.Size())
+	return m.Keys()[randomIndex], m.Values()[randomIndex]
 }

@@ -13,12 +13,12 @@ import (
 // Block:  []V{ ... }
 // A Block is a slice of entries and forms the Node in the list.List.
 
-// Type alias for a pointer to a block of entries.
-type blockPtr[V any] *[]V
+// Type alias for a block of entries.
+type ulistBlk[V any] []V
 
 // UList implements a doubly-linked unolled list.
 type UList[V any] struct {
-	ll              list.List[blockPtr[V]]
+	ll              list.List[ulistBlk[V]]
 	entriesPerBlock int
 	size            int
 }
@@ -29,7 +29,7 @@ type UList[V any] struct {
 // See: https://en.wikipedia.org/wiki/Unrolled_linked_list
 func New[V any](entriesPerBlock int) *UList[V] {
 	return &UList[V]{
-		ll:              *list.New[blockPtr[V]](),
+		ll:              *list.New[ulistBlk[V]](),
 		entriesPerBlock: entriesPerBlock,
 		size:            0,
 	}
@@ -40,22 +40,23 @@ func (ul *UList[V]) Size() int {
 	return ul.size
 }
 
-// PushBack adds 'v to the end of the ulist.
+// PushBack adds 'v' to the end of the ulist.
 func (ul *UList[V]) PushBack(v V) {
 	if !hasCapacity[V](ul.ll.Back) {
 		ul.ll.PushBack(ul.newBlock())
 	}
-	blkPtr := ul.ll.Back.Value
-	*blkPtr = append(*blkPtr, v)
+	blk := ul.ll.Back.Value
+	blk = append(blk, v)
+	ul.ll.Back.Value = blk
 	ul.size++
 }
 
-// PushFront adds 'v to the beginning of the ulist.
+// PushFront adds 'v' to the beginning of the ulist.
 func (ul *UList[V]) PushFront(v V) {
 	if !hasCapacity[V](ul.ll.Front) {
 		ul.ll.PushFront(ul.newBlock())
 	}
-	ul.prependToBlock(v, ul.ll.Front.Value)
+	ul.prependToBlock(v, &ul.ll.Front.Value)
 	ul.size++
 }
 
@@ -75,28 +76,27 @@ func (ul *UList[V]) End() *UListIter[V] {
 // iter->Get() == 'v'.
 func (ul *UList[V]) AddAfter(iter *UListIter[V], v V) {
 	ul.size++
-	blkPtr := iter.node.Value
 	// Adding to a block with spare capacity.
 	if hasCapacity(iter.node) {
 		iter.index++
-		*blkPtr = append((*blkPtr)[:iter.index+1], (*blkPtr)[iter.index:]...)
-		(*blkPtr)[iter.index] = v
+		iter.node.Value = append(iter.node.Value[:iter.index+1], iter.node.Value[iter.index:]...)
+		iter.node.Value[iter.index] = v
 		return
 	}
 	// Adding to an already full block.
-	if iter.index == len(*blkPtr)-1 {
+	if iter.index == len(iter.node.Value)-1 {
 		// When adding to the end of a block, 'v' is the overflow.
 		iter.addOverflowToNextBlock(ul, v)
 		iter.Next()
 		return
 	}
 	// When adding 'v' in the middle, the last entry in the block is the overflow.
-	overflow := (*blkPtr)[len(*blkPtr)-1]
+	overflow := iter.node.Value[len(iter.node.Value)-1]
 	iter.addOverflowToNextBlock(ul, overflow)
 	iter.index++
 	// Slide entries beyond the write index right by one spot and write the value.
-	*blkPtr = append((*blkPtr)[:iter.index+1], (*blkPtr)[iter.index:len(*blkPtr)-1]...)
-	(*blkPtr)[iter.index] = v
+	iter.node.Value = append(iter.node.Value[:iter.index+1], iter.node.Value[iter.index:len(iter.node.Value)-1]...)
+	iter.node.Value[iter.index] = v
 }
 
 // AddBefore adds 'v' to 'ul' before the entry pointed to by 'iter'.
@@ -120,9 +120,8 @@ func (ul *UList[V]) AddBefore(iter *UListIter[V], v V) {
 // that occurs after the deleted entry.
 func (ul *UList[V]) Remove(iter *UListIter[V]) {
 	ul.size--
-	blkPtr := iter.node.Value
-	*blkPtr = append((*blkPtr)[:iter.index], (*blkPtr)[iter.index+1:]...)
-	if len(*blkPtr) == 0 {
+	iter.node.Value = append(iter.node.Value[:iter.index], iter.node.Value[iter.index+1:]...)
+	if len(iter.node.Value) == 0 {
 		// Block got emptied.
 		ul.ll.Remove(iter.node)
 		iter.Next()
@@ -130,21 +129,19 @@ func (ul *UList[V]) Remove(iter *UListIter[V]) {
 	}
 }
 
-func hasCapacity[V any](llNode *list.Node[blockPtr[V]]) bool {
+func hasCapacity[V any](llNode *list.Node[ulistBlk[V]]) bool {
 	if llNode == nil {
 		return false
 	}
-	blkPtr := llNode.Value
-	return len(*blkPtr) < cap(*blkPtr)
+	return len(llNode.Value) < cap(llNode.Value)
 }
 
-func (ul *UList[V]) newBlock() blockPtr[V] {
-	blk := make([]V, 0, ul.entriesPerBlock)
-	return &blk
+func (ul *UList[V]) newBlock() ulistBlk[V] {
+	return make([]V, 0, ul.entriesPerBlock)
 }
 
-func (ul *UList[V]) prependToBlock(v V, blkPtr blockPtr[V]) {
-	tmp := *ul.newBlock()
+func (ul *UList[V]) prependToBlock(v V, blkPtr *ulistBlk[V]) {
+	tmp := ul.newBlock()
 	tmp = append(tmp, v)
 	// 'append' returns a slice with capacity of the first variable.
 	// To maintain the propoer capacity, we use 'tmp' with an explicitly defined capacity.
@@ -153,12 +150,12 @@ func (ul *UList[V]) prependToBlock(v V, blkPtr blockPtr[V]) {
 
 func (iter *UListIter[V]) addOverflowToNextBlock(ul *UList[V], v V) {
 	if hasCapacity(iter.node.Next) {
-		ul.prependToBlock(v, iter.node.Next.Value)
+		ul.prependToBlock(v, &iter.node.Next.Value)
 	} else {
 		newBlk := make([]V, 0, ul.entriesPerBlock)
 		newBlk = append(newBlk, v)
-		ul.ll.InsertAfter(iter.node, &list.Node[blockPtr[V]]{
-			Value: &newBlk,
+		ul.ll.InsertAfter(iter.node, &list.Node[ulistBlk[V]]{
+			Value: newBlk,
 		})
 	}
 }

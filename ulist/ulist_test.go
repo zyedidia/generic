@@ -1,7 +1,6 @@
 package ulist
 
 import (
-	"fmt"
 	"reflect"
 	"runtime/debug"
 	"testing"
@@ -53,7 +52,6 @@ func TestUList(t *testing.T) {
 }
 
 func checkEq[V any](t *testing.T, a V, b V) {
-	//if a != b {
 	if !reflect.DeepEqual(a, b) {
 		t.Fatalf("got:%v, want:%v \n%s", a, b, debug.Stack())
 	}
@@ -62,8 +60,8 @@ func checkEq[V any](t *testing.T, a V, b V) {
 // Helper function that returns the number of entries in the unrolled list.
 func getNumUListEntries[V any](ul *UList[V]) int {
 	ret := int(0)
-	mapper := func(val blockPtr[V]) {
-		ret += len(*val)
+	mapper := func(val ulistBlk[V]) {
+		ret += len(val)
 	}
 	ul.ll.Front.Each(mapper)
 	return ret
@@ -72,18 +70,8 @@ func getNumUListEntries[V any](ul *UList[V]) int {
 // Helper function that returns the number of blocks in the unrolled list.
 func getNumUListBlocks[V any](ul *UList[V]) int {
 	ret := int(0)
-	mapper := func(val blockPtr[V]) {
+	mapper := func(val ulistBlk[V]) {
 		ret += 1
-	}
-	ul.ll.Front.Each(mapper)
-	return ret
-}
-
-// Helper function to print a debug string of 'ul'.
-func getDebugString[V any](ul *UList[V]) string {
-	ret := ""
-	mapper := func(val blockPtr[V]) {
-		ret += fmt.Sprintf("%v ->", *val)
 	}
 	ul.ll.Front.Each(mapper)
 	return ret
@@ -92,8 +80,8 @@ func getDebugString[V any](ul *UList[V]) string {
 // Helper function to return ulist as a slice.
 func getSlice[V any](ul *UList[V]) []V {
 	ret := make([]V, 0)
-	mapper := func(val blockPtr[V]) {
-		ret = append(ret, *val...)
+	mapper := func(val ulistBlk[V]) {
+		ret = append(ret, val...)
 	}
 	ul.ll.Front.Each(mapper)
 	return ret
@@ -101,8 +89,8 @@ func getSlice[V any](ul *UList[V]) []V {
 
 // Helper function to check if all blocks in 'ul' are of the expected size.
 func validateBlockCapacities[V any](t *testing.T, ul *UList[V]) {
-	mapper := func(val blockPtr[V]) {
-		checkEq(t, cap(*val), ul.entriesPerBlock)
+	mapper := func(val ulistBlk[V]) {
+		checkEq(t, cap(val), ul.entriesPerBlock)
 	}
 	ul.ll.Front.Each(mapper)
 }

@@ -6,7 +6,7 @@ import (
 
 // A UListIter points to an element in the UList.
 type UListIter[V any] struct {
-	node  *list.Node[blockPtr[V]]
+	node  *list.Node[ulistBlk[V]]
 	index int
 }
 
@@ -27,7 +27,7 @@ func newIterBack[V any](ul *UList[V]) *UListIter[V] {
 		index: 0,
 	}
 	if iter.node != nil {
-		blk := *iter.node.Value
+		blk := iter.node.Value
 		iter.index = len(blk) - 1
 	}
 	return &iter
@@ -38,27 +38,28 @@ func (iter *UListIter[V]) IsValid() bool {
 	if iter.node == nil {
 		return false
 	}
-	blkPtr := iter.node.Value
-	return iter.index >= 0 && iter.index < len(*blkPtr)
+	blk := iter.node.Value
+	return iter.index >= 0 && iter.index < len(blk)
 }
 
 // Get returns the entry in the UList that the 'iter' is pointing to.
 // This call should only ever be made when iter.IsValid() is true.
 func (iter *UListIter[V]) Get() V {
-	return (*iter.node.Value)[iter.index]
+	blk := iter.node.Value
+	return blk[iter.index]
 }
 
 // Next moves the iterator one step forward and returns true if the iterator is valid.
 func (iter *UListIter[V]) Next() bool {
 	iter.index++
-	blkPtr := iter.node.Value
-	if iter.index >= len(*blkPtr) {
+	blk := iter.node.Value
+	if iter.index >= len(blk) {
 		if iter.node.Next != nil {
 			iter.node = iter.node.Next
 			iter.index = 0
 		} else {
 			// By not going past len, we can recover to the end using Prev().
-			iter.index = len(*blkPtr)
+			iter.index = len(blk)
 		}
 	}
 	return iter.IsValid()
@@ -70,8 +71,8 @@ func (iter *UListIter[V]) Prev() bool {
 	if iter.index < 0 {
 		if iter.node.Prev != nil {
 			iter.node = iter.node.Prev
-			blkPtr := iter.node.Value
-			iter.index = len(*blkPtr) - 1
+			blk := iter.node.Value
+			iter.index = len(blk) - 1
 		} else {
 			// By not going further past -1, we can recover to the begin using Next().
 			iter.index = -1

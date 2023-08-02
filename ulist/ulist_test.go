@@ -1,11 +1,29 @@
 package ulist
 
 import (
+	"fmt"
 	"reflect"
 	"runtime/debug"
 	"testing"
 	"unsafe"
 )
+
+func Example() {
+	// Ideally 'entriesPerBlock' is the size of a cache line (64) or multiples there of.
+	entriesPerBlock := int(64 / unsafe.Sizeof(int(0)))
+	ul := New[int](entriesPerBlock)
+	ul.PushBack(1)
+	ul.PushBack(2)
+	ul.PushFront(0)
+
+	for iter := ul.Begin(); iter.IsValid(); iter.Next() {
+		fmt.Printf("%d\n", iter.Get())
+	}
+	// Output:
+	// 0
+	// 1
+	// 2
+}
 
 func TestUList(t *testing.T) {
 	entriesPerBlock := int(64 / unsafe.Sizeof(int(1)))

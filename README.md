@@ -29,6 +29,7 @@ This package implements some generic data structures.
   versions of the rope with only a little extra time or memory.
 * [`stack`](./stack): a LIFO stack.
 * [`trie`](./trie): a ternary search trie.
+* [`ulist`](./ulist): an un-rolled doubly-linked list.
 
 See each subpackage for documentation and examples. The top-level `generic`
 package provides some useful types and constraints. See [DOC.md](DOC.md) for

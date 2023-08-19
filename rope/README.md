@@ -190,7 +190,7 @@ SplitAt splits the node at the given index and returns two new ropes correspondi
 func (n *Node[V]) Value() []V
 ```
 
-Value returns the elements of this node concatenated into a slice. May return the underyling slice without copying, so do not modify the returned slice.
+Value returns the elements of this node concatenated into a slice. May return the underlying slice without copying, so do not modify the returned slice.
 
 
 

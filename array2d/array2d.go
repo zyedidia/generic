@@ -131,6 +131,9 @@ func (a Array2D[T]) RowSpan(x1, x2, y int) []T {
 	if x2 < 0 || x2 >= a.width {
 		panic(fmt.Sprintf("array2d: x2 index out of range [%d] with width %d", x2, a.width))
 	}
+	if x2 < x1 {
+		x1, x2 = x2, x1
+	}
 	return a.slice[x1+y*a.height : 1+x2+y*a.height]
 }
 

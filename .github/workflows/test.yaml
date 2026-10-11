@@ -20,7 +20,7 @@ jobs:
       run: "go vet ./..."
 
     - name: Install Staticcheck
-      uses: dominikh/staticcheck-action@v1.2.0
+      uses: dominikh/staticcheck-action@v1.4.1
       with:
         version: "2022.1.1"
         install-go: false

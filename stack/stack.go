@@ -52,3 +52,8 @@ func (s *Stack[T]) Copy() *Stack[T] {
 		entries: entries,
 	}
 }
+
+// Empty returns true if the stack contains no elements.
+func (s *Stack[T]) Empty() bool {
+	return s.Size() == 0
+}

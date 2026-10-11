@@ -88,3 +88,21 @@ func Example() {
 	// foo
 	// bar
 }
+
+func TestEmptyIntervalsDoNotOverlap(t *testing.T) {
+	tree := New[int, string]()
+	tree.Put(0, 10, "nonempty")
+	tree.Put(5, 5, "empty")
+	for _, point := range []int{0, 3, 5, 10} {
+		if got := tree.Overlaps(point, point); len(got) != 0 {
+			t.Errorf("empty query [%d, %d) matched %v", point, point, got)
+		}
+	}
+	got := tree.Overlaps(4, 6)
+	if len(got) != 1 || got[0].Val != "nonempty" {
+		t.Errorf("nonempty query should exclude stored empty intervals, got %v", got)
+	}
+	if entry, ok := tree.Get(5); !ok || entry.Val != "empty" || tree.Size() != 2 {
+		t.Errorf("empty intervals should remain stored: entry=%v, ok=%v, size=%d", entry, ok, tree.Size())
+	}
+}

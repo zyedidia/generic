@@ -94,3 +94,28 @@ func Example() {
 	// [bar f§o f§oo]
 	// [f§o f§oo]
 }
+
+func TestRemoveSize(t *testing.T) {
+	tr := trie.New[int]()
+	tr.Remove("missing")
+	if tr.Size() != 0 {
+		t.Fatalf("removing from an empty trie changed its size to %d", tr.Size())
+	}
+	tr.Put("cat", 1)
+	tr.Put("car", 2)
+	for _, key := range []string{"", "ca", "cab", "cats", "other"} {
+		tr.Remove(key)
+		if tr.Size() != 2 || !tr.Contains("cat") || !tr.Contains("car") {
+			t.Fatalf("removing absent key %q changed the trie: size=%d keys=%v", key, tr.Size(), tr.Keys())
+		}
+	}
+	tr.Remove("cat")
+	tr.Remove("cat")
+	if tr.Size() != 1 || tr.Contains("cat") || !tr.Contains("car") {
+		t.Fatalf("repeated removal corrupted size or keys: size=%d keys=%v", tr.Size(), tr.Keys())
+	}
+	tr.Remove("car")
+	if tr.Size() != 0 || len(tr.Keys()) != 0 {
+		t.Fatalf("trie should be empty: size=%d keys=%v", tr.Size(), tr.Keys())
+	}
+}

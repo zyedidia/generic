@@ -49,7 +49,7 @@ func newIntrvl[I constraints.Ordered](low, high I) intrvl[I] {
 }
 
 func overlaps[I constraints.Ordered](i1 intrvl[I], i2 intrvl[I]) bool {
-	return i1.low < i2.high && i1.high > i2.low
+	return i1.low < i1.high && i2.low < i2.high && i1.low < i2.high && i1.high > i2.low
 }
 
 // Tree implements an interval tree. All intervals must have unique starting

@@ -150,7 +150,6 @@ func (t *Trie[V]) Remove(key string) {
 	}
 
 	t.root = t.remove(t.root, key, 0)
-	t.n--
 }
 
 func (t *Trie[V]) remove(x *node[V], key string, d int) *node[V] {
@@ -166,6 +165,9 @@ func (t *Trie[V]) remove(x *node[V], key string, d int) *node[V] {
 	} else if d < len(key)-1 {
 		x.mid = t.remove(x.mid, key, d+1)
 	} else {
+		if x.valid {
+			t.n--
+		}
 		var v V
 		x.val = v
 		x.valid = false

@@ -57,6 +57,8 @@ func (h *Heap[T]) Pop() (T, bool) {
 	x = h.data[0]
 
 	h.data[0] = h.data[len(h.data)-1]
+	var zero T
+	h.data[len(h.data)-1] = zero
 	h.data = h.data[:len(h.data)-1]
 	down(h.data, 0, h.less)
 

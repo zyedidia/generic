@@ -53,6 +53,24 @@ func (s *Stack[T]) Copy() *Stack[T] {
 	}
 }
 
+// TryPop removes the stack's top element and returns it along with a boolean indicating success. If the stack is empty, it returns the zero value and false.
+func (s *Stack[T]) TryPop() (t T, ok bool) {
+	if len(s.entries) == 0 {
+		return t, false
+	}
+	v := s.entries[len(s.entries)-1]
+	s.entries = s.entries[:len(s.entries)-1]
+	return v, true
+}
+
+// TryPeek returns the stack's top element along with a boolean indicating success, but does not remove it. If the stack is empty, it returns the zero value and false.
+func (s *Stack[T]) TryPeek() (t T, ok bool) {
+	if len(s.entries) == 0 {
+		return t, false
+	}
+	return s.entries[len(s.entries)-1], true
+}
+
 // Empty returns true if the stack contains no elements.
 func (s *Stack[T]) Empty() bool {
 	return s.Size() == 0

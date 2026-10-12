@@ -242,3 +242,24 @@ func ExampleHeap_Pop() {
 	// 5 true
 	// 0 false
 }
+
+func TestPopReleasesUnusedSlots(t *testing.T) {
+	values := []int{3, 1, 2}
+	backing := []*int{&values[0], &values[1], &values[2]}
+	h := heap.FromSlice(func(a, b *int) bool { return *a < *b }, backing)
+	for want := 1; want <= len(values); want++ {
+		got, ok := h.Pop()
+		if !ok || *got != want {
+			t.Fatalf("Pop=%v,%v; want %d", got, ok, want)
+		}
+		for _, retained := range backing[h.Size():] {
+			if retained != nil {
+				t.Error("unused heap storage still retains a pointer")
+			}
+		}
+	}
+	h.Push(&values[0])
+	if got, ok := h.Pop(); !ok || got != &values[0] {
+		t.Fatal("heap cannot be reused after draining")
+	}
+}

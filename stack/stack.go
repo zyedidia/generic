@@ -70,3 +70,8 @@ func (s *Stack[T]) TryPeek() (t T, ok bool) {
 	}
 	return s.entries[len(s.entries)-1], true
 }
+
+// Empty returns true if the stack contains no elements.
+func (s *Stack[T]) Empty() bool {
+	return s.Size() == 0
+}

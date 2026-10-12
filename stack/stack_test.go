@@ -23,6 +23,11 @@ func TestSimple(t *testing.T) {
 	assert(t, func() bool { return st.Size() == 0 })
 	assert(t, func() bool { return st.Pop() == 0 })
 	assert(t, func() bool { return st.Peek() == 0 })
+
+	assert(t, func() bool { return st.Empty() })
+
+	st.Push(1)
+	assert(t, func() bool { return !st.Empty() })
 }
 
 func Example() {

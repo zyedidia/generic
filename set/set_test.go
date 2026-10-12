@@ -112,3 +112,16 @@ func FuzzDifference(f *testing.F) {
 		}
 	})
 }
+
+func ExampleSet_IsDisjoint() {
+	setA := NewMapset(1, 2, 3)
+	setB := NewMapset(4, 5, 6)
+	setC := NewMapset(3, 4, 5)
+
+	fmt.Println(setA.IsDisjoint(setB))
+	fmt.Println(setA.IsDisjoint(setC))
+
+	// Output:
+	// true
+	// false
+}

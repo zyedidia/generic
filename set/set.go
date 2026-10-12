@@ -144,8 +144,13 @@ func (s Set[K]) Keys() []K {
 }
 
 func (s Set[K]) IsDisjoint(other SetOf[K]) bool {
-	// TODO: maybe optimize?
-	return s.Intersection(other).Size() > 0
+	disjoint := true
+	s.Each(func(key K) {
+		if other.Has(key) {
+			disjoint = false
+		}
+	})
+	return disjoint
 }
 
 func (s Set[K]) IsSubset(of SetOf[K]) bool {

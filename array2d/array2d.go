@@ -78,7 +78,7 @@ func (a Array2D[T]) Get(x, y int) T {
 }
 
 func (a Array2D[T]) getUnchecked(x, y int) T {
-	return a.slice[x+y*a.height]
+	return a.slice[x+y*a.width]
 }
 
 // Set sets a value in the array.
@@ -95,7 +95,7 @@ func (a Array2D[T]) Set(x, y int, value T) {
 }
 
 func (a Array2D[T]) setUnchecked(x, y int, value T) {
-	a.slice[x+y*a.height] = value
+	a.slice[x+y*a.width] = value
 }
 
 // Width returns the width of this array. The maximum x value is Width()-1.
@@ -134,7 +134,7 @@ func (a Array2D[T]) RowSpan(x1, x2, y int) []T {
 	if x2 < x1 {
 		x1, x2 = x2, x1
 	}
-	return a.slice[x1+y*a.height : 1+x2+y*a.height]
+	return a.slice[x1+y*a.width : 1+x2+y*a.width]
 }
 
 // Row returns a mutable slice for an entire row. Changing values in this slice
@@ -143,7 +143,7 @@ func (a Array2D[T]) Row(y int) []T {
 	if y < 0 || y >= a.height {
 		panic(fmt.Sprintf("array2d: y index out of range [%d] with height %d", y, a.height))
 	}
-	return a.slice[y*a.height : a.width+y*a.height]
+	return a.slice[y*a.width : a.width+y*a.width]
 }
 
 // Fill will assign all values inside the region to the specified value.
@@ -171,10 +171,10 @@ func (a Array2D[T]) Fill(x1, y1, x2, y2 int, value T) {
 	if y2 < y1 {
 		y1, y2 = y2, y1
 	}
-	firstRow := a.slice[x1+y1*a.height : 1+x2+y1*a.height]
+	firstRow := a.slice[x1+y1*a.width : 1+x2+y1*a.width]
 	fill(firstRow, value)
 	for y := y1 + 1; y <= y2; y++ {
-		copy(a.slice[x1+y*a.height:1+x2+y*a.height], firstRow)
+		copy(a.slice[x1+y*a.width:1+x2+y*a.width], firstRow)
 	}
 }
 

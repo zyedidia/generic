@@ -66,3 +66,20 @@ func (s *Set[K]) Copy() *Set[K] {
 		m: s.m.Copy(),
 	}
 }
+
+// Union returns a copy of s containing all elements from s and other.
+
+func (s *Set[K]) Union(other *Set[K]) *Set[K] {
+	if s == nil && other == nil {
+		return nil
+	}
+	if s == nil {
+		return other.Copy()
+	}
+
+	union := s.Copy()
+	if other != nil {
+		other.Each(union.Put)
+	}
+	return union
+}

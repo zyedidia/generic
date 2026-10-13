@@ -70,9 +70,9 @@ func (s Set[K]) ConstUnion(with ...K) Set[K] {
 }
 
 func (s Set[K]) Clone() Set[K] {
-	new := NewSet(s.new)
-	s.Each(func(key K) { new.Put(key) })
-	return new
+	news := NewSet(s.new)
+	s.Each(func(key K) { news.Put(key) })
+	return news
 }
 
 func (s Set[K]) String() string {
@@ -91,19 +91,19 @@ func (s Set[K]) Map() map[K]struct{} {
 }
 
 func (s Set[K]) SymmetricDifference(others ...SetOf[K]) Set[K] {
-	new := s.Clone()
-	seen := new.Clone()
+	news := s.Clone()
+	seen := news.Clone()
 	for _, other := range others {
 		other.Each(func(key K) {
 			if seen.Has(key) {
-				new.Remove(key)
+				news.Remove(key)
 				return
 			}
-			new.Put(key)
+			news.Put(key)
 			seen.Put(key)
 		})
 	}
-	return new
+	return news
 }
 
 func (s Set[K]) InPlaceIntersection(others ...SetOf[K]) Set[K] {

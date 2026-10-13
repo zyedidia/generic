@@ -1,4 +1,4 @@
-module github.com/zyedidia/generic
+module github.com/st1064870/generic
 
 go 1.18
 

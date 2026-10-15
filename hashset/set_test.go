@@ -70,6 +70,95 @@ func TestOf(t *testing.T) {
 	}
 }
 
+func TestUnion(t *testing.T) {
+	testcases := []struct {
+		name     string
+		a        []int
+		b        []int
+		expected []int
+	}{
+		{
+			name:     "overlapping sets",
+			a:        []int{1, 2, 3},
+			b:        []int{3, 4, 5},
+			expected: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:     "disjoint sets",
+			a:        []int{1, 2},
+			b:        []int{3, 4},
+			expected: []int{1, 2, 3, 4},
+		},
+		{
+			name:     "first set empty",
+			a:        []int{},
+			b:        []int{1, 2, 3},
+			expected: []int{1, 2, 3},
+		},
+		{
+			name:     "second set empty",
+			a:        []int{1, 2, 3},
+			b:        []int{},
+			expected: []int{1, 2, 3},
+		},
+		{
+			name:     "both empty",
+			a:        []int{},
+			b:        []int{},
+			expected: []int{},
+		},
+		{
+			name:     "identical sets",
+			a:        []int{1, 2, 3},
+			b:        []int{1, 2, 3},
+			expected: []int{1, 2, 3},
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			s1 := hashset.Of[int](uint64(len(tc.a)), g.Equals[int], g.HashInt, tc.a...)
+			s2 := hashset.Of[int](uint64(len(tc.b)), g.Equals[int], g.HashInt, tc.b...)
+
+			union := s1.Union(s2)
+
+			if union.Size() != len(tc.expected) {
+				t.Fatalf("expected size %d, got %d", len(tc.expected), union.Size())
+			}
+
+			for _, v := range tc.expected {
+				if !union.Has(v) {
+					t.Fatalf("expected value %d in union, but was missing", v)
+				}
+			}
+
+			if s1.Size() != len(tc.a) {
+				t.Fatalf("original set s1 was mutated: expected size %d, got %d", len(tc.a), s1.Size())
+			}
+			if s2.Size() != len(tc.b) {
+				t.Fatalf("original set s2 was mutated: expected size %d, got %d", len(tc.b), s2.Size())
+			}
+		})
+	}
+}
+
+func ExampleSet_Union() {
+	s1 := hashset.Of[string](3, g.Equals[string], g.HashString, "apple", "banana")
+	s2 := hashset.Of[string](3, g.Equals[string], g.HashString, "banana", "cherry")
+
+	u := s1.Union(s2)
+
+	fmt.Println(u.Has("apple"))
+	fmt.Println(u.Has("banana"))
+	fmt.Println(u.Has("cherry"))
+	fmt.Println(u.Has("grape"))
+	// Output:
+	// true
+	// true
+	// true
+	// false
+}
+
 func Example() {
 	set := hashset.New[string](3, g.Equals[string], g.HashString)
 	set.Put("foo")

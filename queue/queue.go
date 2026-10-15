@@ -120,7 +120,11 @@ func (q *Queue[T]) Clear() {
 
 // Copy returns a shallow copy of this queue.
 func (q *Queue[T]) Copy() *Queue[T] {
-	return Of(q.PeekAll())
+	newQ := New[T]()
+	q.Each(func(val T) {
+		newQ.Enqueue(val)
+	})
+	return newQ
 }
 
 // Each calls 'fn' on every item in the queue, starting with the least

@@ -68,7 +68,6 @@ func (s *Set[K]) Copy() *Set[K] {
 }
 
 // Union returns a copy of s containing all elements from s and other.
-
 func (s *Set[K]) Union(other *Set[K]) *Set[K] {
 	if s == nil && other == nil {
 		return nil

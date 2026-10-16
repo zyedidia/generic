@@ -159,6 +159,78 @@ func ExampleSet_Union() {
 	// false
 }
 
+func TestIntersection(t *testing.T) {
+	testcases := []struct {
+		name     string
+		a        []int
+		b        []int
+		expected []int
+	}{
+		{
+			name:     "overlapping sets",
+			a:        []int{1, 2, 3},
+			b:        []int{3, 4, 5},
+			expected: []int{3},
+		},
+		{
+			name:     "disjoint sets",
+			a:        []int{1, 2},
+			b:        []int{3, 4},
+			expected: []int{},
+		},
+		{
+			name:     "first set empty",
+			a:        []int{},
+			b:        []int{1, 2, 3},
+			expected: []int{},
+		},
+		{
+			name:     "second set empty",
+			a:        []int{1, 2, 3},
+			b:        []int{},
+			expected: []int{},
+		},
+		{
+			name:     "both empty",
+			a:        []int{},
+			b:        []int{},
+			expected: []int{},
+		},
+		{
+			name:     "identical sets",
+			a:        []int{1, 2, 3},
+			b:        []int{1, 2, 3},
+			expected: []int{1, 2, 3},
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			s1 := hashset.Of[int](uint64(len(tc.a)), g.Equals[int], g.HashInt, tc.a...)
+			s2 := hashset.Of[int](uint64(len(tc.b)), g.Equals[int], g.HashInt, tc.b...)
+
+			intersection := s1.Intersection(s2)
+
+			if intersection.Size() != len(tc.expected) {
+				t.Fatalf("expected size %d, got %d", len(tc.expected), intersection.Size())
+			}
+
+			for _, v := range tc.expected {
+				if !intersection.Has(v) {
+					t.Fatalf("expected value %d in intersection, but was missing", v)
+				}
+			}
+
+			if s1.Size() != len(tc.a) {
+				t.Fatalf("original set s1 was mutated: expected size %d, got %d", len(tc.a), s1.Size())
+			}
+			if s2.Size() != len(tc.b) {
+				t.Fatalf("original set s2 was mutated: expected size %d, got %d", len(tc.b), s2.Size())
+			}
+		})
+	}
+}
+
 func Example() {
 	set := hashset.New[string](3, g.Equals[string], g.HashString)
 	set.Put("foo")
@@ -177,11 +249,24 @@ func Example() {
 
 	fmt.Println(set.Has("foo"))
 	fmt.Println(set.Has("bar"))
+
+	s1 := hashset.Of[string](3, g.Equals[string], g.HashString, "apple", "banana")
+	s2 := hashset.Of[string](3, g.Equals[string], g.HashString, "banana", "cherry")
+
+	i := s1.Intersection(s2)
+
+	fmt.Println(i.Has("apple"))
+	fmt.Println(i.Has("banana"))
+	fmt.Println(i.Has("cherry"))
+
 	// Output:
 	// true
 	// false
 	// false
 	// true
 	// false
+	// false
+	// false
+	// true
 	// false
 }

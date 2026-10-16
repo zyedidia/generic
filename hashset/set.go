@@ -82,3 +82,17 @@ func (s *Set[K]) Union(other *Set[K]) *Set[K] {
 	}
 	return union
 }
+
+// Intersection returns a new set containing elements that exist in both s and other.
+func (s *Set[K]) Intersection(other *Set[K]) *Set[K] {
+	if s == nil || other == nil {
+		return nil
+	}
+	result := s.Copy()
+	result.Each(func(key K) {
+		if !other.Has(key) {
+			result.Remove(key)
+		}
+	})
+	return result
+}

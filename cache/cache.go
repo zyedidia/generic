@@ -47,6 +47,9 @@ func (t *Cache[K, V]) Get(k K) (V, bool) {
 
 // Put adds a new key-entry pair to the table.
 func (t *Cache[K, V]) Put(k K, e V) {
+	if t.capacity == 0 {
+		return
+	}
 	if n, ok := t.table[k]; ok {
 		n.Value.Val = e
 		t.lru.Remove(n)

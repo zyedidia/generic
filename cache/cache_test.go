@@ -2,9 +2,31 @@ package cache_test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/zyedidia/generic/cache"
 )
+
+func TestZeroCapacity(t *testing.T) {
+	for _, capacity := range []int{0, 2} {
+		t.Run(fmt.Sprint(capacity), func(t *testing.T) {
+			c := cache.New[int, int](capacity)
+			if capacity > 0 {
+				c.Put(1, 1)
+				c.Resize(0)
+			}
+			c.Put(2, 2)
+			if c.Size() != 0 {
+				t.Fatalf("zero-capacity cache has %d entries", c.Size())
+			}
+			c.Resize(1)
+			c.Put(3, 3)
+			if value, ok := c.Get(3); !ok || value != 3 {
+				t.Fatalf("Get(3) = %d, %v after growing", value, ok)
+			}
+		})
+	}
+}
 
 func Example() {
 	c := cache.New[int, int](2)

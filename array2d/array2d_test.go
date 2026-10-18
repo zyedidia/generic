@@ -87,6 +87,27 @@ func TestArray2D_row(t *testing.T) {
 	}
 }
 
+func TestOfJaggedBounds(t *testing.T) {
+	for _, tt := range []struct {
+		name          string
+		width, height int
+		rows          [][]int
+		want          string
+	}{
+		{"extra rows and columns", 2, 2, [][]int{{1, 2, 3}, {4}, {5, 6}}, "[[1 2] [4 0]]"},
+		{"zero height", 2, 0, [][]int{{1, 2}}, "[]"},
+		{"zero width", 0, 1, [][]int{{1}, {2}}, "[[]]"},
+		{"missing rows", 2, 2, [][]int{{1}}, "[[1 0] [0 0]]"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			arr := OfJagged(tt.width, tt.height, tt.rows)
+			if got := arr.String(); got != tt.want {
+				t.Errorf("want %q, got %q", tt.want, got)
+			}
+		})
+	}
+}
+
 func assertLen[E any](t *testing.T, want int, slice []E) {
 	t.Helper()
 	if len(slice) != want {

@@ -56,6 +56,23 @@ func TestConstruction(t *testing.T) {
 	check(r, b, t)
 }
 
+func TestRebuild(t *testing.T) {
+	for _, text := range []string{"ab", "abcdefghij"} {
+		t.Run(text, func(t *testing.T) {
+			input := []byte(text)
+			r := rope.Join(rope.New(input[:1]), rope.New(input[1:]))
+			b := newBasicText(input)
+			r.Rebuild()
+			check(r, b, t)
+			r.Insert(1, []byte("test"))
+			b.insert(1, []byte("test"))
+			r.Remove(2, 4)
+			b.remove(2, 4)
+			check(r, b, t)
+		})
+	}
+}
+
 func TestInsertRemove(t *testing.T) {
 	r, b := data()
 

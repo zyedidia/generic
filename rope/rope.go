@@ -234,6 +234,7 @@ func (n *Node[V]) Rebuild() {
 		n.value = concat(n.left.Value(), n.right.Value())
 		n.left = nil
 		n.right = nil
+		n.kind = tLeaf
 		n.adjust()
 	}
 }

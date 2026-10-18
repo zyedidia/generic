@@ -32,6 +32,9 @@ func NewFilled[T any](width, height int, value T) Array2D[T] {
 func OfJagged[J ~[]S, S ~[]E, E any](width, height int, jagged J) Array2D[E] {
 	arr := New[E](width, height)
 	for y, row := range jagged {
+		if y >= height {
+			break
+		}
 		copy(arr.Row(y), row)
 	}
 	return arr

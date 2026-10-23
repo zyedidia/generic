@@ -4,6 +4,8 @@
 package heap
 
 import (
+	"slices"
+
 	g "github.com/zyedidia/generic"
 )
 
@@ -23,7 +25,7 @@ func New[T any](less g.LessFn[T]) *Heap[T] {
 
 // From returns a new heap with the given less function and initial data.
 func From[T any](less g.LessFn[T], t ...T) *Heap[T] {
-	return FromSlice(less, t)
+	return FromSlice(less, slices.Clone(t))
 }
 
 // FromSlice returns a new heap with the given less function and initial data.

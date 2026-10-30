@@ -26,6 +26,8 @@ func (s *Stack[T]) Pop() (t T) {
 		return t
 	}
 	v := s.entries[len(s.entries)-1]
+	var zero T
+	s.entries[len(s.entries)-1] = zero
 	s.entries = s.entries[:len(s.entries)-1]
 	return v
 }
@@ -59,6 +61,8 @@ func (s *Stack[T]) TryPop() (t T, ok bool) {
 		return t, false
 	}
 	v := s.entries[len(s.entries)-1]
+	var zero T
+	s.entries[len(s.entries)-1] = zero
 	s.entries = s.entries[:len(s.entries)-1]
 	return v, true
 }

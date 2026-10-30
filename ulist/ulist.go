@@ -127,6 +127,10 @@ func (ul *UList[V]) Remove(iter *UListIter[V]) {
 		iter.Next()
 		return
 	}
+	if iter.index == len(iter.node.Value) && iter.node.Next != nil {
+		iter.node = iter.node.Next
+		iter.index = 0
+	}
 }
 
 func hasCapacity[V any](llNode *list.Node[ulistBlk[V]]) bool {

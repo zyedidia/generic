@@ -77,8 +77,11 @@ func (t *Tree[K, V]) search(x *node[K, V], key K, height int) (V, bool) {
 
 // Put associates 'key' with 'val'.
 func (t *Tree[K, V]) Put(key K, val V) {
+	_, exists := t.Get(key)
 	u := t.insert(t.root, key, val, t.height, true)
-	t.n++
+	if !exists {
+		t.n++
+	}
 	if u == nil {
 		return
 	}
